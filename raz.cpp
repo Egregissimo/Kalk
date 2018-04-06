@@ -166,3 +166,12 @@ ostream& operator<<(ostream& os, const raz& r){
         os<<r.num<<"/"<<r.den;
     return os;
 }
+
+string to_string(raz r){
+    if(r.num==0)
+        return to_string(0);
+    else if(r.den==1)
+        return to_string(r.num);
+    else
+        return to_string(r.num)+"/"+to_string(r.den);
+}

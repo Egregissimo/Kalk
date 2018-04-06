@@ -1,17 +1,13 @@
 #ifndef TREEBASIC_H
 #define TREEBASIC_H
-#include <iostream>
-#include <string>
-using std::string;
-using std::cout;
-using std::ostream;
-using std::size_t;
+#include "raz.h"
 
 template <class T> class treebasic;
 
 template <class T>
 ostream& operator<<(ostream&, const treebasic<T>&);
 
+//per ogni tipo T dev'essere presente la funzione "string to_string(T)" esterna alla classe
 template <class T>
 class treebasic{
      friend ostream& operator<< <T>(ostream&, const treebasic<T>&);
@@ -22,13 +18,13 @@ protected:
         T info;
         nodo(): father(0), left(0), right(0) {}
         //ATTENZIONE: nel costruttore c'e' prima r per right e poi l per left
-        nodo(const T& val, nodo* f=0, nodo* r=0, nodo* l=0): info(val), father(f), left(l), right(r) {}
+        nodo(const T& val, nodo* f=0, nodo* l=0, nodo* r=0): info(val), father(f), left(l), right(r) {}
         static string stampa(nodo*);
     };
     nodo* root;
 private:
     //funzioni costruttore
-    nodo* constrRic(T*, int, nodo*, string::iterator, string::iterator, int&);
+    nodo* constrRic(T[], int, nodo*, string::iterator, string::iterator, int&);
     size_t balance(string::iterator, string::iterator);
     //altre funzioni ausialiarie
     nodo* copia(nodo *, nodo* =0);
@@ -43,7 +39,7 @@ public:
      * Il nodo foglia è del tipo: (*,_,_), dove "_" indica il nodo vuoto.
      * Es: l'albero (5,(2,_,(1,_,_)),_) sara' (*,(*,_,(*,_,_)),_)*/
     treebasic(T[], int, string);//viene costruito almeno un nodo
-    treebasic(const treebasic& t): root(copia(t.root)) {}// costruttore di copia profondo
+    treebasic(const treebasic& t): root(new nodo(t.root->info, 0, copia(t.root->left, root), copia(t.root->right, root))) {}// costruttore di copia profondo
     ~treebasic();// distruttore profondo
     /*virtual treebasic* somma(treebasic<T>* b)const=0;
     virtual treebasic* differenza(treebasic<T>* b)const=0;
@@ -62,21 +58,14 @@ template <class T>
 string treebasic<T>::nodo::stampa(treebasic<T>::nodo* n){
     if(!(n))
         return "_";
-    string s="(";
-    s+=n->info;
-    s+=",";
-    s+=stampa(n->left);
-    s+=",";
-    s+=stampa(n->right);
-    s+=")";
-    return s;
+    return "('"+to_string(n->info)+"',"+stampa(n->left)+","+stampa(n->right)+")";
 }
 
 template <class T>
-typename treebasic<T>::nodo* treebasic<T>::copia(treebasic<T>::nodo * n, treebasic<T>::nodo* father){
+typename treebasic<T>::nodo* treebasic<T>::copia(nodo * n, nodo* father){
     if(!n)
         return n;
-    nodo* x=new nodo(n->info, father, copia(n->right, x), copia(n->left, x));
+    nodo* x=new nodo(n->info, father, copia(n->left, x), copia(n->right, x));
     return x;
 }
 
@@ -106,23 +95,21 @@ size_t treebasic<T>::balance(string::iterator i, string::iterator end){
  * di passi fino alla posizione della ')' che chiude la parentesi della PRE}*/
 
 template <class T>
-typename treebasic<T>::nodo* treebasic<T>::constrRic(T*  A, int size, treebasic<T>::nodo* father, string::iterator i, string::iterator end, int& k){
-    A=A+k;
+typename treebasic<T>::nodo* treebasic<T>::constrRic(T A[], int size, nodo* father, string::iterator i, string::iterator end, int& k){
+    k++;
     nodo* x=0;
     if(k<size){//se sto creando piu' nodi di quelli presenti nell'array
-        T val=*A;
-    cout<<val;
-        k++;
+        T val=A[k];
         if(*i!='(' || *(++i)!='*' || *(++i)!=',')
             cout<<"ERRORE9\n";
         if(*(i+1)=='_' && *(i+2)==',' && *(i+3)=='_' && *(i+4)==')')
-            return new nodo(val, father);
+            return new nodo(val, father, 0, 0);
         else if(*(i+1)=='_' && *(i+2)==',' && *(i+3)=='('){//solo Td
             i=i+3;// i punta su un '('
             int r=balance(i, end);
             if(r==-1)
                 cout<<"ERRORE10\n";
-            x=new nodo(val, father, constrRic(A, size, x, i, end, k), 0);
+            x=new nodo(val, father, 0, constrRic(A, size, x, i, end, k));
             i=i+r+1;
             if(*i!=')')
                 cout<<"ERRORE11\n";
@@ -131,11 +118,11 @@ typename treebasic<T>::nodo* treebasic<T>::constrRic(T*  A, int size, treebasic<
             int l=balance(++i, end);//i punta si '('
             if(l!=-1 && *(i+l+1)==','){
                 if(*(i+l+2)=='_' && *(i+l+3)==')')//solo Ts
-                    x=new nodo(val, father, 0, constrRic(A, size, x, i, end, k));
+                    x=new nodo(val, father, constrRic(A, size, x, i, end, k));
                 else if(*(i+l+2)=='('){
                     int r=balance(i+l+2, end);
                     if(r!=-1 && *(i+l+2+r+1)==')')
-                        x=new nodo(val, father, constrRic(A, size, x, i+l+2, end, k), constrRic(A, size, x, i, end, k));
+                        x=new nodo(val, father, constrRic(A, size, x, i, end, k), constrRic(A, size, x, i+l+2, end, k));
                     else
                         cout<<"ERRORE12\n";
                 }
@@ -157,11 +144,10 @@ template <class T>
 treebasic<T>::treebasic(T type[], int size, string s){
     string::iterator i=s.begin();
     string::iterator end=s.end();
-    T* A=type;
-    int k=1;
-    T val=*A;
+    int k=0;//indice corrente array
     
     if(size>0){
+        T val=type[k];
         if(*i!='(' || *(++i)!='*' || *(++i)!=','){
             root=0;
             cout<<"ERRORE1\n";
@@ -175,13 +161,7 @@ treebasic<T>::treebasic(T type[], int size, string s){
                 root=0;
                 cout<<"ERRORE2\n";
             }
-            root=new nodo(val, 0, constrRic(A, size, root, i, end, k), 0);
-            /*qui si vede il motivo per cui nel costruttore del nodo è' presente prima r
-             * e poi l: nel momento in cui una funzione ha per parametri altre funzioni,
-             * queste vengono risolte a partire da destra, e dato che noi vogliamo che
-             * per primo venca costruito Ts rispetto a Td, per inserire nell'albero i
-             * valori dell'array nell'ordine corretto, Ts viene messo a destra e Td
-             * a sinistra*/
+            root=new nodo(val, 0, 0, constrRic(type, size, root, i, end, k));
             i=i+r+1;
             if(*i!=')'){
                 root=0;
@@ -192,11 +172,11 @@ treebasic<T>::treebasic(T type[], int size, string s){
             int l=balance(++i, end);//i punta si '('
             if(l!=-1 && *(i+l+1)==','){
                 if(*(i+l+2)=='_' && *(i+l+3)==')')//solo Ts
-                    root=new nodo(val, 0, 0, constrRic(A, size, root, i, end, k));
+                    root=new nodo(val, 0, constrRic(type, size, root, i, end, k));
                 else if(*(i+l+2)=='('){
                     int r=balance(i+l+2, end);
                     if(r!=-1 && *(i+l+2+r+1)==')')
-                        root=new nodo(val, 0, constrRic(A, size, root, i+l+2, end, k), constrRic(A, size, root, i, end, k));
+                        root=new nodo(val, 0, constrRic(type, size, root, i, end, k), constrRic(type, size, root, i+l+2, end, k));
                     else{
                         root=0;
                         cout<<"ERRORE4\n";
@@ -230,12 +210,10 @@ treebasic<T>::~treebasic(){distruggi(root);}
 template <class T>
 ostream& operator <<(ostream& os, const treebasic<T>& t){
     if(t.root)
-        os<<"("<<t.root->info<<","<<treebasic<T>::nodo::stampa(t.root->left)<<","<<treebasic<T>::nodo::stampa(t.root->right)<<")";
+        os<<"('"<<t.root->info<<"',"<<treebasic<T>::nodo::stampa(t.root->left)<<","<<treebasic<T>::nodo::stampa(t.root->right)<<")";
     return os;
 }
 
+//trow(0) c'e' quando la sintassi della stringa non e' corretta
+
 #endif // TREEBASIC_H
-
-
-
-

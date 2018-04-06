@@ -2,14 +2,15 @@
 #define RAZ_H
 #include <cmath>
 #include <iostream>
-#include <typeinfo>
+#include <string>
+using std::string;
+using std::to_string;
 using std::ostream;
 using std::cout;
 using std::endl;
 using std::sqrt;
 using std::floor;
 using std::pow;
-using std::sqrt;
 using std::cbrt;
 
 class raz{
@@ -20,6 +21,7 @@ class raz{
     friend bool operator==(const raz&, const raz&);
     friend bool operator!=(const raz&, const raz&);
     friend ostream& operator<<(ostream&, const raz&);
+    friend string to_string(raz);
 private:
     int num, den;
     int degree(double);
@@ -46,7 +48,8 @@ raz operator/(const raz&, const raz&);
 bool operator==(const raz&, const raz&);
 bool operator!=(const raz&, const raz&);
 ostream& operator<<(ostream&, const raz&);
+string to_string(raz);
 
-//throw(0) c'è quando il raz da il denominatore nullo
+//throw(0) c'e' quando il raz da il denominatore nullo
 
 #endif // RAZ_H
