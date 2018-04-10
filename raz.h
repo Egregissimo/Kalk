@@ -21,7 +21,7 @@ class raz{
     friend bool operator==(const raz&, const raz&);
     friend bool operator!=(const raz&, const raz&);
     friend ostream& operator<<(ostream&, const raz&);
-    friend string to_string(raz);
+    friend string to_string(const raz&);
 private:
     int num, den;
     int degree(double);
@@ -48,7 +48,7 @@ raz operator/(const raz&, const raz&);
 bool operator==(const raz&, const raz&);
 bool operator!=(const raz&, const raz&);
 ostream& operator<<(ostream&, const raz&);
-string to_string(raz);
+string to_string(const raz&);
 
 //throw(0) c'e' quando il raz da il denominatore nullo
 

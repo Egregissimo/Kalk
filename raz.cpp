@@ -167,7 +167,7 @@ ostream& operator<<(ostream& os, const raz& r){
     return os;
 }
 
-string to_string(raz r){
+string to_string(const raz &r){
     if(r.num==0)
         return to_string(0);
     else if(r.den==1)
