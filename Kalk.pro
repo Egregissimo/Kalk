@@ -16,9 +16,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp \
     raz.cpp \
-    vet.cpp
+    vet.cpp \
+    eccezione.cpp
 
 HEADERS += \
     treebasic.h \
     raz.h \
-    vet.h
+    vet.h \
+    eccezione.h
