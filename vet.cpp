@@ -53,11 +53,28 @@ bool vet::sameSize(vet tmp) const{
     else
         return false;
 }
+void vet::transposed(){
+    int* tmp = new int[r*c];
+    int index = 0;
+    for(int j=0; j<c; j++){
+        for(int i=0; i<r; i++){
+            *(tmp+index) = *(v_m+(j+(i*c)));
+            index++;
+        }
+    }
+
+    if(index > r*c)
+        throw eccezione();      //se index supera la dimensione dell'array solleva un eccezione per non fare casini con la matrice/vettore
+
+    delete[] v_m;
+    v_m = tmp;
+    int ttmp = c;
+    c = r; r = ttmp;
+}
 
 /* ------------------------------------------------------ */
 
-int* vet::operator [](size_t i){ return (v_m + (c*i)); }
-
+int* vet::operator [](size_t i) const { return (v_m + (c*i)); }
 vet operator +(const vet& vet1, const vet& vet2){
     if(vet1.sameSize(vet2)){
         vet out(vet1.getRow(),vet1.getColumn());
@@ -69,7 +86,6 @@ vet operator +(const vet& vet1, const vet& vet2){
         return out;
     }
 }
-
 vet operator -(const vet& vet1, const vet& vet2){
     if(vet1.sameSize(vet2)){
         vet out(vet1.getRow(),vet1.getColumn());
@@ -82,17 +98,16 @@ vet operator -(const vet& vet1, const vet& vet2){
     else
         throw eccezione();
 }
-
-vet operator *(const vet& vet1, const vet& vet2){
-    if(vet1.isMoltiplication(vet2)){
-        vet out(vet1.getRow(),vet2.getColumn());
+vet vet::operator *(const vet& vet2){
+    if(this->isMoltiplication(vet2)){
+        vet out(this->getRow(),vet2.getColumn());
         int valore=0;
 
-        for(int i=0; i<vet1.getRow(); i++){
+        for(int i=0; i<this->getRow(); i++){
             for(int jj=0; jj<vet2.getColumn(); jj++){
 
-                for(int j=0; j<vet1.getColumn(); j++)
-                    valore = valore + (vet1.getVal(i,j) * vet2.getVal(j,jj));
+                for(int j=0; j<this->getColumn(); j++)
+                    valore = valore + (this->getVal(i,j) * vet2.getVal(j,jj));
 
                 //out.insert(valore, i, jj);
                 out[i][jj] = valore;
@@ -103,4 +118,11 @@ vet operator *(const vet& vet1, const vet& vet2){
     }
     else
         throw eccezione();
+}
+vet operator* (int k, const vet& vet1){
+    vet out(vet1.getRow(),vet1.getColumn());
+    for(int i=0; i<vet1.getRow(); i++)
+        for(int j=0; j<vet1.getColumn(); j++)
+            out[i][j] = k * vet1[i][j];
+    return out;
 }
