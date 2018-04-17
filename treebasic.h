@@ -26,7 +26,14 @@ protected:
         static string stampa(nodo*);
     };
     nodo* root;
+    //funzioni
     bool parser(string::iterator, string::iterator)const;
+    static nodo* somma(nodo*, nodo*, nodo* =0);
+    static nodo* differenza(nodo*, nodo*, nodo* =0);
+    static nodo* moltiplicazione(nodo*, int&, nodo * =0);
+    static nodo* divisione(nodo*, int&, nodo* =0);
+    static int n_nodes(nodo*);//conta i nodi dell'albero
+    static void nodes(T[], nodo*, int&);//inserisce i vari campi info nell'array
 private:
     //funzioni ausiliarie per il costruttore
     nodo* constrRic(const T[], int, string::iterator, int&, nodo* =0);
@@ -49,15 +56,13 @@ public:
     treebasic(const treebasic& t): root(copia(t.root)) {}// costruttore di copia profondo
     ~treebasic();// distruttore profondo
     treebasic& operator=(const treebasic&);//assegnazione profonda
-    virtual treebasic* somma(treebasic<T>* b)const=0;
-    virtual treebasic* differenza(treebasic<T>* b)const=0;
-    virtual treebasic* moltiplicazione(int)const=0;
-    virtual treebasic* divisione(int)const=0;
     virtual void add(T)=0;//cerca di tenere  l'albero bilanciato
     virtual void remove(string)=0;//rimuove l'oggetto indicato da un percorso
     virtual void remove(T)=0;//rimuove l'oggetto cercandolo
     virtual T search(string)const=0;
     virtual T search (T)const=0;
+
+    static string tree_to_string(nodo*);//stampa la struttura dell'albero
 };
 
 //IMPLEMENTAZIONE FUNZIONI TEMPLATE
@@ -189,6 +194,9 @@ treebasic<T>::treebasic(T type[], int size, string& s){
 }
 
 template <class T>
+treebasic<T>::~treebasic(){if(root) distruggi(root);}
+
+template <class T>
 treebasic<T>& treebasic<T>::operator=(const treebasic<T>& t){
     if(this->root!=t.root){
         delete root;
@@ -197,7 +205,68 @@ treebasic<T>& treebasic<T>::operator=(const treebasic<T>& t){
 }
 
 template <class T>
-treebasic<T>::~treebasic(){if(root) distruggi(root);}
+typename treebasic<T>::nodo* treebasic<T>::somma(nodo* a, nodo* b, nodo *father){
+    nodo* x=0;
+    if(!a && b)
+        x=new nodo(b->info, father, somma(a, b->left, x), somma(a, b->right, x));
+    else if(a && !b)
+        x=new nodo(a->info, father, somma(a->left, b, x), somma(a->right, b, x));
+    else if(a && b)
+        x=new nodo((a->info+b->info), father, somma(a->left, b->left, x), somma(a->right, b->right, x));
+    return x;
+}
+
+template <class T>
+typename treebasic<T>::nodo* treebasic<T>::differenza(nodo* a, nodo* b, nodo *father){
+    nodo* x=0;
+    if(!a && b)
+        x=new nodo(((b->info)*(-1)), father, differenza(a, b->left, x), differenza(a, b->right, x));
+    else if(a && !b)
+        x=new nodo(((a->info)*(-1)), father, differenza(a->left, b, x), differenza(a->right, b, x));
+    else if(a && b)
+        x=new nodo((a->info-b->info), father, differenza(a->left, b->left, x), differenza(a->right, b->right, x));
+    return x;
+}
+
+template <class T>
+typename treebasic<T>::nodo* treebasic<T>::moltiplicazione(nodo* a, int& k, nodo* father){
+    nodo* x=0;
+    if(a)
+        x=new nodo((a->info*k), father, moltiplicazione(a->left, k, x), moltiplicazione(a->right, k, x));
+    return x;
+}
+
+template <class T>
+typename treebasic<T>::nodo* treebasic<T>::divisione(nodo* a, int& k, nodo* father){
+    nodo* x=0;
+    if(a)
+        x=new nodo((a->info/k), father, divisione(a->left, k, x), divisione(a->right, k, x));
+    return x;
+}
+
+template <class T>
+int treebasic<T>::n_nodes(nodo* n){
+    if(!n)
+       return 0;
+   return 1+n_nodes(n->left)+n_nodes(n->right);
+}
+
+template <class T>
+void treebasic<T>::nodes(T A[], nodo* n, int &k){
+    if(n){
+        A[k]=n->info;
+        k++;
+        nodes(A, n->left, k);
+        nodes(A, n->right, k);
+    }
+}
+
+template <class T>
+string treebasic<T>::tree_to_string(nodo * r){
+    if(!r)
+        return "_";
+    return "(*,"+tree_to_string(r->left)+","+tree_to_string(r->right)+")";
+}
 
 template <class T>
 ostream& operator <<(ostream& os, const treebasic<T>& t){

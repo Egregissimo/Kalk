@@ -10,6 +10,18 @@ ostream& operator<< (ostream&, const treesearch<T>&);
 template <class T>
 string to_string(const treesearch<T>&);
 
+template <class T>
+treesearch<T>& operator +(const treesearch<T>&, const treesearch<T>&);
+
+template <class T>
+treesearch<T>& operator -(const treesearch<T>&, const treesearch<T>&);
+
+template <class T>
+treesearch<T>& operator *(const treesearch<T>&, int);
+
+template <class T>
+treesearch<T>& operator /(const treesearch<T>&, int);
+
 /*ricordarsi che per invocare un campo dati bisogna fare this->"campo dati"
 Non serve ridefinire costruttore di coppia, distruttore o assegnazione dato
 che questi alberi derivati non hanno campi dati. Ogni tipo T che usera' questa
@@ -18,22 +30,22 @@ template <class T>
 class treesearch: public treebasic<T>{
     friend ostream& operator<< <T>(ostream&, const treesearch<T>&);
     friend string to_string<T>(const treesearch&);
+    friend treesearch& operator + <T>(const treesearch&, const treesearch&);
+    friend treesearch& operator - <T>(const treesearch&, const treesearch&);
+    friend treesearch<T>& operator * <T>(const treesearch&, int);
+    friend treesearch<T>& operator / <T>(const treesearch&, int);
 private:
     int num_t(string::iterator, int&)const;
     void merge(T[], int, int, int)const;
     void merge_sort(T[], int, int)const;
     void ordinaRic(T[], T[], int, string::iterator, int&)const;
     T* ordina(T[], int, string &)const;
-    int n_nodes(typename treebasic<T>::nodo*) const;
-    void nodes(T[], typename treebasic<T>::nodo*) const;
     string crea_stringa(int) const;
+
+    typename treebasic<T>::nodo* sommaRic(typename treebasic<T>::nodo*, typename treebasic<T>::nodo*, typename treebasic<T>::nodo* =0);
 public:
     treesearch(): treebasic<T>() {}
     treesearch(T type[], int size, string& s): treebasic<T>(ordina(type, size, s), size, s) {}
-    treesearch* somma(treebasic<T>* b)const;
-    treesearch* differenza(treebasic<T>* b)const;
-    treesearch* moltiplicazione(int)const;
-    treesearch* divisione(int)const;
     void add(T);//cerca di tenere  l'albero bilanciato
     void remove(string);//rimuove l'oggetto indicato da un percorso
     void remove(T);//rimuove l'oggetto cercandolo
@@ -155,22 +167,6 @@ T* treesearch<T>::ordina(T t[], int size, string& s) const{
 }
 
 template <class T>
-int treesearch<T>::n_nodes(typename treebasic<T>::nodo* n) const{
-    if(!n)
-       return 0;
-   return 1+n_nodes(n->left)+n_nodes(n->right);
-}
-
-template <class T>
-void treesearch<T>::nodes(T A[], typename treebasic<T>::nodo* n) const{
-    if(!n)
-        return;
-    *A=n->info;
-    nodes(A+1, n->left);
-    nodes(A+1, n->right);
-}
-
-template <class T>
 string treesearch<T>::crea_stringa(int n) const{
     if(!n)
         return "_";
@@ -178,24 +174,19 @@ string treesearch<T>::crea_stringa(int n) const{
     return "(*,"+crea_stringa(q-1)+","+crea_stringa(n-q)+")";
 }
 
+//PRE=(entrambi gli alberi non sono vuoti)
 template <class T>
-treesearch<T>* treesearch<T>::somma(treebasic<T>* t)const{
-
-}
-
-template <class T>
-treesearch<T>* treesearch<T>::differenza(treebasic<T>* t)const{
-
-}
-
-template <class T>
-treesearch<T>* treesearch<T>::moltiplicazione(int)const{
-
-}
-
-template <class T>
-treesearch<T>* treesearch<T>::divisione(int)const{
-
+typename treebasic<T>::nodo* sommaRic(typename treebasic<T>::nodo* a, typename treebasic<T>::nodo* b, typename treebasic<T>::nodo* father){
+    typename treebasic<T>::nodo* x=0;
+    if(!a && b)
+         typename treebasic<T>::nodo x=new typename treebasic<T>::nodo(b->info, father, sommaRic(a, b->left, x), sommaRic(a, b->right, x));
+    else if(a && !b)
+        typename treebasic<T>::nodo x=new typename treebasic<T>::nodo(a->info, father, sommaRic(a->left, b, x), sommaRic(a->right, b, x));
+    else if(!a && !b)
+        return 0;
+    else
+        typename treebasic<T>::nodo x=new typename treebasic<T>::nodo((a->info+b->info), father, sommaRic(a->left, b->left, x), sommaRic(a->right, b->right, x));
+    return x;
 }
 
 template <class T>
@@ -215,9 +206,10 @@ T treesearch<T>::search(T a)const{}
 
 template <class T>
 treesearch<T>& treesearch<T>::balance() const{
-    int n=n_nodes(this->root);
+    int n=treebasic<T>::n_nodes(this->root);
     T A[n];
-    nodes(A, this->root);
+    int k=0;
+    treebasic<T>::nodes(A, this->root, k);
     string s=crea_stringa(n);
     treesearch<T>* a=new treesearch<T>(A, n, s);
     return *a;
@@ -235,6 +227,54 @@ string to_string(const treesearch<T>& t){
     if(t.root)
         return  treebasic<T>::nodo::stampa(t.root);
     return "";
+}
+
+template <class T>
+treesearch<T>& operator+(const treesearch<T>& a, const treesearch<T>& b){
+    typename treebasic<T>::nodo* x=treebasic<T>::somma(a.root, b.root);
+    string s=treebasic<T>::tree_to_string(x);
+    int n=treebasic<T>::n_nodes(x);
+    T A[n];
+    int k=0;
+    treebasic<T>::nodes(A, x, k);
+    treesearch<T>* c=new treesearch<T>(A, n, s);
+    return *c;
+}
+
+template <class T>
+treesearch<T> &operator -(const treesearch<T> &a, const treesearch<T> &b){
+    typename treebasic<T>::nodo* x=treebasic<T>::differenza(a.root, b.root);
+    string s=treebasic<T>::tree_to_string(x);
+    int n=treebasic<T>::n_nodes(x);
+    T A[n];
+    int k=0;
+    treebasic<T>::nodes(A, x, k);
+    treesearch<T>* c=new treesearch<T>(A, n, s);
+    return *c;
+}
+
+template <class T>
+treesearch<T>& operator *(const treesearch<T>& t, int p){
+    typename treebasic<T>::nodo* x=treebasic<T>::moltiplicazione(t.root, p);
+    string s=treebasic<T>::tree_to_string(x);
+    int n=treebasic<T>::n_nodes(x);
+    T A[n];
+    int k=0;
+    treebasic<T>::nodes(A, x, k);
+    treesearch<T>* c=new treesearch<T>(A, n, s);
+    return *c;
+}
+
+template <class T>
+treesearch<T>& operator /(const treesearch<T>& t, int p){
+    typename treebasic<T>::nodo* x=treebasic<T>::divisione(t.root, p);
+    string s=treebasic<T>::tree_to_string(x);
+    int n=treebasic<T>::n_nodes(x);
+    T A[n];
+    int k=0;
+    treebasic<T>::nodes(A, x, k);
+    treesearch<T>* c=new treesearch<T>(A, n, s);
+    return *c;
 }
 
 #endif // TREESEARCH_H
