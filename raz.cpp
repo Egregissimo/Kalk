@@ -99,7 +99,7 @@ raz raz::riduzione()const{
     if(x.num==x.den)
             x.num=x.den=1;
     else if(x.num!=0){
-        int aux=(x.num<x.den)?x.num:x.den;
+        int aux=(abs(x.num)<abs(x.den))?abs(x.num):abs(x.den);
         for(int i=2; i<=aux; i++)
             if(x.num%i==0 && x.den%i==0){
                 x.num=x.num/i;
@@ -153,8 +153,12 @@ bool operator==(const raz& r1, const raz& r2){
 }
 
 bool operator!=(const raz& r1, const raz& r2){
-    raz r3(r1), r4(r2);
-    return r3.num!=r4.num || r3.den!=r4.den;
+    //raz r3(r1), r4(r2);
+    return r1.num!=r2.num || r1.den!=r2.den;
+}
+
+bool operator<=(const raz& r1, const raz& r2){
+    return (r1.num*r2.den<=r2.num*r2.den);
 }
 
 ostream& operator<<(ostream& os, const raz& r){

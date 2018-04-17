@@ -1,7 +1,7 @@
 #ifndef TREEBASIC_H
 #define TREEBASIC_H
 #include "raz.h"
-#include "vet.h"
+//#include "vet.h"
 
 template <class T> class treebasic;
 
@@ -11,7 +11,7 @@ ostream& operator<<(ostream&, const treebasic<T>&);
 template <class T>
 string to_string(const treebasic<T>&);
 
-//per ogni tipo T dev'essere presente la funzione "string to_string(T)" esterna alla classe
+//per ogni tipo T dev'essere presente la funzione "string to_string(const T&)" esterna alla classe
 template <class T>
 class treebasic{
      friend ostream& operator<< <T>(ostream&, const treebasic<T>&);
@@ -19,32 +19,36 @@ class treebasic{
 protected:
     class nodo{
     public:
-        nodo* father, *right, *left;
+        nodo* father, *left, *right;
         T info;
+        nodo(): father(0), left(0), right(0) {}
         nodo(const T& val, nodo* f=0, nodo* l=0, nodo* r=0): info(val), father(f), left(l), right(r) {}
         static string stampa(nodo*);
     };
     nodo* root;
+    bool parser(string::iterator, string::iterator)const;
 private:
     //funzioni ausiliarie per il costruttore
-    nodo* constrRic(T[], int, string::iterator, string::iterator, int&, nodo* =0);
-    size_t balance(string::iterator, string::iterator);
+    nodo* constrRic(const T[], int, string::iterator, int&, nodo* =0);
+    int balance_brackets(string::iterator, string::iterator)const;
     //altre funzioni ausialiarie
-    nodo* copia(nodo *, nodo* =0);
-    void distruggi(nodo*);
+    nodo* copia(nodo *, nodo* =0)const;
+    void distruggi(nodo*);//non si è deciso di implementare il distruttore di nodo per evitare
+                            //di distruggere l'intero albero distruggendo un solo nodo
 public:
     treebasic(): root(0) {}
     /* la costruzione di un albero sara' formato dalla sua struttura espressa con
      * una stringa controllata da un parser e da un array di elementi da inserire
-     * nell'albero. Gli elementi devo essere inseriti secondo l'ordine prefisso.
+     * nell'albero. Gli elementi devo essere inseriti secondo l'ordine PREFISSO.
      * la sringa sara' del tipo: (*, Ts, Td) dove "*" indica che sara' il valore
      * del nodo, mentre Ts e Td sono i sottoalberi sinistro e destro rispettivamente.
      * Il nodo foglia è del tipo: (*,_,_), dove "_" indica il nodo vuoto.
      * Es: l'albero (5,(2,_,(1,_,_)),_) sara' (*,(*,_,(*,_,_)),_). Il costruttire vuole
      * per parametri l'array di valori, la sua dimensione e la stringa con la struttura*/
-    treebasic(T[], int, string);//viene costruito almeno un nodo
-    treebasic(const treebasic& t): root(new nodo(t.root->info, 0, copia(t.root->left, root), copia(t.root->right, root))) {}// costruttore di copia profondo
+    treebasic(T[], int, string&);//viene costruito almeno un nodo
+    treebasic(const treebasic& t): root(copia(t.root)) {}// costruttore di copia profondo
     ~treebasic();// distruttore profondo
+    treebasic& operator=(const treebasic&);//assegnazione profonda
     virtual treebasic* somma(treebasic<T>* b)const=0;
     virtual treebasic* differenza(treebasic<T>* b)const=0;
     virtual treebasic* moltiplicazione(int)const=0;
@@ -66,9 +70,9 @@ string treebasic<T>::nodo::stampa(treebasic<T>::nodo* n){
 }
 
 template <class T>
-typename treebasic<T>::nodo* treebasic<T>::copia(nodo * n, nodo* father){
+typename treebasic<T>::nodo* treebasic<T>::copia(nodo * n, nodo* father) const{
     if(!n)
-        return n;
+        return 0;
     nodo* x=new nodo(n->info, father, copia(n->left, x), copia(n->right, x));
     return x;
 }
@@ -78,73 +82,90 @@ void treebasic<T>::distruggi(treebasic<T>::nodo* n){
     if(n){
         distruggi(n->left);
         distruggi(n->right);
-        delete n;
     }
 }
 
-//PRE={l'iteratore e' in un carattere '('}
+//PRE={la stringa e' corretta}
 template <class T>
-size_t treebasic<T>::balance(string::iterator i, string::iterator end){
+int treebasic<T>::balance_brackets(string::iterator i, string::iterator end) const{
+    if(*i=='_')
+        return 0; 
     int k=1, s=1;
-    for(; k>0 && i!=end; s++)
+    if(end==i)
+        end=i-1;
+
+    for(; k>0 && i+s!=end; s++)
         if(*(i+s)=='(')
             k++;
         else if(*(i+s)==')')
             k--;
-    if(!k)
-        return s-1;
-    return -1;
+    if(k)
+        return -1;
+    return s-1;
 }
-/*POST={ritorna -1 se le parentesi non sono ben bilanciate, altrimenti ritorna il numero
- * di passi fino alla posizione della ')' che chiude la parentesi della PRE}*/
+//POST={ritorna il numero di passi fino alla posizione della ')' che chiude la parentesi della PRE}
 
 template <class T>
-typename treebasic<T>::nodo* treebasic<T>::constrRic(T A[], int size, string::iterator i, string::iterator end, int& k,  nodo* father){
+bool treebasic<T>::parser(string::iterator begin, string::iterator end)const{
+    if(begin==end)
+        return true;
+    if(*begin!='(' || *++begin!='*' || *++begin!=',')
+        return false;
+    if(*(begin+1)=='_' && *(begin+2)==',' && *(begin+3)=='_' && *(begin+4)==')')
+        return true;
+
+    begin++;
+    bool a=true, b=true;
+    string::iterator aux_end;
+
+    if(*(begin)!='_' && *(begin)!='(')
+        return false;
+    if(*(begin)=='('){
+        int l=balance_brackets(begin, end);
+        if(l==-1)
+            return false;
+        aux_end=begin+l+1;
+        if(*aux_end!=',')
+            return false;
+        a=parser(begin, aux_end);
+        begin=aux_end+1;
+    }
+    else
+        begin+=2;
+
+    if(*(begin)!='_' && *(begin)!='(')
+        return false;
+    if(*(begin)=='('){
+        int r=balance_brackets(begin, end);
+        if(r==-1)
+            return false;
+        aux_end=begin+r+1;
+        if(*aux_end!=')')
+            return false;
+        b=parser(begin, aux_end);
+    }
+
+    return a && b;
+}
+
+//PRE=(la stringa s e' corretta e l'albero contiene almeno un nodo, percio' il caso limite sara' "(*, _,_)")
+template <class T>
+typename treebasic<T>::nodo* treebasic<T>::constrRic(const T A[], int size, string::iterator i, int& k,  nodo* father){
     nodo* x=0;
-    k++;
-    if(k<size){//se sto creando piu' nodi di quelli presenti nell'array
+    if(k<size){
         T val=A[k];
-        if(*i!='(' || *(++i)!='*' || *(++i)!=',')
-            //throw(0);
-            cout<<"ERRORE9\n";
-        if(*(i+1)=='_' && *(i+2)==',' && *(i+3)=='_' && *(i+4)==')')
+        k++;
+        i+=3;
+        int left=balance_brackets(i, i);
+        int right=balance_brackets(i+left+2, i);
+        if(!left && !right)//caso base
             return new nodo(val, father, 0, 0);
-        else if(*(i+1)=='_' && *(i+2)==',' && *(i+3)=='('){//solo Td
-            i=i+3;// i punta su un '('
-            int r=balance(i, end);
-            if(r==-1)
-                //throw(0);
-                cout<<"ERRORE10\n";
-            x=new nodo(val, father, 0, constrRic(A, size, i, end, k, x));
-            i=i+r+1;
-            if(*i!=')')
-                //throw(0);
-                cout<<"ERRORE11\n";
-        }
-        else if(*(i+1)=='('){// o solo con Ts o con Ts e Td
-            int l=balance(++i, end);//i punta si '('
-            if(l!=-1 && *(i+l+1)==','){
-                if(*(i+l+2)=='_' && *(i+l+3)==')')//solo Ts
-                    x=new nodo(val, father, constrRic(A, size, i, end, k, x));
-                else if(*(i+l+2)=='('){
-                    int r=balance(i+l+2, end);
-                    if(r!=-1 && *(i+l+2+r+1)==')')
-                        x=new nodo(val, father, constrRic(A, size, i, end, k, x), constrRic(A, size, i+l+2, end, k, x));
-                    else
-                        //throw(0);
-                        cout<<"ERRORE12\n";
-                }
-                else
-                    //throw(0);
-                    cout<<"ERRORE13\n";
-            }
-            else
-                //throw(0);
-                cout<<"ERRORE14\n";
-        }
+        if(!left && right)
+            x=new nodo(val, father, 0, constrRic(A, size, i+left+2, k, x));
+        else if(left && !right)
+            x=new nodo(val, father, constrRic(A, size, i, k, x));
         else
-            //throw(0);
-            cout<<"ERRORE15\n";
+            x=new nodo(val, father, constrRic(A, size, i, k, x), constrRic(A, size, i+left+2, k, x));
     }
     else
         //throw(0);
@@ -152,19 +173,31 @@ typename treebasic<T>::nodo* treebasic<T>::constrRic(T A[], int size, string::it
     return x;
 }
 
+//PRE={size e' la lunghezza corretta di type}
 template <class T>
-treebasic<T>::treebasic(T type[], int size, string s){
-    string::iterator i=s.begin();
-    string::iterator end=s.end();
-    int k=-1;//indice valore gia' analizzato nell'array
-    //constrRic costruisce l'albero prendendo in input l'array di valori,
-    //la sua lunghezza, un iteratore iniziale e finale della stringa, l'indice del
-    //valore gia' analizzato passasto per riferimento e il valore del noto padre(che inizialmente e' 0)
-    root=constrRic(type, size, i, end, k);
+treebasic<T>::treebasic(T type[], int size, string& s){
+    if(parser(s.begin(), s.end()) && size>0){
+        int k=0;//indice valore da analizzare nell'array
+        //constrRic costruisce l'albero prendendo in input l'array di valori,
+        //la sua lunghezza, un iteratore iniziale e finale della stringa, l'indice del
+        //valore gia' analizzato passasto per riferimento e il valore del noto padre(che inizialmente e' 0)
+        root=constrRic(type, size, s.begin(), k);
+    }
+    else
+        //throw(0);
+        cout<<"ERRORE10\n";
 }
 
 template <class T>
-treebasic<T>::~treebasic(){distruggi(root);}
+treebasic<T>& treebasic<T>::operator=(const treebasic<T>& t){
+    if(this->root!=t.root){
+        delete root;
+        root=copia(t.root);
+    }
+}
+
+template <class T>
+treebasic<T>::~treebasic(){if(root) distruggi(root);}
 
 template <class T>
 ostream& operator <<(ostream& os, const treebasic<T>& t){

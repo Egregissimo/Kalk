@@ -20,6 +20,7 @@ class raz{
     friend raz operator/(const raz&, const raz&);
     friend bool operator==(const raz&, const raz&);
     friend bool operator!=(const raz&, const raz&);
+    friend bool operator<=(const raz&, const raz&);
     friend ostream& operator<<(ostream&, const raz&);
     friend string to_string(const raz&);
 private:
@@ -47,6 +48,7 @@ raz operator*(const raz&, const raz&);
 raz operator/(const raz&, const raz&);
 bool operator==(const raz&, const raz&);
 bool operator!=(const raz&, const raz&);
+bool operator<=(const raz&, const raz&);
 ostream& operator<<(ostream&, const raz&);
 string to_string(const raz&);
 

@@ -1,4 +1,5 @@
 #include <QCoreApplication>
+#include "treesearch.h"
 
 int main(int argc, char *argv[])
 {
