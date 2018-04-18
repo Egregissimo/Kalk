@@ -4,6 +4,7 @@
 #include "eccezione.h"
 #include <iostream>
 #include <string>
+#include <vector>
 
 class bin{
     friend bin operator+ (const bin&, const bin&);
@@ -12,18 +13,17 @@ class bin{
     friend bin operator/ (const bin&, const bin&);
 
 private:
-    unsigned int dim;
-    bool* array;
+    std::vector<bool> array;
 public:
     bin(unsigned int=1);
 
     /* metodi ausiliari */
     unsigned int getDim() const;
-    bool max(const bin&) const;
     void stampa() const;
     void insert(unsigned int, bool);
+    bool max(const bin& vet2) const;
 
-    bool operator[](unsigned int) const;
+    //bool& operator[](unsigned int) const;
 };
 
 bin operator+ (const bin&, const bin&);
