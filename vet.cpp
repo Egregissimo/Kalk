@@ -31,18 +31,6 @@ void vet::stampa() const{
 }
 
 /* ------------------------------------------------------ */
-int vet::determinant() const{
-    int det=0;
-    for(int i=0; i<r; i++){
-        for(int j=0; j<c; j++){
-
-        }
-    }
-    return det;
-}
-void vet::inverse(){
-
-}
 
 /* ------------------------------------------------------ */
 
@@ -124,6 +112,18 @@ vet operator* (int k, const vet& vet1){
     for(int i=0; i<vet1.getRow(); i++)
         for(int j=0; j<vet1.getColumn(); j++)
             out[i][j] = k * vet1[i][j];
+    return out;
+}
+
+string to_string(const vet& vet1){
+    string out;
+    for(int i=0; i<vet1.getRow(); i++){
+        for(int j=0; j<vet1.getColumn()-1; j++){
+            out = out + std::to_string(vet1[i][j]) + ",";
+        }
+        out = out + std::to_string(vet1[i][vet1.getColumn()-1]);
+        out = out + ";";
+    }
     return out;
 }
 
