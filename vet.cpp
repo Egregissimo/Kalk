@@ -126,3 +126,18 @@ vet operator* (int k, const vet& vet1){
             out[i][j] = k * vet1[i][j];
     return out;
 }
+
+bool operator== (const vet& vet1, const vet& vet2){
+    bool out = true;
+
+    if( vet1.sameSize(vet2)){
+        /* stessa dimensione */
+        for(int i=0; i<vet1.getRow() && out; i++)
+            for(int j=0; j<vet1.getColumn() && out; j++)
+                if(vet1[i][j] != vet2[i][j])
+                    out = false;
+
+        return out;
+    }
+    return false;
+}

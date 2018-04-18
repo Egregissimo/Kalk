@@ -8,7 +8,8 @@ class vet{
     friend vet operator+(const vet&, const vet&);
     friend vet operator-(const vet&, const vet&);
     friend vet operator/(const vet&, const vet&);
-    friend vet operator*(size_t, const vet&);
+    friend vet operator*(int, const vet&);
+    friend bool operator== (const vet&, const vet&);
 
 private:
     int r, c;
@@ -40,7 +41,8 @@ public:
 
 vet operator+ (const vet&, const vet&);   /* due matrici sono sommabili se hanno la stessa dimensione r=r1 & c=c1 */
 vet operator- (const vet&, const vet&);   /* due matrici sono sottrabili se hanno la stessa dimensione r=r1 & c=c1 */
-vet operator* (int, const vet&);       /* moltiplicazione di uno scalare per una matrice */
+vet operator* (int, const vet&);          /* moltiplicazione di uno scalare per una matrice */
 vet operator/ (const vet&, const vet&);   /* [A]*[B]-1 o [B]-1 * [A]. */
+bool operator== (const vet&, const vet&);  /* ritorna true sse dim1 == dim2 e se vet1[i][j] == vet2[i][j] */
 
 #endif // VET_H
