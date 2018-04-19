@@ -161,6 +161,10 @@ bool operator<=(const raz& r1, const raz& r2){
     return (r1.num*r2.den<=r2.num*r2.den);
 }
 
+bool operator<(const raz& r1, const raz& r2){
+    return (r1.num*r2.den<r2.num*r2.den);
+}
+
 ostream& operator<<(ostream& os, const raz& r){
     if(r.num==0)
         os<<0;

@@ -16,43 +16,44 @@ treesearch<T>& operator +(const treesearch<T>&, const treesearch<T>&);
 template <class T>
 treesearch<T>& operator -(const treesearch<T>&, const treesearch<T>&);
 
-template <class T>
-treesearch<T>& operator *(const treesearch<T>&, int);
-
-template <class T>
-treesearch<T>& operator /(const treesearch<T>&, int);
-
 /*ricordarsi che per invocare un campo dati bisogna fare this->"campo dati"
 Non serve ridefinire costruttore di coppia, distruttore o assegnazione dato
 che questi alberi derivati non hanno campi dati. Ogni tipo T che usera' questa
-classe dovra' implementare l'operatore '<='*/
+classe dovra' implementare l'operatore '<=' e '<'*/
 template <class T>
 class treesearch: public treebasic<T>{
     friend ostream& operator<< <T>(ostream&, const treesearch<T>&);
     friend string to_string<T>(const treesearch&);
     friend treesearch& operator + <T>(const treesearch&, const treesearch&);
     friend treesearch& operator - <T>(const treesearch&, const treesearch&);
-    friend treesearch<T>& operator * <T>(const treesearch&, int);
-    friend treesearch<T>& operator / <T>(const treesearch&, int);
 private:
+    //stessa funzione di balance_brackets, ma in piu' conta i nodi all'interno della stringa
     int num_t(string::iterator, int&)const;
+    //funzioni per effettuare il merge-sort in O(nlogn)
     void merge(T[], int, int, int)const;
     void merge_sort(T[], int, int)const;
+    //funzione ricorsiva per creare l'albero di ricerca. Prende in input il primo array per inserirne
+    //i valori ordinati nel secondo array da usare nel costruttore
     void ordinaRic(T[], T[], int, string::iterator, int&)const;
+    //invoca ordinaRic per ritornare l'array ordinato per l'albero di ricerca
     T* ordina(T[], int, string &)const;
+    //crea una stringa per un albero bilanciato di ricerca di n nodi
     string crea_stringa(int) const;
-
-    typename treebasic<T>::nodo* sommaRic(typename treebasic<T>::nodo*, typename treebasic<T>::nodo*, typename treebasic<T>::nodo* =0);
+    typename treebasic<T>::nodo* minimum(typename treebasic<T>::nodo*)const;//trova il minimo dell'albero
+    typename treebasic<T>::nodo* successor(typename treebasic<T>::nodo*)const;//trova il successore del nodo dato in input
+    T removeIt(typename treebasic<T>::nodo*);//rimuove in modo iterativo il nodo indicato mantenedo leproprieta' del'albero di ricerca
 public:
     treesearch(): treebasic<T>() {}
     treesearch(T type[], int size, string& s): treebasic<T>(ordina(type, size, s), size, s) {}
-    void add(T);//cerca di tenere  l'albero bilanciato
-    void remove(string);//rimuove l'oggetto indicato da un percorso
-    void remove(T);//rimuove l'oggetto cercandolo
-    T search(string)const;
-    T search (T)const;
+    virtual void add(const T);//cerca di tenere  l'albero bilanciato
+    virtual T remove(string);//rimuove l'oggetto indicato da un percorso
+    virtual T remove(const T);//rimuove l'oggetto cercandolo
+    virtual T search(string)const;//trova l'oggetto indicato da un percorso
+    virtual T search (const T)const;//trova l'oggetto indicato
 
-    treesearch& balance() const;
+    treesearch& balance() const;//restituisce un albero di ricerca bilanciato
+    treesearch<T>& operator *(int);
+    treesearch<T>& operator /(int);
 };
 
 //PRE={la stringa è corretta}
@@ -174,35 +175,142 @@ string treesearch<T>::crea_stringa(int n) const{
     return "(*,"+crea_stringa(q-1)+","+crea_stringa(n-q)+")";
 }
 
-//PRE=(entrambi gli alberi non sono vuoti)
 template <class T>
-typename treebasic<T>::nodo* sommaRic(typename treebasic<T>::nodo* a, typename treebasic<T>::nodo* b, typename treebasic<T>::nodo* father){
-    typename treebasic<T>::nodo* x=0;
-    if(!a && b)
-         typename treebasic<T>::nodo x=new typename treebasic<T>::nodo(b->info, father, sommaRic(a, b->left, x), sommaRic(a, b->right, x));
-    else if(a && !b)
-        typename treebasic<T>::nodo x=new typename treebasic<T>::nodo(a->info, father, sommaRic(a->left, b, x), sommaRic(a->right, b, x));
-    else if(!a && !b)
+typename treebasic<T>::nodo* treesearch<T>::minimum(typename treebasic<T>::nodo* r) const{
+    if(!r)
         return 0;
-    else
-        typename treebasic<T>::nodo x=new typename treebasic<T>::nodo((a->info+b->info), father, sommaRic(a->left, b->left, x), sommaRic(a->right, b->right, x));
-    return x;
+    while(r->left)
+        r=r->left;
+    return r;
 }
 
 template <class T>
-void treesearch<T>::add(T a){}
+typename treebasic<T>::nodo* treesearch<T>::successor(typename treebasic<T>::nodo* r) const{
+    if(!r)
+        return 0;
+    if(r->right)
+        return minimum(r->right);
+    //altrimenti e' il primo padre sinistro
+    typename treebasic<T>::nodo* y=r->father;
+    while(y && r==y->right){
+        r=y;
+        y=y->father;
+    }
+    return y;
+}
+
+//PRE=(x e t non sono nulli)
+template <class T>
+T treesearch<T>::removeIt(typename treebasic<T>::nodo* z){
+    typename treebasic<T>::nodo* x=0, *y=0;
+    if(!z->left || !z->right)//se z ha 0 o 1 figli
+        y=z;
+    else//z ha 2 figli
+        y=successor(z);
+    if(y->left)//se ho due figli o un figlio sinistro
+        x=y->left;
+    else//se ho 0 o un figlio destro
+        x=y->right;
+    if(x)
+        x->father=y->father;
+    if(!y->father)//nel caso l'albero contenga l'unico nodo da rimuovere
+        this->root=x;
+    else if(y==y->father->left)//nel caso z non abbia figli cancella il collegamento
+        y->father->left=x;
+    else//in alternativa collega i vari nodi senza z
+        y->father->right=x;
+    if(x!=z)
+        z->info=y->info;
+    T a=z->info;
+    return a;
+}
 
 template <class T>
-void treesearch<T>::remove(string s){}
+void treesearch<T>::add(const T a){
+    //addRic(this->root, a);
+    typename treebasic<T>::nodo *y=0, *x=this->root;
+    while(x){
+        y=x;
+        if(a<x->info)
+            x=x->left;
+        else
+            x=x->right;
+    }
+    if(!y)
+        this->root=new typename treebasic<T>::nodo(a);
+    else if(a<y->info)
+        y->left=new typename treebasic<T>::nodo(a, y);
+    else
+        y->right=new typename treebasic<T>::nodo(a, y);
+}
 
 template <class T>
-void treesearch<T>::remove(T a){}
+T treesearch<T>::remove(string s){
+    typename treebasic<T>::nodo* x=this->root;
+    if(!treebasic<T>::controlla_percorso(s))
+        cout<<"ERRORE20\n";
+        //trow(0);
+    string::iterator begin=s.begin(), end=s.end();
+    for(; x && begin!=end; begin++){
+        if(*begin=='0')
+            x=x->left;
+        else
+            x=x->right;
+    }
+    if(x)
+        return removeIt(x);
+    cout<<"Elemento non trovato\n";
+    return 0;
+}
 
 template <class T>
-T treesearch<T>::search(string s)const{}
+T treesearch<T>::remove(const T a){
+    typename treebasic<T>::nodo* x=this->root;
+    while(x && x->info!=a)
+        if(a<x->info)
+            x=x->left;
+        else
+            x=x->right;
+    if(x)
+        return removeIt(x);
+    cout<<"Elemento non trovato";
+    return 0;
+}
 
 template <class T>
-T treesearch<T>::search(T a)const{}
+T treesearch<T>::search(string s)const{
+    typename treebasic<T>::nodo* x=this->root;
+    if(!treebasic<T>::controlla_percorso(s) || !x)
+        cout<<"ERRORE20\n";
+        //trow(0);
+    string::iterator begin=s.begin(), end=s.end();
+    for(; x && begin!=end; begin++)
+        if(*begin=='0')
+            x=x->left;
+        else
+            x=x->right;
+    if(x)
+        return x->info;
+    cout<<"Elemento non trovato\n";
+    return 0;
+}
+
+template <class T>
+T treesearch<T>::search(const T a)const{
+    typename treebasic<T>::nodo* x=this->root;
+    if(!x)
+        cout<<"ERRORE21\n";
+        //throw(0);
+    while(x && x->info!=a)
+        if(a<x->info)
+            x=x->left;
+        else
+            x=x->right;
+    if(x)
+        return x->info;
+    cout<<"Elemento non trovato\n";
+    return 0;
+}
 
 template <class T>
 treesearch<T>& treesearch<T>::balance() const{
@@ -254,8 +362,8 @@ treesearch<T> &operator -(const treesearch<T> &a, const treesearch<T> &b){
 }
 
 template <class T>
-treesearch<T>& operator *(const treesearch<T>& t, int p){
-    typename treebasic<T>::nodo* x=treebasic<T>::moltiplicazione(t.root, p);
+treesearch<T>& treesearch<T>::operator *(int p){
+    typename treebasic<T>::nodo* x=treebasic<T>::moltiplicazione(this->root, p);
     string s=treebasic<T>::tree_to_string(x);
     int n=treebasic<T>::n_nodes(x);
     T A[n];
@@ -266,8 +374,8 @@ treesearch<T>& operator *(const treesearch<T>& t, int p){
 }
 
 template <class T>
-treesearch<T>& operator /(const treesearch<T>& t, int p){
-    typename treebasic<T>::nodo* x=treebasic<T>::divisione(t.root, p);
+treesearch<T>& treesearch<T>::operator /(int p){
+    typename treebasic<T>::nodo* x=treebasic<T>::divisione(this->root, p);
     string s=treebasic<T>::tree_to_string(x);
     int n=treebasic<T>::n_nodes(x);
     T A[n];
