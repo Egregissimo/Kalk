@@ -11,7 +11,10 @@ ostream& operator<<(ostream&, const treebasic<T>&);
 template <class T>
 string to_string(const treebasic<T>&);
 
-//per ogni tipo T dev'essere presente la funzione "string to_string(const T&)" esterna alla classe
+/*per ogni tipo T:
+ *  dev'essere presente la funzione "string to_string(const T&)" esterna alla classe
+ * l'operatore '=='
+ * l'operatore di moltiplicazione per un intero*/
 template <class T>
 class treebasic{
      friend ostream& operator<< <T>(ostream&, const treebasic<T>&);
@@ -27,19 +30,23 @@ protected:
     };
     nodo* root;
     //funzioni
-    bool parser(string::iterator, string::iterator)const;
+    bool parser(string::iterator, string::iterator)const;//constrolla che la stringa in input sia grammaticalmente corretta
+    //il primo e secondo valore sono rispettivamente il termine a sinistra e destra dei rispettivi operatori. Il terzo si
+    //riferisce al nodo padre da impostare ad ogni ricorsione
     static nodo* somma(nodo*, nodo*, nodo* =0);
     static nodo* differenza(nodo*, nodo*, nodo* =0);
     static nodo* moltiplicazione(nodo*, int&, nodo * =0);
     static nodo* divisione(nodo*, int&, nodo* =0);
     static int n_nodes(nodo*);//conta i nodi dell'albero
     static void nodes(T[], nodo*, int&);//inserisce i vari campi info nell'array
+    static bool controlla_percorso(string &);//constrolla se la stringa formata da 0 e 1 per la ricerca di un elemento si corretta
 private:
     //funzioni ausiliarie per il costruttore
-    nodo* constrRic(const T[], int, string::iterator, int&, nodo* =0);
+    nodo* constrRic(const T[], int, string::iterator, int&, nodo* =0);//funzione ricorsica del costruttore
+    //prende in input un carattere, se questo e' '(' ritorna la sua ')' bilanciata
     int balance_brackets(string::iterator, string::iterator)const;
     //altre funzioni ausialiarie
-    nodo* copia(nodo *, nodo* =0)const;
+    nodo* copia(nodo *, nodo* =0)const;//effettua una copia profonda dell'albero
     void distruggi(nodo*);//non si è deciso di implementare il distruttore di nodo per evitare
                             //di distruggere l'intero albero distruggendo un solo nodo
 public:
@@ -52,15 +59,15 @@ public:
      * Il nodo foglia è del tipo: (*,_,_), dove "_" indica il nodo vuoto.
      * Es: l'albero (5,(2,_,(1,_,_)),_) sara' (*,(*,_,(*,_,_)),_). Il costruttire vuole
      * per parametri l'array di valori, la sua dimensione e la stringa con la struttura*/
-    treebasic(T[], int, string&);//viene costruito almeno un nodo
+    treebasic(T[], int, string &);//viene costruito almeno un nodo
     treebasic(const treebasic& t): root(copia(t.root)) {}// costruttore di copia profondo
     ~treebasic();// distruttore profondo
     treebasic& operator=(const treebasic&);//assegnazione profonda
-    virtual void add(T)=0;//cerca di tenere  l'albero bilanciato
-    virtual void remove(string)=0;//rimuove l'oggetto indicato da un percorso
-    virtual void remove(T)=0;//rimuove l'oggetto cercandolo
-    virtual T search(string)const=0;
-    virtual T search (T)const=0;
+    virtual void add(const T)=0;//cerca di tenere  l'albero bilanciato
+    virtual T remove(string)=0;//rimuove l'oggetto indicato da un percorso
+    virtual T remove(const T)=0;//rimuove l'oggetto cercandolo
+    virtual T search(string)const=0;//trova l'oggetto indicato dal percorso
+    virtual T search (const T)const=0;//trova l'oggetto indicato in input
 
     static string tree_to_string(nodo*);//stampa la struttura dell'albero
 };
@@ -78,7 +85,9 @@ template <class T>
 typename treebasic<T>::nodo* treebasic<T>::copia(nodo * n, nodo* father) const{
     if(!n)
         return 0;
-    nodo* x=new nodo(n->info, father, copia(n->left, x), copia(n->right, x));
+    nodo* x=new nodo(n->info, father);
+    x->left=copia(n->left, x);
+    x->right=copia(n->right, x);
     return x;
 }
 
@@ -161,16 +170,19 @@ typename treebasic<T>::nodo* treebasic<T>::constrRic(const T A[], int size, stri
         T val=A[k];
         k++;
         i+=3;
+        x=new nodo(val, father);
         int left=balance_brackets(i, i);
         int right=balance_brackets(i+left+2, i);
         if(!left && !right)//caso base
-            return new nodo(val, father, 0, 0);
+            return x;
         if(!left && right)
-            x=new nodo(val, father, 0, constrRic(A, size, i+left+2, k, x));
+            x->right=constrRic(A, size, i+left+2, k, x);
         else if(left && !right)
-            x=new nodo(val, father, constrRic(A, size, i, k, x));
-        else
-            x=new nodo(val, father, constrRic(A, size, i, k, x), constrRic(A, size, i+left+2, k, x));
+            x->left=constrRic(A, size, i, k, x);
+        else{
+            x->left=constrRic(A, size, i, k, x);
+            x->right=constrRic(A, size, i+left+2, k, x);
+        }
     }
     else
         //throw(0);
@@ -207,40 +219,68 @@ treebasic<T>& treebasic<T>::operator=(const treebasic<T>& t){
 template <class T>
 typename treebasic<T>::nodo* treebasic<T>::somma(nodo* a, nodo* b, nodo *father){
     nodo* x=0;
-    if(!a && b)
-        x=new nodo(b->info, father, somma(a, b->left, x), somma(a, b->right, x));
-    else if(a && !b)
-        x=new nodo(a->info, father, somma(a->left, b, x), somma(a->right, b, x));
-    else if(a && b)
-        x=new nodo((a->info+b->info), father, somma(a->left, b->left, x), somma(a->right, b->right, x));
+    if(!a && b){
+        x=new nodo(b->info, father);
+        x->left=somma(a, b->left, x);
+        x->right=somma(a, b->right, x);
+    }
+    else if(a && !b){
+        x=new nodo(a->info, father);
+        x->left=somma(a->left, b, x);
+        x->right=somma(a->right, b, x);
+    }
+    else if(a && b && !a->left && a->right && !b->left && !b->right && ((a->info*(-1))==b->info))
+        return x;
+    else if(a && b){
+        x=new nodo((a->info+b->info), father);
+        x->left=somma(a->left, b->left, x);
+        x->right=somma(a->right, b->right, x);
+    }
     return x;
 }
 
 template <class T>
 typename treebasic<T>::nodo* treebasic<T>::differenza(nodo* a, nodo* b, nodo *father){
     nodo* x=0;
-    if(!a && b)
-        x=new nodo(((b->info)*(-1)), father, differenza(a, b->left, x), differenza(a, b->right, x));
-    else if(a && !b)
-        x=new nodo(((a->info)*(-1)), father, differenza(a->left, b, x), differenza(a->right, b, x));
-    else if(a && b)
-        x=new nodo((a->info-b->info), father, differenza(a->left, b->left, x), differenza(a->right, b->right, x));
+    if(!a && b){
+        x=new nodo((b->info*(-1)), father);
+        x->left=differenza(a, b->left, x);
+        x->right=differenza(a, b->right, x);
+    }
+    else if(a && !b){
+        x=new nodo(a->info, father);
+        x->left=differenza(a->left, b, x);
+        x->right=differenza(a->right, b, x);
+    }
+    else if(a && b && !a->left && a->right && !b->left && !b->right && (a->info==b->info))
+        return x;
+    else if(a && b){
+        x=new nodo((a->info+b->info), father);
+        x->left=differenza(a->left, b->left, x);
+        x->right=differenza(a->right, b->right, x);
+    }
     return x;
 }
 
 template <class T>
 typename treebasic<T>::nodo* treebasic<T>::moltiplicazione(nodo* a, int& k, nodo* father){
     nodo* x=0;
-    if(a)
-        x=new nodo((a->info*k), father, moltiplicazione(a->left, k, x), moltiplicazione(a->right, k, x));
+    if(a){
+        x=new nodo((a->info*k), father);
+        x->left=moltiplicazione(a->left, k, x);
+        x->right=moltiplicazione(a->right, k, x);
+    }
     return x;
 }
 
 template <class T>
 typename treebasic<T>::nodo* treebasic<T>::divisione(nodo* a, int& k, nodo* father){
     nodo* x=0;
-    if(a)
-        x=new nodo((a->info/k), father, divisione(a->left, k, x), divisione(a->right, k, x));
+    if(a){
+        x=new nodo((a->info7k), father);
+        x->left=divisione(a->left, k, x);
+        x->right=divisione(a->right, k, x);
+    }
     return x;
 }
 
@@ -259,6 +299,15 @@ void treebasic<T>::nodes(T A[], nodo* n, int &k){
         nodes(A, n->left, k);
         nodes(A, n->right, k);
     }
+}
+
+template <class T>
+bool treebasic<T>::controlla_percorso(string &s){
+    string::iterator begin=s.begin(), end=s.end();
+    for(; begin!=end; begin++)
+        if(*begin!='0' && *begin!='1')
+            return false;
+    return true;
 }
 
 template <class T>
