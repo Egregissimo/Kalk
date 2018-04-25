@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>                            /* reverse */
 #include <math.h>                               /* pow */
 
 class bin{
@@ -20,6 +21,8 @@ class bin{
 private:
     std::vector<bool> intera;
     std::vector<bool> frazionaria;
+
+    bool segno;                                   /* 1 negativo 0 positivo */
 public:
     //bin();
     bin(int = 1);                                 /* costruttore che dato in input un valore base 10 lo trasforma in base 2 */
@@ -33,6 +36,7 @@ public:
     /* metodi ausiliari */
     void stampa() const;
     double base10() const;
+    std::string base16() const;
 };
 
 bin operator+ (const bin&, const bin&);
