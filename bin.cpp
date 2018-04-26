@@ -1,5 +1,23 @@
 #include "bin.h"
+bin::bin(int d){
+    if(d>=0)
+        segno = 0;
+    else{
+        segno = 1;
+        d = -1 * d;
+    }
 
+    int quoziente = d;
+    bool resto = 0;
+
+    while(quoziente != 0){
+        resto = quoziente%2;
+        intera.push_back(resto);
+        quoziente = quoziente/2;
+    }
+    std::reverse(intera.begin(), intera.end());
+    frazionaria.push_back(0);
+}
 bin::bin(double d){
     if(d>=0)
         segno = 0;
@@ -18,16 +36,8 @@ bin::bin(double d){
         intera.push_back(resto);
         quoziente = quoziente/2;
     }
-    std::vector<bool> tmp;
-    quoziente = intera.size();
-    for(unsigned int it = 0; it<quoziente; it++){
-        resto = intera.back();
-        intera.pop_back();
-        tmp.push_back(resto);
-    }
 
-    /* VEDERE SE IL VECTOR tmp CREA GARDBAGE */
-    intera = tmp;
+    std::reverse(intera.begin(), intera.end());
 
     if(frazionario == 0)
         frazionaria.push_back(0);
@@ -44,35 +54,6 @@ bin::bin(double d){
         }
     }
 }
-bin::bin(int d){
-    if(d>=0)
-        segno = 0;
-    else{
-        segno = 1;
-        d = -1 * d;
-    }
-
-    int quoziente = d;
-    bool resto = 0;
-
-    while(quoziente != 0){
-        resto = quoziente%2;
-        intera.push_back(resto);
-        quoziente = quoziente/2;
-    }
-    std::vector<bool> tmp;
-    quoziente = intera.size();
-    for(unsigned int it = 0; it<quoziente; it++){
-        resto = intera.back();
-        intera.pop_back();
-        tmp.push_back(resto);
-    }
-
-    /* VEDERE SE IL VECTOR tmp CREA GARDBAGE */
-    intera = tmp;
-    frazionaria.push_back(0);
-}
-
 
 void bin::stampa() const{
     if(segno)
@@ -149,6 +130,9 @@ std::string bin::base16() const{
     return out;
 }
 
+unsigned int bin::getDimIntera() const { return intera.size(); }
+unsigned int bin::getDimFrazionaria() const { return frazionaria.size(); }
+
 bin operator+ (const bin& bin1, const bin& bin2){
     double a = bin1.base10();
     double b = bin2.base10();
@@ -200,4 +184,23 @@ bool operator>= (const bin& bin1, const bin& bin2){
     double b = bin2.base10();
 
     return a>=b;
+}
+
+string to_string(const bin& bin1){
+    std::string out;
+
+    if(bin1.segno)
+        out = "-";
+    else
+        out = "+";
+
+    for(int i=0; i<bin1.intera.size(); i++)
+        out = out + std::to_string(bin1.intera[i]);
+
+    out = out + ".";
+
+    for(int i=0; i<bin1.frazionaria.size(); i++)
+        out = out + std::to_string(bin1.frazionaria[i]);
+
+    return out;
 }

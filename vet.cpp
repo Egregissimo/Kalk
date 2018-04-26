@@ -4,6 +4,14 @@ vet::vet(int dim1, int dim2){
     r=dim1; c=dim2;
     v_m = new int[r*c];
 }
+vet::vet(int* st, int dim1, int dim2){
+    r=dim1; c=dim2;
+    v_m = new int[r*c];
+
+    for(int i=0; i<r; i++)
+        for(int j=0; j<c; j++)
+            *(v_m+(j+(i*c))) = *(st+(j+(i*c)));
+}
 void vet::insert(int val, int i, int j){
     if((i>=0) && (i<r) && (j>=0) && (j<c))
         *(v_m+(j+(i*c))) = val;
@@ -59,28 +67,55 @@ void vet::transposed(){
     int ttmp = c;
     c = r; r = ttmp;
 }
+int vet::norma() const{
+    int out = 0;
+    if((r == 1) || (c == 1)){
+        /* NORMA VETTORE */
+        for(int i=0; i<r*c; i++)
+             out = pow(*(v_m+i), 2) + out;
+        out = sqrt(out);
+    }
+    else{
+        /* NORMA VETTORE */
+        int max;
+        for(int j=0; j<1; j++)
+            for(int i=0; i<r; i++)
+                out = abs(*(v_m+(j+(i*c)))) + out;
+
+        for(int j=1; j<c; j++){
+            max = 0;
+            for(int i=0; i<r; i++){
+                max = abs(*(v_m+(j+(i*c)))) + max;
+            }
+            if(max >= out)
+                out = max;
+        }
+    }
+    return out;
+}
 
 /* ------------------------------------------------------ */
 
 int* vet::operator [](size_t i) const { return (v_m + (c*i)); }
 vet operator +(const vet& vet1, const vet& vet2){
     if(vet1.sameSize(vet2)){
-        vet out(vet1.getRow(),vet1.getColumn());
-        for(int i=0; i<vet1.getRow(); i++)
-            for(int j=0; j<vet1.getColumn(); j++)
-               //out.insert((vet1.getVal(i,j) + vet2.getVal(i,j)), i, j);
-               out[i][j] = vet1.getVal(i,j) + vet2.getVal(i,j);
+        vet out(vet1.r,vet1.c);
+        for(int i=0; i<vet1.r; i++)
+            for(int j=0; j<vet1.c; j++)
+                out[i][j] = vet1[i][j] + vet2[i][j];
 
         return out;
     }
+    else
+        throw eccezione();
 }
 vet operator -(const vet& vet1, const vet& vet2){
     if(vet1.sameSize(vet2)){
-        vet out(vet1.getRow(),vet1.getColumn());
-        for(int i=0; i<vet1.getRow(); i++)
-            for(int j=0; j<vet1.getColumn(); j++)
-               //out.insert((vet1.getVal(i,j) - vet2.getVal(i,j)), i, j);
-                out[i][j] = vet1.getVal(i,j) - vet2.getVal(i,j);
+        vet out(vet1.r,vet1.c);
+        for(int i=0; i<vet1.r; i++)
+            for(int j=0; j<vet1.c; j++)
+                out[i][j] = vet1[i][j] - vet2[i][j];
+
         return out;
     }
     else
@@ -88,14 +123,14 @@ vet operator -(const vet& vet1, const vet& vet2){
 }
 vet vet::operator *(const vet& vet2){
     if(this->isMoltiplication(vet2)){
-        vet out(this->getRow(),vet2.getColumn());
+        vet out(this->r,vet2.c);
         int valore=0;
 
-        for(int i=0; i<this->getRow(); i++){
-            for(int jj=0; jj<vet2.getColumn(); jj++){
+        for(int i=0; i<this->r; i++){
+            for(int jj=0; jj<vet2.c; jj++){
 
-                for(int j=0; j<this->getColumn(); j++)
-                    valore = valore + (this->getVal(i,j) * vet2.getVal(j,jj));
+                for(int j=0; j<this->c; j++)
+                    valore = valore + ((*this)[i][j] * vet2[j][jj]);
 
                 //out.insert(valore, i, jj);
                 out[i][jj] = valore;
@@ -108,20 +143,20 @@ vet vet::operator *(const vet& vet2){
         throw eccezione();
 }
 vet operator* (int k, const vet& vet1){
-    vet out(vet1.getRow(),vet1.getColumn());
-    for(int i=0; i<vet1.getRow(); i++)
-        for(int j=0; j<vet1.getColumn(); j++)
+    vet out(vet1.r,vet1.c);
+    for(int i=0; i<vet1.r; i++)
+        for(int j=0; j<vet1.c; j++)
             out[i][j] = k * vet1[i][j];
     return out;
 }
 
 string to_string(const vet& vet1){
     string out;
-    for(int i=0; i<vet1.getRow(); i++){
-        for(int j=0; j<vet1.getColumn()-1; j++){
+    for(int i=0; i<vet1.r; i++){
+        for(int j=0; j<vet1.c-1; j++){
             out = out + std::to_string(vet1[i][j]) + ",";
         }
-        out = out + std::to_string(vet1[i][vet1.getColumn()-1]);
+        out = out + std::to_string(vet1[i][vet1.c-1]);
         out = out + ";";
     }
     return out;
@@ -141,3 +176,5 @@ bool operator== (const vet& vet1, const vet& vet2){
     }
     return false;
 }
+bool operator< (const vet& vet1, const vet& vet2){ return vet1.norma()<vet2.norma(); }
+bool operator<= (const vet& vet1, const vet& vet2){ return vet1.norma()<=vet2.norma(); }
