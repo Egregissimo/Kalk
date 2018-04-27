@@ -4,16 +4,17 @@
 #include "eccezione.h"
 #include <iostream>
 #include <string>
-#include <math.h>                               /* pow - sqrt - abs */
+#include <math.h>                                   /* pow - sqrt - abs */
 class vet{
     friend vet operator+(const vet&, const vet&);
     friend vet operator-(const vet&, const vet&);
     friend vet operator/(const vet&, const vet&);
     friend vet operator*(int, const vet&);
+
     friend bool operator== (const vet&, const vet&);
     friend bool operator< (const vet&, const vet&);
     friend bool operator<= (const vet&, const vet&);
-    friend string to_string(const vet&);         /* per ogni tipo T la funzione "string to_string(const T&)" converte in stringa la classe per stampare poi sul albero */
+    friend string to_string(const vet&);            /* per ogni tipo T la funzione "string to_string(const T&)" converte in stringa la classe per stampare poi sul albero */
 
 private:
     int r, c;
@@ -33,6 +34,7 @@ public:
 
     /* Metodi ausiliari per metodi di calcolo   -------------------------- */
     bool isMoltiplication(vet tmp) const;
+    bool isQuadrata(const vet&) const;
     bool sameSize(vet tmp) const;
     void transposed();
     int norma() const;
@@ -47,8 +49,8 @@ vet operator- (const vet&, const vet&);         /* due matrici sono sottrabili s
 vet operator* (int, const vet&);                /* moltiplicazione di uno scalare per una matrice */
 vet operator/ (const vet&, const vet&);         /* [A]*[B]-1 o [B]-1 * [A]. */
 bool operator== (const vet&, const vet&);       /* ritorna true sse dim1 == dim2 e se vet1[i][j] == vet2[i][j] */
-bool operator< (const vet&, const vet&);
-bool operator<= (const vet&, const vet&);
+bool operator< (const vet&, const vet&);        /* basata sulla norma, vero sse norma1 < norma2 */
+bool operator<= (const vet&, const vet&);       /* basata sulla norma, vero sse norma1 <= norma2 */
 
 string to_string(const vet&);                   /* per ogni tipo T la funzione "string to_string(const T&)" converte in stringa la classe in questo modo:
                                                    1,2,3 ; 4,5,6 dove le ',' separano le celle delle colonne e il ';' le righe */

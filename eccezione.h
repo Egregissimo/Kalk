@@ -7,10 +7,11 @@ using std::string;
 
 class eccezione{
 private:
-    string classe;
     int id;
+    string classe;
+    string significato;
 public:
-    eccezione(string cl="NA", int num=0);
+    eccezione(int =0);
 };
 
 #endif // EXCEPTION_H

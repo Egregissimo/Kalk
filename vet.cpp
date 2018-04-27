@@ -12,6 +12,8 @@ vet::vet(int* st, int dim1, int dim2){
         for(int j=0; j<c; j++)
             *(v_m+(j+(i*c))) = *(st+(j+(i*c)));
 }
+
+
 void vet::insert(int val, int i, int j){
     if((i>=0) && (i<r) && (j>=0) && (j<c))
         *(v_m+(j+(i*c))) = val;
@@ -38,11 +40,8 @@ void vet::stampa() const{
     }
 }
 
-/* ------------------------------------------------------ */
-
-/* ------------------------------------------------------ */
-
 bool vet::isMoltiplication(vet tmp) const{ return c == tmp.r; }
+bool vet::isQuadrata(const vet& vet2) const { return r==vet2.r && c==vet2.c; }
 bool vet::sameSize(vet tmp) const{
     if((r == tmp.r) && (c == tmp.c))
         return true;
@@ -76,7 +75,7 @@ int vet::norma() const{
         out = sqrt(out);
     }
     else{
-        /* NORMA VETTORE */
+        /* NORMA MATRICE */
         int max;
         for(int j=0; j<1; j++)
             for(int i=0; i<r; i++)
