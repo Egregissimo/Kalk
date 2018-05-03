@@ -26,5 +26,21 @@ eccezione::eccezione(int num){
     default:
         break;
     }
-
 }
+
+errore_vet::errore_vet(string mex, string std_mex){ messaggio = mex; standard_mex = std_mex; }
+std::ostream& operator<<(std::ostream& os, const errore_vet& er){
+    os<<er.messaggio<<std::endl;
+    return os;
+}
+errore_somma::errore_somma(string mex): errore_vet(mex,"meessaggio standar") {}
+void errore_somma::stampa_errore() const { std::cout<<messaggio<<std::endl; }
+
+errore_sottrazione::errore_sottrazione(string mex): errore_vet(mex,"messaggio standar") {}
+void errore_sottrazione::stampa_errore() const { std::cout<<messaggio<<std::endl; }
+
+errore_prodotto::errore_prodotto(string mex): errore_vet(mex,"messaggio standar") {}
+void errore_prodotto::stampa_errore() const { std::cout<<messaggio<<std::endl; }
+
+errore_divisione::errore_divisione(string mex): errore_vet(mex,"messaggio standar") {}
+void errore_divisione::stampa_errore() const { std::cout<<messaggio<<std::endl; }
