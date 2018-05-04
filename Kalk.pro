@@ -19,7 +19,9 @@ SOURCES += \
     raz.cpp \
     vet.cpp \
     eccezione.cpp \
-    bin.cpp
+    bin.cpp \
+    treebasic.cpp \
+    treesearch.cpp
 
 HEADERS += \
     treebasic.h \
@@ -27,4 +29,5 @@ HEADERS += \
     vet.h \
     treesearch.h \
     eccezione.h \
-    bin.h
+    bin.h \
+    tipo.h

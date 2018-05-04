@@ -2,7 +2,7 @@
 #define RAZ_H
 #include <cmath>
 #include <iostream>
-#include <string>
+#include "tipo.h"
 using std::string;
 using std::to_string;
 using std::ostream;
@@ -13,7 +13,7 @@ using std::floor;
 using std::pow;
 using std::cbrt;
 
-class raz{
+class raz: public tipo{
     friend raz operator+(const raz&, const raz&);
     friend raz operator-(const raz&, const raz&);
     friend raz operator*(const raz&, const raz&);
@@ -41,6 +41,14 @@ public:
     static raz sqrt(const raz&);
     static raz cbrt(const raz&);
     raz riduzione() const;
+
+    raz* somma(tipo*);
+    raz* differenza(tipo*);
+    raz* moltiplicazione(int);
+    raz* divisione(int);
+    bool uguale(tipo*)const;
+    bool min(tipo*)const;
+    string to_stringa()const;
 };
 
 raz operator+(const raz&, const raz&);

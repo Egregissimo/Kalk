@@ -113,6 +113,38 @@ raz raz::riduzione()const{
     return x;
 }
 
+raz* raz::somma(tipo* b){
+    raz *b1=static_cast<raz*>(b);
+    return new raz(((*this)+(*b1)));
+}
+
+raz* raz::differenza(tipo* b){
+    raz*b1=static_cast<raz*>(b);
+    return new raz(((*this)-(*b1)));
+}
+
+raz* raz::moltiplicazione(int b){
+    return new raz(((*this)*b));
+}
+
+raz* raz::divisione(int b){
+    return new raz(((*this)/b));
+}
+
+bool raz::uguale(tipo* b) const{
+    raz* b1=static_cast<raz*>(b);
+    return (*this)==(*b1);
+}
+
+bool raz::min(tipo* b) const{
+    raz*b1=static_cast<raz*>(b);
+    return (*this)<(*b1);
+}
+
+string raz::to_stringa()const{
+    return to_string(*this);
+}
+
 raz operator+(const raz& r1, const raz& r2){
     if(!r1.num)
         return r2;
@@ -158,11 +190,11 @@ bool operator!=(const raz& r1, const raz& r2){
 }
 
 bool operator<=(const raz& r1, const raz& r2){
-    return (r1.num*r2.den<=r2.num*r2.den);
+    return (r1.num*r2.den<=r2.num*r1.den);
 }
 
 bool operator<(const raz& r1, const raz& r2){
-    return (r1.num*r2.den<r2.num*r2.den);
+    return (r1.num*r2.den<r2.num*r1.den);
 }
 
 ostream& operator<<(ostream& os, const raz& r){

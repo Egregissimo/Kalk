@@ -1,336 +1,73 @@
 #ifndef TREEBASIC_H
 #define TREEBASIC_H
+#include <vector>
+#include <typeinfo>
 #include "raz.h"
 //#include "vet.h"
+using std::vector;
 
-template <class T> class treebasic;
-
-template <class T>
-ostream& operator<<(ostream&, const treebasic<T>&);
-
-template <class T>
-string to_string(const treebasic<T>&);
-
-/*per ogni tipo T:
- *  dev'essere presente la funzione "string to_string(const T&)" esterna alla classe
- * l'operatore '=='
- * l'operatore di moltiplicazione per un intero*/
-template <class T>
 class treebasic{
-     friend ostream& operator<< <T>(ostream&, const treebasic<T>&);
-     friend string to_string <T>(const treebasic<T>&);
+     friend ostream& operator<<(ostream&, const treebasic&);
+     friend string to_string(const treebasic&);
 protected:
     class nodo{
     public:
+        tipo* info;//campo info polimorfo
         nodo* father, *left, *right;
-        T info;
         nodo(): father(0), left(0), right(0) {}
-        nodo(const T& val, nodo* f=0, nodo* l=0, nodo* r=0): info(val), father(f), left(l), right(r) {}
-        static string stampa(nodo*);
+        nodo(tipo* val, nodo* f=0, nodo* l=0, nodo* r=0): info(val), father(f), left(l), right(r) {}
+        static string stampa(nodo*);//stampa il nodo corrente e il suo sottoalbero
     };
     nodo* root;
     //funzioni
-    bool parser(string::iterator, string::iterator)const;//constrolla che la stringa in input sia grammaticalmente corretta
+    static bool parser(string::iterator, string::iterator);//constrolla che la stringa in input sia grammaticalmente corretta
+    //prende in input un carattere, se questo e' '(' ritorna la sua ')' bilanciata
+    static int balance_brackets(string::iterator, string::iterator);
+    static unsigned int n_nodes_stringa(string::iterator);//ritorna il numero di nodi di una stringa
     //il primo e secondo valore sono rispettivamente il termine a sinistra e destra dei rispettivi operatori. Il terzo si
     //riferisce al nodo padre da impostare ad ogni ricorsione
     static nodo* somma(nodo*, nodo*, nodo* =0);
     static nodo* differenza(nodo*, nodo*, nodo* =0);
-    static nodo* moltiplicazione(nodo*, int&, nodo * =0);
-    static nodo* divisione(nodo*, int&, nodo* =0);
+    static nodo* moltiplicazione(nodo*, int, nodo * =0);
+    static nodo* divisione(nodo*, int, nodo* =0);
     static int n_nodes(nodo*);//conta i nodi dell'albero
-    static void nodes(T[], nodo*, int&);//inserisce i vari campi info nell'array
-    static bool controlla_percorso(string &);//constrolla se la stringa formata da 0 e 1 per la ricerca di un elemento si corretta
+    static vector<tipo*> nodes(nodo*);//ritorna un vettore con i campi info del sottoalbero del nodo letti in modo infisso
+    static bool controlla_percorso(string &);//constrolla se la stringa per la ricerca di un elemento sia formata esclusivamente da 0 e 1
+    static bool controlla_input(vector<tipo*>&, string&);//constrolla se gli input del costruttore sono corretti
+    static string tree_to_string(nodo*);//stampa la struttura dell'albero prendendo il nodo radice
 private:
-    //funzioni ausiliarie per il costruttore
-    nodo* constrRic(const T[], int, string::iterator, int&, nodo* =0);//funzione ricorsica del costruttore
-    //prende in input un carattere, se questo e' '(' ritorna la sua ')' bilanciata
-    int balance_brackets(string::iterator, string::iterator)const;
     //altre funzioni ausialiarie
     nodo* copia(nodo *, nodo* =0)const;//effettua una copia profonda dell'albero
     void distruggi(nodo*);//non si è deciso di implementare il distruttore di nodo per evitare
                             //di distruggere l'intero albero distruggendo un solo nodo
+    //funzioni ausiliarie per il costruttore
+    nodo* constrRic(string::iterator, vector<tipo*>::iterator&, nodo* =0);//funzione ricorsica del costruttore
+
 public:
     treebasic(): root(0) {}
     /* la costruzione di un albero sara' formato dalla sua struttura espressa con
      * una stringa controllata da un parser e da un array di elementi da inserire
      * nell'albero. Gli elementi devo essere inseriti secondo l'ordine PREFISSO.
-     * la sringa sara' del tipo: (*, Ts, Td) dove "*" indica che sara' il valore
+     * la stringa sara' del tipo: (*, Ts, Td) dove "*" indica che sara' il valore
      * del nodo, mentre Ts e Td sono i sottoalberi sinistro e destro rispettivamente.
      * Il nodo foglia è del tipo: (*,_,_), dove "_" indica il nodo vuoto.
      * Es: l'albero (5,(2,_,(1,_,_)),_) sara' (*,(*,_,(*,_,_)),_). Il costruttire vuole
      * per parametri l'array di valori, la sua dimensione e la stringa con la struttura*/
-    treebasic(T[], int, string &);//viene costruito almeno un nodo
+    treebasic(vector<tipo*>, string &);//viene costruito almeno un nodo
     treebasic(const treebasic& t): root(copia(t.root)) {}// costruttore di copia profondo
     ~treebasic();// distruttore profondo
     treebasic& operator=(const treebasic&);//assegnazione profonda
-    virtual void add(const T)=0;//cerca di tenere  l'albero bilanciato
-    virtual T remove(string)=0;//rimuove l'oggetto indicato da un percorso
-    virtual T remove(const T)=0;//rimuove l'oggetto cercandolo
-    virtual T search(string)const=0;//trova l'oggetto indicato dal percorso
-    virtual T search (const T)const=0;//trova l'oggetto indicato in input
 
-    static string tree_to_string(nodo*);//stampa la struttura dell'albero
+    virtual void add(tipo*)=0;//cerca di tenere  l'albero bilanciato
+    virtual tipo* remove(string)=0;//rimuove l'oggetto indicato da un percorso
+    virtual tipo* remove(tipo*)=0;//rimuove l'oggetto cercandolo
+    virtual tipo* search(string)const=0;//trova l'oggetto indicato dal percorso
+    virtual tipo* search (tipo*)const=0;//trova l'oggetto indicato in input
+
+    string struttura_tree()const;//stampa la struttura dell'albero
 };
 
-//IMPLEMENTAZIONE FUNZIONI TEMPLATE
-
-template <class T>
-string treebasic<T>::nodo::stampa(treebasic<T>::nodo* n){
-    if(!(n))
-        return "_";
-    return "('"+to_string(n->info)+"',"+stampa(n->left)+","+stampa(n->right)+")";
-}
-
-template <class T>
-typename treebasic<T>::nodo* treebasic<T>::copia(nodo * n, nodo* father) const{
-    if(!n)
-        return 0;
-    nodo* x=new nodo(n->info, father);
-    x->left=copia(n->left, x);
-    x->right=copia(n->right, x);
-    return x;
-}
-
-template <class T>
-void treebasic<T>::distruggi(treebasic<T>::nodo* n){
-    if(n){
-        distruggi(n->left);
-        distruggi(n->right);
-    }
-}
-
-//PRE={la stringa e' corretta}
-template <class T>
-int treebasic<T>::balance_brackets(string::iterator i, string::iterator end) const{
-    if(*i=='_')
-        return 0; 
-    int k=1, s=1;
-    if(end==i)
-        end=i-1;
-
-    for(; k>0 && i+s!=end; s++)
-        if(*(i+s)=='(')
-            k++;
-        else if(*(i+s)==')')
-            k--;
-    if(k)
-        return -1;
-    return s-1;
-}
-//POST={ritorna il numero di passi fino alla posizione della ')' che chiude la parentesi della PRE}
-
-template <class T>
-bool treebasic<T>::parser(string::iterator begin, string::iterator end)const{
-    if(begin==end)
-        return true;
-    if(*begin!='(' || *++begin!='*' || *++begin!=',')
-        return false;
-    if(*(begin+1)=='_' && *(begin+2)==',' && *(begin+3)=='_' && *(begin+4)==')')
-        return true;
-
-    begin++;
-    bool a=true, b=true;
-    string::iterator aux_end;
-
-    if(*(begin)!='_' && *(begin)!='(')
-        return false;
-    if(*(begin)=='('){
-        int l=balance_brackets(begin, end);
-        if(l==-1)
-            return false;
-        aux_end=begin+l+1;
-        if(*aux_end!=',')
-            return false;
-        a=parser(begin, aux_end);
-        begin=aux_end+1;
-    }
-    else
-        begin+=2;
-
-    if(*(begin)!='_' && *(begin)!='(')
-        return false;
-    if(*(begin)=='('){
-        int r=balance_brackets(begin, end);
-        if(r==-1)
-            return false;
-        aux_end=begin+r+1;
-        if(*aux_end!=')')
-            return false;
-        b=parser(begin, aux_end);
-    }
-
-    return a && b;
-}
-
-//PRE=(la stringa s e' corretta e l'albero contiene almeno un nodo, percio' il caso limite sara' "(*, _,_)")
-template <class T>
-typename treebasic<T>::nodo* treebasic<T>::constrRic(const T A[], int size, string::iterator i, int& k,  nodo* father){
-    nodo* x=0;
-    if(k<size){
-        T val=A[k];
-        k++;
-        i+=3;
-        x=new nodo(val, father);
-        int left=balance_brackets(i, i);
-        int right=balance_brackets(i+left+2, i);
-        if(!left && !right)//caso base
-            return x;
-        if(!left && right)
-            x->right=constrRic(A, size, i+left+2, k, x);
-        else if(left && !right)
-            x->left=constrRic(A, size, i, k, x);
-        else{
-            x->left=constrRic(A, size, i, k, x);
-            x->right=constrRic(A, size, i+left+2, k, x);
-        }
-    }
-    else
-        //throw(0);
-        cout<<"ERRORE16\n";
-    return x;
-}
-
-//PRE={size e' la lunghezza corretta di type}
-template <class T>
-treebasic<T>::treebasic(T type[], int size, string& s){
-    if(parser(s.begin(), s.end()) && size>0){
-        int k=0;//indice valore da analizzare nell'array
-        //constrRic costruisce l'albero prendendo in input l'array di valori,
-        //la sua lunghezza, un iteratore iniziale e finale della stringa, l'indice del
-        //valore gia' analizzato passasto per riferimento e il valore del noto padre(che inizialmente e' 0)
-        root=constrRic(type, size, s.begin(), k);
-    }
-    else
-        //throw(0);
-        cout<<"ERRORE10\n";
-}
-
-template <class T>
-treebasic<T>::~treebasic(){if(root) distruggi(root);}
-
-template <class T>
-treebasic<T>& treebasic<T>::operator=(const treebasic<T>& t){
-    if(this->root!=t.root){
-        delete root;
-        root=copia(t.root);
-    }
-}
-
-template <class T>
-typename treebasic<T>::nodo* treebasic<T>::somma(nodo* a, nodo* b, nodo *father){
-    nodo* x=0;
-    if(!a && b){
-        x=new nodo(b->info, father);
-        x->left=somma(a, b->left, x);
-        x->right=somma(a, b->right, x);
-    }
-    else if(a && !b){
-        x=new nodo(a->info, father);
-        x->left=somma(a->left, b, x);
-        x->right=somma(a->right, b, x);
-    }
-    else if(a && b && !a->left && a->right && !b->left && !b->right && ((a->info*(-1))==b->info))
-        return x;
-    else if(a && b){
-        x=new nodo((a->info+b->info), father);
-        x->left=somma(a->left, b->left, x);
-        x->right=somma(a->right, b->right, x);
-    }
-    return x;
-}
-
-template <class T>
-typename treebasic<T>::nodo* treebasic<T>::differenza(nodo* a, nodo* b, nodo *father){
-    nodo* x=0;
-    if(!a && b){
-        x=new nodo((b->info*(-1)), father);
-        x->left=differenza(a, b->left, x);
-        x->right=differenza(a, b->right, x);
-    }
-    else if(a && !b){
-        x=new nodo(a->info, father);
-        x->left=differenza(a->left, b, x);
-        x->right=differenza(a->right, b, x);
-    }
-    else if(a && b && !a->left && a->right && !b->left && !b->right && (a->info==b->info))
-        return x;
-    else if(a && b){
-        x=new nodo((a->info+b->info), father);
-        x->left=differenza(a->left, b->left, x);
-        x->right=differenza(a->right, b->right, x);
-    }
-    return x;
-}
-
-template <class T>
-typename treebasic<T>::nodo* treebasic<T>::moltiplicazione(nodo* a, int& k, nodo* father){
-    nodo* x=0;
-    if(a){
-        x=new nodo((a->info*k), father);
-        x->left=moltiplicazione(a->left, k, x);
-        x->right=moltiplicazione(a->right, k, x);
-    }
-    return x;
-}
-
-template <class T>
-typename treebasic<T>::nodo* treebasic<T>::divisione(nodo* a, int& k, nodo* father){
-    nodo* x=0;
-    if(a){
-        x=new nodo((a->info7k), father);
-        x->left=divisione(a->left, k, x);
-        x->right=divisione(a->right, k, x);
-    }
-    return x;
-}
-
-template <class T>
-int treebasic<T>::n_nodes(nodo* n){
-    if(!n)
-       return 0;
-   return 1+n_nodes(n->left)+n_nodes(n->right);
-}
-
-template <class T>
-void treebasic<T>::nodes(T A[], nodo* n, int &k){
-    if(n){
-        A[k]=n->info;
-        k++;
-        nodes(A, n->left, k);
-        nodes(A, n->right, k);
-    }
-}
-
-template <class T>
-bool treebasic<T>::controlla_percorso(string &s){
-    string::iterator begin=s.begin(), end=s.end();
-    for(; begin!=end; begin++)
-        if(*begin!='0' && *begin!='1')
-            return false;
-    return true;
-}
-
-template <class T>
-string treebasic<T>::tree_to_string(nodo * r){
-    if(!r)
-        return "_";
-    return "(*,"+tree_to_string(r->left)+","+tree_to_string(r->right)+")";
-}
-
-template <class T>
-ostream& operator <<(ostream& os, const treebasic<T>& t){
-    if(t.root)
-        os<<treebasic<T>::nodo::stampa(t.root);
-    return os;
-}
-
-template <class T>
-string to_string(const treebasic<T> &t){
-    if(t.root)
-        return  treebasic<T>::nodo::stampa(t.root);
-    return "";
-}
-
-//throw(0) c'e' quando la sintassi della stringa non e' corretta
+ostream& operator<<(ostream&, const treebasic&);
+string to_string(const treebasic&);
 
 #endif // TREEBASIC_H
