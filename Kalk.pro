@@ -21,7 +21,9 @@ SOURCES += \
     eccezione.cpp \
     bin.cpp \
     treebasic.cpp \
-    treesearch.cpp
+    treesearch.cpp \
+    eccezione1.cpp \
+    binarytree.cpp
 
 HEADERS += \
     treebasic.h \
@@ -30,4 +32,6 @@ HEADERS += \
     treesearch.h \
     eccezione.h \
     bin.h \
-    tipo.h
+    tipo.h \
+    eccezione1.h \
+    binarytree.h

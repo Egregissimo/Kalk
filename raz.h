@@ -17,7 +17,7 @@ class raz: public tipo{
     friend raz operator+(const raz&, const raz&);
     friend raz operator-(const raz&, const raz&);
     friend raz operator*(const raz&, const raz&);
-    friend raz operator/(const raz&, const raz&);
+    friend raz operator/(const raz&, const raz&) throw(domain_error);
     friend bool operator==(const raz&, const raz&);
     friend bool operator!=(const raz&, const raz&);
     friend bool operator<=(const raz&, const raz&);
@@ -28,8 +28,8 @@ private:
     int num, den;
     int degree(double);
 public:
-    raz(int n=0, int d=1);
-    raz(double n, double d=1);
+    raz(int n=0, int d=1) throw(domain_error);
+    raz(double n, double d=1) throw(domain_error);
     int getNum()const;
     int getDen()const;
     static raz inverso(const raz&);
@@ -54,7 +54,7 @@ public:
 raz operator+(const raz&, const raz&);
 raz operator-(const raz&, const raz&);
 raz operator*(const raz&, const raz&);
-raz operator/(const raz&, const raz&);
+raz operator/(const raz&, const raz&) throw(domain_error);
 bool operator==(const raz&, const raz&);
 bool operator!=(const raz&, const raz&);
 bool operator<=(const raz&, const raz&);

@@ -1,12 +1,12 @@
 #ifndef TIPO_H
 #define TIPO_H
-#include <string>
-using std::string;
+#include<eccezione1.h>
 
-//ogni tipo di dato da usare nell'alero deve includere
+//ogni tipo di dato da usare nell'albero deve includere
 //ed implementare questa classe
 class tipo{
 public:
+    virtual ~tipo() {}
     virtual tipo* somma(tipo*) =0;//somma tra due tipi
     virtual tipo* differenza(tipo*) =0;//differenza tra due tipi
     virtual tipo* moltiplicazione(int) =0;//moltiplicazione per uno scalare

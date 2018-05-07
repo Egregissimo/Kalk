@@ -31,7 +31,7 @@ protected:
     static nodo* moltiplicazione(nodo*, int, nodo * =0);
     static nodo* divisione(nodo*, int, nodo* =0);
     static int n_nodes(nodo*);//conta i nodi dell'albero
-    static vector<tipo*> nodes(nodo*);//ritorna un vettore con i campi info del sottoalbero del nodo letti in modo infisso
+    static vector<tipo*> nodes(nodo*);//ritorna un vettore con i campi info del sottoalbero del nodo letti in modo PREFISSO
     static bool controlla_percorso(string &);//constrolla se la stringa per la ricerca di un elemento sia formata esclusivamente da 0 e 1
     static bool controlla_input(vector<tipo*>&, string&);//constrolla se gli input del costruttore sono corretti
     static string tree_to_string(nodo*);//stampa la struttura dell'albero prendendo il nodo radice
@@ -46,22 +46,23 @@ private:
 public:
     treebasic(): root(0) {}
     /* la costruzione di un albero sara' formato dalla sua struttura espressa con
-     * una stringa controllata da un parser e da un array di elementi da inserire
+     * una stringa controllata da un parser e da un vector di elementi da inserire
      * nell'albero. Gli elementi devo essere inseriti secondo l'ordine PREFISSO.
      * la stringa sara' del tipo: (*, Ts, Td) dove "*" indica che sara' il valore
      * del nodo, mentre Ts e Td sono i sottoalberi sinistro e destro rispettivamente.
      * Il nodo foglia è del tipo: (*,_,_), dove "_" indica il nodo vuoto.
      * Es: l'albero (5,(2,_,(1,_,_)),_) sara' (*,(*,_,(*,_,_)),_). Il costruttire vuole
      * per parametri l'array di valori, la sua dimensione e la stringa con la struttura*/
-    treebasic(vector<tipo*>, string &);//viene costruito almeno un nodo
+    treebasic(vector<tipo*>, string &) throw(input_error);//viene costruito almeno un nodo
     treebasic(const treebasic& t): root(copia(t.root)) {}// costruttore di copia profondo
-    ~treebasic();// distruttore profondo
+    virtual ~treebasic();// distruttore profondo
     treebasic& operator=(const treebasic&);//assegnazione profonda
+
+    tipo* cerca(string)const throw(path_error);//trova l'oggetto indicato dal percorso
 
     virtual void add(tipo*)=0;//cerca di tenere  l'albero bilanciato
     virtual tipo* remove(string)=0;//rimuove l'oggetto indicato da un percorso
     virtual tipo* remove(tipo*)=0;//rimuove l'oggetto cercandolo
-    virtual tipo* search(string)const=0;//trova l'oggetto indicato dal percorso
     virtual tipo* search (tipo*)const=0;//trova l'oggetto indicato in input
 
     string struttura_tree()const;//stampa la struttura dell'albero

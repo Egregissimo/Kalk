@@ -45,7 +45,7 @@ void treesearch::merge_sort(vector<tipo*>& bar){
 }
 
 //PRE={gli input sono corretti}
-void treesearch::ordinaRic(vector<tipo*>& A, string::iterator begin, vector<tipo*>::iterator& it)const{
+void treesearch::ordinaRic(vector<tipo*>& A, string::iterator begin, vector<tipo*>::iterator& it){
     int size=A.size();
     if(size>1){
         begin+=3;
@@ -67,7 +67,7 @@ void treesearch::ordinaRic(vector<tipo*>& A, string::iterator begin, vector<tipo
     }
 }
 
-vector<tipo*> treesearch::ordina(vector<tipo*> t, string& s) const{
+vector<tipo*> treesearch::ordina(vector<tipo*> t, string& s) throw(input_error){
     if(controlla_input(t, s)){
         vector<tipo*> A=t;
         vector<tipo*> B(t.size());
@@ -77,18 +77,17 @@ vector<tipo*> treesearch::ordina(vector<tipo*> t, string& s) const{
         return B;
     }
     else
-        //throw(0);
-        cout<<"ERRORE8\n";
+        throw input_error();
 }
 
-string treesearch::crea_stringa(int n) const{
+string treesearch::crea_stringa(int n){
     if(!n)
         return "_";
     int q=(n+1)/2;
     return "(*,"+crea_stringa(q-1)+","+crea_stringa(n-q)+")";
 }
 
-treebasic::nodo* treesearch::minimum(nodo* r) const{
+treebasic::nodo* treesearch::minimum(nodo* r){
     if(!r)
         return 0;
     while(r->left)
@@ -96,7 +95,7 @@ treebasic::nodo* treesearch::minimum(nodo* r) const{
     return r;
 }
 
-treebasic::nodo* treesearch::successor(nodo* r) const{
+treebasic::nodo* treesearch::successor(nodo* r){
     if(!r)
         return 0;
     if(r->right)
@@ -110,9 +109,9 @@ treebasic::nodo* treesearch::successor(nodo* r) const{
     return y;
 }
 
-//PRE=(x e t non sono nulli)
+//PRE=(z non e' nullo)
 tipo* treesearch::removeIt(nodo* z){
-    nodo* x=0, *y=0;
+    nodo* x=0, *y=0;// y diventa il nodo da rimuovere, x quello da sitemare
     if(!z->left || !z->right)//se z ha 0 o 1 figli
         y=z;
     else//z ha 2 figli
@@ -129,14 +128,15 @@ tipo* treesearch::removeIt(nodo* z){
         y->father->left=x;
     else//in alternativa collega i vari nodi senza z
         y->father->right=x;
-    if(x!=z)
+    if(x!=z)//nel caso in cui abbia 2 figli
         z->info=y->info;
     tipo* a=z->info;
     return a;
 }
 
-void treesearch::add(tipo* a){
-    //addRic(this->root, a);
+void treesearch::add(tipo* a) throw(point_error){
+    if(!a)
+        throw point_error();
     nodo *y=0, *x=this->root;
     while(x){
         y=x;
@@ -153,11 +153,10 @@ void treesearch::add(tipo* a){
         y->right=new nodo(a, y);
 }
 
-tipo* treesearch::remove(string s){
+tipo* treesearch::remove(string s) throw(path_error){
     nodo* x=this->root;
     if(!controlla_percorso(s))
-        cout<<"ERRORE20\n";
-        //trow(0);
+        throw path_error();
     string::iterator begin=s.begin(), end=s.end();
     for(; x && begin!=end; begin++){
         if(*begin=='0')
@@ -165,47 +164,35 @@ tipo* treesearch::remove(string s){
         else
             x=x->right;
     }
-    if(x)
+    if(x){
         return removeIt(x);
+        delete x;
+    }
     cout<<"Elemento non trovato\n";
     return 0;
 }
 
-tipo* treesearch::remove(tipo* a){
+tipo* treesearch::remove(tipo* a) throw(point_error){
+    if(!a)
+        throw point_error();
     nodo* x=this->root;
     while(x && !(x->info->uguale(a)))
         if(a->min(x->info))
             x=x->left;
         else
             x=x->right;
-    if(x)
+    if(x){
         return removeIt(x);
+        delete x;
+    }
     cout<<"Elemento non trovato";
     return 0;
 }
 
-tipo* treesearch::search(string s)const{
+tipo* treesearch::search(tipo* a)const throw(point_error){
+    if(!a)
+        throw point_error();
     nodo* x=this->root;
-    if(!controlla_percorso(s) || !x)
-        cout<<"ERRORE20\n";
-        //trow(0);
-    string::iterator begin=s.begin(), end=s.end();
-    for(; x && begin!=end; begin++)
-        if(*begin=='0')
-            x=x->left;
-        else
-            x=x->right;
-    if(x)
-        return x->info;
-    cout<<"Elemento non trovato\n";
-    return 0;
-}
-
-tipo* treesearch::search(tipo* a)const{
-    nodo* x=this->root;
-    if(!x)
-        cout<<"ERRORE21\n";
-        //throw(0);
     while(x && !(x->info->uguale(a)))
         if(a->min(x->info))
             x=x->left;
@@ -245,7 +232,7 @@ treesearch& operator+(const treesearch& a, const treesearch& b){
     return *c;
 }
 
-treesearch &operator -(const treesearch &a, const treesearch &b){
+treesearch& operator -(const treesearch &a, const treesearch &b){
     treebasic::nodo* x=treebasic::differenza(a.root, b.root);
     string s=treebasic::tree_to_string(x);
     vector<tipo*> A=treebasic::nodes(x);
@@ -253,18 +240,20 @@ treesearch &operator -(const treesearch &a, const treesearch &b){
     return *c;
 }
 
-treesearch treesearch::operator *(int p){
-    treebasic::nodo* x=treebasic::moltiplicazione(this->root, p);
+treesearch& treesearch::operator *(int p){
+    treebasic::nodo* x=moltiplicazione(this->root, p);
     string s=treebasic::tree_to_string(x);
-    vector<tipo*> A=treebasic::nodes(x);
-    treesearch c(A, s);
-    return c;
+    vector<tipo*> A=nodes(x);
+    treesearch* c=new treesearch(A, s);
+    return *c;
 }
 
-treesearch treesearch::operator /(int p){
-    treebasic::nodo* x=treebasic::divisione(this->root, p);
+treesearch& treesearch::operator /(int p){
+    treebasic::nodo* x=divisione(this->root, p);
     string s=treebasic::tree_to_string(x);
-    vector<tipo*> A=treebasic::nodes(x);
-    treesearch c(A, s);
-    return c;
+    vector<tipo*> A=nodes(x);
+    treesearch* c=new treesearch(A, s);
+    return *c;
 }
+
+//throw(0) l'input e' un puntatore nullo

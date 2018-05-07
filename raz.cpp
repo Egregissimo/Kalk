@@ -7,9 +7,9 @@ int raz::degree(double d){
     return i;
 }
 
-raz::raz(int n, int d): num(n) {
+raz::raz(int n, int d) throw(domain_error): num(n){
     if(d==0)
-        throw(0);
+        throw domain_error();
     else if(num==0)
         den=1;
     else if(d<0){
@@ -21,9 +21,9 @@ raz::raz(int n, int d): num(n) {
     *this=riduzione();
 }
 
-raz::raz(double n, double d){
+raz::raz(double n, double d) throw(domain_error){
     if(d==0)
-        throw(0);
+        throw domain_error();
     if(n==0){
         num=0;
         den=1;
@@ -171,9 +171,9 @@ raz operator*(const raz& r1, const raz& r2){
     return t;
 }
 
-raz operator/(const raz& r1, const raz& r2){
+raz operator/(const raz& r1, const raz& r2) throw(domain_error){
     if(r2.num==0)
-        throw(0);
+        throw domain_error();
     raz t(r1.num*r2.den, r1.den*r2.num);
     t=t.riduzione();
     return t;
@@ -215,3 +215,5 @@ string to_string(const raz &r){
     else
         return to_string(r.num)+"/"+to_string(r.den);
 }
+
+//throw(0) denominatore nullo

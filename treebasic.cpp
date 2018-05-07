@@ -162,11 +162,13 @@ vector<tipo*> treebasic::nodes(nodo* n){
         a.push_back(n->info);
         return a;
     }
+    vector<tipo*> c;
+    c.push_back(n->info);
     a=nodes(n->left);
     b=nodes(n->right);
-    a.push_back(n->info);
     a.insert(a.end(), b.begin(), b.end());
-    return a;
+    c.insert(c.end(), a.begin(), a.end());
+    return c;
 }
 
 bool treebasic::controlla_percorso(string &s){
@@ -179,10 +181,11 @@ bool treebasic::controlla_percorso(string &s){
 
 bool treebasic::controlla_input(vector<tipo*>& v, string &s){
     vector<tipo*>::iterator begin=v.begin(), end=v.end();
+    int size=s.size();
     for(; begin!=end; begin++)
         if(typeid(**v.begin())!=typeid(**begin))
             return false;
-    return parser(s.begin(), s.end()) && (v.size()==n_nodes_stringa(s.begin()));
+    return parser(s.begin(), s.end()) && (v.size()==n_nodes_stringa(s.begin())) && (size==0 || size==5 || size%6==1);
 }
 
 string treebasic::tree_to_string(nodo * r){
@@ -205,6 +208,7 @@ void treebasic::distruggi(treebasic::nodo* n){
     if(n){
         distruggi(n->left);
         distruggi(n->right);
+        delete n;
     }
 }
 
@@ -229,7 +233,7 @@ treebasic::nodo* treebasic::constrRic(string::iterator i, vector<tipo*>::iterato
     return x;
 }
 
-treebasic::treebasic(vector<tipo*> type, string& s){
+treebasic::treebasic(vector<tipo*> type, string& s) throw(input_error){
     if(controlla_input(type, s)){
         //int k=0;//indice valore da analizzare nell'array
         //constrRic costruisce l'albero prendendo in input l'array di valori,
@@ -239,8 +243,7 @@ treebasic::treebasic(vector<tipo*> type, string& s){
         root=constrRic(s.begin(), it);
     }
     else
-        //throw(0);
-        cout<<"ERRORE10\n";
+        throw input_error();
 }
 
 treebasic::~treebasic(){if(root) distruggi(root);}
@@ -251,6 +254,22 @@ treebasic& treebasic::operator=(const treebasic& t){
         root=copia(t.root);
     }
     return *this;
+}
+
+tipo* treebasic::cerca(string s)const throw(path_error){
+    nodo* x=this->root;
+    if(!controlla_percorso(s) || !x)
+        throw path_error();
+    string::iterator begin=s.begin(), end=s.end();
+    for(; x && begin!=end; begin++)
+        if(*begin=='0')
+            x=x->left;
+        else
+            x=x->right;
+    if(x)
+        return x->info;
+    cout<<"Elemento non trovato\n";
+    return 0;
 }
 
 string treebasic::struttura_tree()const{
@@ -269,4 +288,5 @@ string to_string(const treebasic &t){
     return "";
 }
 
-//throw(0) c'e' quando la sintassi della stringa non e' corretta
+//throw(0) i dati inseriti in input non sono corretti
+//throw(1) il percorso inserito non e' corretto
