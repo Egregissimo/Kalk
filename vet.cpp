@@ -13,32 +13,8 @@ vet::vet(int* st, int dim1, int dim2){
             *(v_m+(j+(i*c))) = *(st+(j+(i*c)));
 }
 
-
-void vet::insert(int val, int i, int j){
-    if((i>=0) && (i<r) && (j>=0) && (j<c))
-        *(v_m+(j+(i*c))) = val;
-    else
-        throw eccezione();
-    /* gestire un eccesione nel caso in cui gli indici da visitare
-       non siano dentro le dimensioni della matrice/vettore */
-}
 int vet::getRow() const { return r; }
 int vet::getColumn() const { return c; }
-int vet::getVal(int i, int j) const {
-    if((i>=0) && (i<r) && (j>=0) && (j<c))
-        return *(v_m+(j+(i*c)));
-    else
-        throw eccezione();
-    /* gestire un eccesione nel caso in cui gli indici da visitare
-       non siano dentro le dimensioni della matrice/vettore */
-}
-void vet::stampa() const{
-    for(int i=0; i<r; i++){
-        for(int j=0; j<c; j++)
-            std::cout<<*(v_m+(j+(i*c)))<<" ";
-        std::cout<<std::endl;
-    }
-}
 
 bool vet::isMoltiplication(vet tmp) const{ return c == tmp.r; }
 bool vet::isQuadrata(const vet& vet2) const { return r==vet2.r && c==vet2.c; }
@@ -59,7 +35,7 @@ void vet::transposed(){
     }
 
     if(index > r*c)
-        throw eccezione();      //se index supera la dimensione dell'array solleva un eccezione per non fare casini con la matrice/vettore
+        throw errore_index();      //se index supera la dimensione dell'array solleva un eccezione per non fare casini con la matrice/vettore
 
     delete[] v_m;
     v_m = tmp;
@@ -105,8 +81,10 @@ vet operator +(const vet& vet1, const vet& vet2){
 
         return out;
     }
-    else
-        throw eccezione();
+    else{
+        errore_vet* p_er = new errore_somma("ERROR SOMMA: impossibile eseguire la somma, dimensioni delle matrici non uguali");
+        throw p_er;
+    }
 }
 vet operator -(const vet& vet1, const vet& vet2){
     if(vet1.sameSize(vet2)){
@@ -118,7 +96,7 @@ vet operator -(const vet& vet1, const vet& vet2){
         return out;
     }
     else
-        throw eccezione();
+        throw errore_sottrazione();
 }
 vet vet::operator *(const vet& vet2){
     if(this->isMoltiplication(vet2)){
@@ -131,7 +109,6 @@ vet vet::operator *(const vet& vet2){
                 for(int j=0; j<this->c; j++)
                     valore = valore + ((*this)[i][j] * vet2[j][jj]);
 
-                //out.insert(valore, i, jj);
                 out[i][jj] = valore;
                 valore = 0;
             }
@@ -139,7 +116,7 @@ vet vet::operator *(const vet& vet2){
         return out;
     }
     else
-        throw eccezione();
+        throw errore_prodotto();
 }
 vet operator* (int k, const vet& vet1){
     vet out(vet1.r,vet1.c);
@@ -148,17 +125,27 @@ vet operator* (int k, const vet& vet1){
             out[i][j] = k * vet1[i][j];
     return out;
 }
+vet operator/ (int k, const vet& vet1){
+    vet out(vet1.r,vet1.c);
+    for(int i=0; i<vet1.r; i++)
+        for(int j=0; j<vet1.c; j++)
+            out[i][j] = vet1[i][j] / k;
 
-string to_string(const vet& vet1){
-    string out;
-    for(int i=0; i<vet1.r; i++){
-        for(int j=0; j<vet1.c-1; j++){
-            out = out + std::to_string(vet1[i][j]) + ",";
-        }
-        out = out + std::to_string(vet1[i][vet1.c-1]);
-        out = out + ";";
-    }
     return out;
+}
+vet& vet::operator= (const vet& vet1){
+    if(this != &vet1){
+        delete[] (*this).v_m;
+
+        /* riassegnazione delle dimensioni e riallocazione */
+        this->r=vet1.r; this->c=vet1.c;
+        this->v_m = new int[r*c];
+
+        for(int i=0; i<vet1.r; i++)
+            for(int j=0; j<vet1.c; j++)
+                (*this)[i][j] = vet1[i][j];
+    }
+    return *this;
 }
 
 bool operator== (const vet& vet1, const vet& vet2){
@@ -175,5 +162,25 @@ bool operator== (const vet& vet1, const vet& vet2){
     }
     return false;
 }
-bool operator< (const vet& vet1, const vet& vet2){ return vet1.norma()<vet2.norma(); }
 bool operator<= (const vet& vet1, const vet& vet2){ return vet1.norma()<=vet2.norma(); }
+bool operator< (const vet& vet1, const vet& vet2){ return vet1.norma()<vet2.norma(); }
+
+std::ostream& operator <<(std::ostream& os, const vet& vet1){
+    for(int i=0; i<vet1.r; i++){
+        for(int j=0; j<vet1.c; j++)
+            os<<vet1[i][j]<<" ";
+        os<<std::endl;
+    }
+    return os;
+}
+string to_string(const vet& vet1){
+    string out;
+    for(int i=0; i<vet1.r; i++){
+        for(int j=0; j<vet1.c-1; j++){
+            out = out + std::to_string(vet1[i][j]) + ",";
+        }
+        out = out + std::to_string(vet1[i][vet1.c-1]);
+        out = out + ";";
+    }
+    return out;
+}

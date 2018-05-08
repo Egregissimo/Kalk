@@ -27,7 +27,7 @@ std::ostream& operator<<(std::ostream&, const errore_vet&);
 
 class errore_index:public errore_vet{
 public:
-    errore_index(string = "N/A", string = "N/A");
+    errore_index(string = "N/A");
     void stampa_errore() const;
 };
 class errore_somma:public errore_vet{

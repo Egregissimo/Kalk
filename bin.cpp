@@ -55,18 +55,6 @@ bin::bin(double d){
     }
 }
 
-void bin::stampa() const{
-    if(segno)
-        std::cout<<"-";
-    else
-        std::cout<<"+";
-
-    for(unsigned int i=0; i<intera.size(); i++)
-        std::cout<<intera[i];
-    std::cout<<".";
-    for(unsigned int i=0; i<frazionaria.size(); i++)
-        std::cout<<frazionaria[i];
-}
 double bin::base10() const{
     int i_out = 0;
     double f_out = 0;
@@ -133,7 +121,22 @@ std::string bin::base16() const{
 unsigned int bin::getDimIntera() const { return intera.size(); }
 unsigned int bin::getDimFrazionaria() const { return frazionaria.size(); }
 
-bin operator+ (const bin& bin1, const bin& bin2){
+bin& bin::operator =(const bin& bin1){
+    if(this != &bin1){
+        this->intera.clear();
+        this->frazionaria.clear();
+
+        this->segno = bin1.segno;
+        for(unsigned int i=0; i<bin1.intera.size(); i++)
+            this->intera.push_back(bin1.intera[i]);
+
+        for(unsigned int i=0; i<bin1.frazionaria.size(); i++)
+            this->frazionaria.push_back(bin1.frazionaria[i]);
+    }
+    return *this;
+}
+
+bin operator +(const bin& bin1, const bin& bin2){
     double a = bin1.base10();
     double b = bin2.base10();
     bin out(a+b);
@@ -184,6 +187,21 @@ bool operator>= (const bin& bin1, const bin& bin2){
     double b = bin2.base10();
 
     return a>=b;
+}
+
+std::ostream& operator<< (std::ostream& os, const bin& bin1){
+    if(bin1.segno)
+        os<<"-";
+    else
+        os<<"+";
+
+    for(unsigned int i=0; i<bin1.intera.size(); i++)
+        os<<bin1.intera[i];
+    os<<".";
+    for(unsigned int i=0; i<bin1.frazionaria.size(); i++)
+        os<<bin1.frazionaria[i];
+
+    return os;
 }
 
 string to_string(const bin& bin1){

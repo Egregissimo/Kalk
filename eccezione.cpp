@@ -33,6 +33,10 @@ std::ostream& operator<<(std::ostream& os, const errore_vet& er){
     os<<er.messaggio<<std::endl;
     return os;
 }
+
+errore_index::errore_index(string mex): errore_vet(mex,"meessaggio standar") {}
+void errore_index::stampa_errore() const { std::cout<<messaggio<<std::endl; }
+
 errore_somma::errore_somma(string mex): errore_vet(mex,"meessaggio standar") {}
 void errore_somma::stampa_errore() const { std::cout<<messaggio<<std::endl; }
 

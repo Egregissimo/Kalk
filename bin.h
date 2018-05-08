@@ -18,7 +18,7 @@ class bin{
     friend bool operator<= (const bin&, const bin&);
     friend bool operator> (const bin&, const bin&);
     friend bool operator>= (const bin&, const bin&);
-
+    friend std::ostream& operator<< (std::ostream&, const bin&);
     friend string to_string(const bin&);
 private:
     std::vector<bool> intera;
@@ -36,11 +36,12 @@ public:
                                                   */
 
     /* metodi ausiliari */
-    void stampa() const;
     double base10() const;                        /* converte un tipo bin in un intero in base 10 */
     std::string base16() const;                   /* converte un tipo bin in una stringa in base 16 */
     unsigned int getDimIntera() const;            /* ritorna la dimensione/lunghezza del vettore che rappresente la parte intera in binario */
     unsigned int getDimFrazionaria() const;       /* ritorna la dimensione/lunghezza del vettore che rappresenta la parte frazionaria in binario */
+
+    bin& operator= (const bin&);
 };
 
 bin operator+ (const bin&, const bin&);
@@ -54,6 +55,7 @@ bool operator<= (const bin&, const bin&);
 bool operator> (const bin&, const bin&);
 bool operator>= (const bin&, const bin&);
 
+std::ostream& operator<< (std::ostream&, const bin&);
 
 string to_string(const bin&);
 #endif // BIN_H
