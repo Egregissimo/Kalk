@@ -2,6 +2,7 @@
 #define VET_H
 
 #include "eccezione.h"
+#include "tipo.h";
 #include <iostream>
 #include <string>
 #include <math.h>                                   /* pow - sqrt - abs */
@@ -43,6 +44,15 @@ public:
     int* operator[](size_t) const;
     vet operator*(const vet&);                  /* due matrici si possno moltiplicare con A[m,n] e B[n,p], ho C[m,p] */
     vet& operator=(const vet&);
+
+
+    vet* somma(tipo*);
+    vet* differenza(tipo*);
+    vet* moltiplicazione(int);
+    vet* divisione(int);
+    bool uguale(tipo*)const;
+    bool min(tipo*)const;
+    string to_stringa()const;
 };
 
 vet operator+ (const vet&, const vet&);         /* due matrici sono sommabili se hanno la stessa dimensione r=r1 & c=c1 */

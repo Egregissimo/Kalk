@@ -184,3 +184,31 @@ string to_string(const vet& vet1){
     }
     return out;
 }
+
+
+
+/* Metodi ereditati dalla classe tipo.h */
+
+vet* vet::somma(tipo* b){
+    vet* b1 = dynamic_cast<vet*>(b);
+    return new vet((*this) + (*b1));
+}
+vet* vet::differenza(tipo* b){
+    vet* b1 = dynamic_cast<vet*>(b);
+    return new vet((*this) - (*b1));
+}
+vet* vet::moltiplicazione(int b){
+    return new vet(b * (*this));    /*è da controllare*/
+}
+vet* vet::divisione(int b){
+    return new vet(b / (*this));    /*è da controllare*/
+}
+bool uguale(tipo* b) const{
+    return (*this)==(*b);
+}
+bool min(tipo*) const{
+    return (*this)<(*b);
+}
+string to_stringa() const{
+    return to_string((*this));
+}

@@ -154,8 +154,24 @@ bin operator *(const bin& bin1, const bin& bin2){
     bin out(a*b);
     return out;
 }
+bin operator *(int i, const bin& bin2){
+    double a = (double)i;
+    double b = bin2.base10();
+    bin out(a*b);
+    return out;
+}
 bin operator /(const bin& bin1, const bin& bin2){
     double a = bin1.base10();
+    double b = bin2.base10();
+
+    if(b<0)
+        throw eccezione();
+
+    bin out(a/b);
+    return out;
+}
+bin operator/ (int i, const bin& bin2){
+    double a = (double)i;
     double b = bin2.base10();
 
     if(b<0)
@@ -222,3 +238,30 @@ string to_string(const bin& bin1){
 
     return out;
 }
+
+/* Metodi ereditati dalla classe tipo.h */
+
+bin* bin::somma(tipo* b){
+    bin* b1 = dynamic_cast<bin*>(b);
+    return new bin((*this) + (*b1));
+}
+bin* bin::differenza(tipo* b){
+    bin* b1 = dynamic_cast<bin*>(b);
+    return new bin((*this) - (*b1));
+}
+bin* bin::moltiplicazione(int b){
+    return new bin(b * (*this));    /*è da controllare*/
+}
+bin* bin::divisione(int b){
+    return new bin(b / (*this));    /*è da controllare*/
+}
+bool uguale(tipo* b) const{
+    return (*this)==(*b);
+}
+bool min(tipo*) const{
+    return (*this)<(*b);
+}
+string to_stringa() const{
+    return to_string((*this));
+}
+

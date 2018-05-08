@@ -2,17 +2,20 @@
 #define BIN_H
 
 #include "eccezione.h"
+#include "tipo.h";
 #include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>                            /* reverse */
 #include <math.h>                               /* pow */
 
-class bin{
+class bin: public tipo{
     friend bin operator+ (const bin&, const bin&);
     friend bin operator- (const bin&, const bin&);
     friend bin operator* (const bin&, const bin&);
+    friend bin operator* (int, const bin&);
     friend bin operator/ (const bin&, const bin&);
+    friend bin operator/ (int, const bin&);
 
     friend bool operator< (const bin&, const bin&);
     friend bool operator<= (const bin&, const bin&);
@@ -42,12 +45,23 @@ public:
     unsigned int getDimFrazionaria() const;       /* ritorna la dimensione/lunghezza del vettore che rappresenta la parte frazionaria in binario */
 
     bin& operator= (const bin&);
+
+
+    bin* somma(tipo*);
+    bin* differenza(tipo*);
+    bin* moltiplicazione(int);
+    bin* divisione(int);
+    bool uguale(tipo*)const;
+    bool min(tipo*)const;
+    string to_stringa()const;
 };
 
 bin operator+ (const bin&, const bin&);
 bin operator- (const bin&, const bin&);
 bin operator* (const bin&, const bin&);
+bin operator* (int, const bin&);
 bin operator/ (const bin&, const bin&);
+bin operator/ (int, const bin&);
 
 
 bool operator< (const bin&, const bin&);
