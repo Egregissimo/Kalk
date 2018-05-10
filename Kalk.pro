@@ -18,20 +18,18 @@ SOURCES += \
     main.cpp \
     raz.cpp \
     vet.cpp \
-    eccezione.cpp \
     bin.cpp \
-    treebasic.cpp \
-    treesearch.cpp \
-    eccezione1.cpp \
-    binarytree.cpp
+    binarytree.cpp \
+    eccezione.cpp \
+    binarytreesearch.cpp \
+    binarytreebasic.cpp
 
 HEADERS += \
-    treebasic.h \
     raz.h \
     vet.h \
-    treesearch.h \
-    eccezione.h \
     bin.h \
     tipo.h \
-    eccezione1.h \
-    binarytree.h
+    binarytree.h \
+    eccezione.h \
+    binarytreesearch.h \
+    binarytreebasic.h

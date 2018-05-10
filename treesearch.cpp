@@ -1,4 +1,4 @@
-#include "treesearch.h"
+#include "binarytreesearch.h"
 
 void treesearch::merge(vector<tipo*>&left, vector<tipo*>& right, vector<tipo*>& bars){
     int nL=left.size();

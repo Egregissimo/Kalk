@@ -120,7 +120,7 @@ std::string bin::base16() const{
 
 unsigned int bin::getDimIntera() const { return intera.size(); }
 unsigned int bin::getDimFrazionaria() const { return frazionaria.size(); }
-
+/*
 bin& bin::operator =(const bin& bin1){
     if(this != &bin1){
         this->intera.clear();
@@ -135,7 +135,7 @@ bin& bin::operator =(const bin& bin1){
     }
     return *this;
 }
-
+*/
 bin operator +(const bin& bin1, const bin& bin2){
     double a = bin1.base10();
     double b = bin2.base10();
@@ -160,22 +160,22 @@ bin operator *(int i, const bin& bin2){
     bin out(a*b);
     return out;
 }
-bin operator /(const bin& bin1, const bin& bin2){
+bin operator /(const bin& bin1, const bin& bin2) throw(input_error){
     double a = bin1.base10();
     double b = bin2.base10();
 
     if(b<0)
-        throw eccezione();
+        throw input_error("bin");
 
     bin out(a/b);
     return out;
 }
-bin operator/ (int i, const bin& bin2){
+bin operator/ (int i, const bin& bin2) throw(input_error){
     double a = (double)i;
     double b = bin2.base10();
 
     if(b<0)
-        throw eccezione();
+        throw input_error("bin");
 
     bin out(a/b);
     return out;
@@ -204,7 +204,9 @@ bool operator>= (const bin& bin1, const bin& bin2){
 
     return a>=b;
 }
-
+bool operator== (const bin& bin1, const bin& bin2){
+    return (bin1.intera == bin2.intera) && (bin1.frazionaria == bin2.frazionaria) && (bin1.segno == bin2.segno);
+}
 std::ostream& operator<< (std::ostream& os, const bin& bin1){
     if(bin1.segno)
         os<<"-";
@@ -255,13 +257,15 @@ bin* bin::moltiplicazione(int b){
 bin* bin::divisione(int b){
     return new bin(b / (*this));    /*è da controllare*/
 }
-bool uguale(tipo* b) const{
-    return (*this)==(*b);
+bool bin::uguale(tipo* b) const{
+    bin* b1 = dynamic_cast<bin*>(b);
+    return (*this)==(*b1);
 }
-bool min(tipo*) const{
-    return (*this)<(*b);
+bool bin::min(tipo* b) const{
+    bin* b1 = dynamic_cast<bin*>(b);
+    return (*this)<(*b1);
 }
-string to_stringa() const{
+string bin::to_stringa() const{
     return to_string((*this));
 }
 

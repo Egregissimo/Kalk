@@ -1,8 +1,7 @@
 #ifndef BIN_H
 #define BIN_H
 
-#include "eccezione.h"
-#include "tipo.h";
+#include "tipo.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -14,13 +13,14 @@ class bin: public tipo{
     friend bin operator- (const bin&, const bin&);
     friend bin operator* (const bin&, const bin&);
     friend bin operator* (int, const bin&);
-    friend bin operator/ (const bin&, const bin&);
-    friend bin operator/ (int, const bin&);
+    friend bin operator/ (const bin&, const bin&) throw(input_error);
+    friend bin operator/ (int, const bin&) throw(input_error);
 
     friend bool operator< (const bin&, const bin&);
     friend bool operator<= (const bin&, const bin&);
     friend bool operator> (const bin&, const bin&);
     friend bool operator>= (const bin&, const bin&);
+    friend bool operator== (const bin&, const bin&);
     friend std::ostream& operator<< (std::ostream&, const bin&);
     friend string to_string(const bin&);
 private:
@@ -44,7 +44,7 @@ public:
     unsigned int getDimIntera() const;            /* ritorna la dimensione/lunghezza del vettore che rappresente la parte intera in binario */
     unsigned int getDimFrazionaria() const;       /* ritorna la dimensione/lunghezza del vettore che rappresenta la parte frazionaria in binario */
 
-    bin& operator= (const bin&);
+    //bin& operator= (const bin&);
 
 
     bin* somma(tipo*);
@@ -60,14 +60,15 @@ bin operator+ (const bin&, const bin&);
 bin operator- (const bin&, const bin&);
 bin operator* (const bin&, const bin&);
 bin operator* (int, const bin&);
-bin operator/ (const bin&, const bin&);
-bin operator/ (int, const bin&);
+bin operator/ (const bin&, const bin&) throw(input_error);
+bin operator/ (int, const bin&) throw(input_error);
 
 
 bool operator< (const bin&, const bin&);
 bool operator<= (const bin&, const bin&);
 bool operator> (const bin&, const bin&);
 bool operator>= (const bin&, const bin&);
+bool operator== (const bin&, const bin&);
 
 std::ostream& operator<< (std::ostream&, const bin&);
 

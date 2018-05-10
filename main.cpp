@@ -1,5 +1,5 @@
 #include <QCoreApplication>
-#include "treesearch.h"
+#include "binarytreesearch.h"
 #include "binarytree.h"
 
 int main(int argc, char *argv[])
@@ -8,13 +8,7 @@ int main(int argc, char *argv[])
 
     return a.exec();*/
     try{
-//        5
-//        13
-//        19
-//        25
-//        31
-//        37
-        string s="(*,(*,_,(*,_,_)),(*,(*,_,_),(*,_,_))))))";
+        string s="(*,(*,_,(*,_,_)),(*,(*,_,_),(*,_,_)))";
         string s1="(*,(*,_,(*,(*,_,_),_)),(*,(*,_,_),_))";
         raz R[]={raz(5,5), raz(3.14), raz(1.5, 0.7), raz(5, 10), raz(5, 70), raz(0.0, 1.5)};
         vector<tipo*> v;
@@ -23,7 +17,7 @@ int main(int argc, char *argv[])
         for(int i=0; i<6; i++)
             cout<<v[i]->to_stringa()<<" ";
         cout<<endl;
-        treesearch a(v, s1);
+        binarytreesearch a(v, s1);
         cout<<a<<endl;
         cout<<a.balance()<<endl;
         raz x(2,3);
@@ -49,5 +43,6 @@ int main(int argc, char *argv[])
         cout<<b.cerca("")->to_stringa()<<endl;
         cout<<b*2<<endl<<b/2<<endl;
     }
-    catch(eccezione1 ex){throw runtime_error(ex.stampa_errore());}
+    catch(eccezione ex){throw runtime_error(ex.stampa_errore());}
+    return 0;
 }

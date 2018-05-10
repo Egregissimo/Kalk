@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include "tipo.h"
+
 using std::string;
 using std::to_string;
 using std::ostream;

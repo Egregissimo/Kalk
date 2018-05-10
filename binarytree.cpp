@@ -19,20 +19,23 @@ string binarytree::min_path(nodo* x){
 
 tipo* binarytree::removeIt(nodo* y){
     nodo* x=0, *z=0;
-    if(y->left && y->right)//se z ha 0 o 1 figli
+    if(y->left && y->right) //se z ha 0 o 1 figli
         z=y->right;
-    if(y->left)//se ho due figli o un figlio sinistro
+    if(y->left)             //se ho due figli o un figlio sinistro
         x=y->left;
-    else//se ho 0 o un figlio destro
+    else                    //se ho 0 o un figlio destro
         x=y->right;
+
     if(x)
         x->father=y->father;
-    if(!y->father)//nel caso l'albero contenga l'unico nodo da rimuovere
+
+    if(!y->father)                  //nel caso l'albero contenga l'unico nodo da rimuovere
         this->root=x;
-    else if(y==y->father->left)//nel caso z non abbia figli cancella il collegamento
+    else if(y==y->father->left)     //nel caso z non abbia figli cancella il collegamento
         y->father->left=x;
-    else//in alternativa collega i vari nodi senza z
+    else                            //in alternativa collega i vari nodi senza z
         y->father->right=x;
+
     if(z){
         nodo* t=this->root;
         string path=min_path(this->root);
@@ -53,8 +56,22 @@ tipo* binarytree::removeIt(nodo* y){
     return a;
 }
 
-//PRE={x non e' un puntatore nullo}
-treebasic::nodo* binarytree::searchIt(nodo * x, tipo* a){
+//PRE={x non e' un puntatore nullo}     /* PRE={ l'albero è un albero binario corretto } */
+binarytreebasic::nodo* binarytree::searchIt(nodo * x, tipo* a){
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     *      ALTRA VERSIONE DI SEARCHIT CON MENO IF
+
+    if(!x)                              // se l'albero è vuoto e se non trovo il nodo return 0
+        return 0;
+    if(x->info->uguale(a))              // se lo trovo ritorno quel puntatore
+        return x;
+
+    nodo* z = searchIt(x->left, a);     // cerco prima a sinistra
+    if(!z)                              // se non lo trovo cerco a destra
+        z = searchIt(x->right, a);
+    return z;                           // se lo trovo ritorno quel puntatore altrimenti ritorna 0 dalle chiamate ricorsive
+    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
     if(!x)
         return x;
     if(x->info->uguale(a))
@@ -132,43 +149,43 @@ tipo* binarytree::search(tipo* a)const throw(point_error){
 
 ostream& operator<<(ostream& os, const binarytree& t){
     if(t.root)
-        os<<treebasic::nodo::stampa(t.root);
+        os<<binarytreebasic::nodo::stampa(t.root);
     return os;
 }
 
 string to_string(const binarytree& t){
     if(t.root)
-        return  treebasic::nodo::stampa(t.root);
+        return  binarytreebasic::nodo::stampa(t.root);
     return "";
 }
 
 binarytree& operator+(const binarytree& a, const binarytree& b){
-    treebasic::nodo* x=treebasic::somma(a.root, b.root);
-    string s=treebasic::tree_to_string(x);
-    vector<tipo*> A=treebasic::nodes(x);
+    binarytreebasic::nodo* x=binarytreebasic::somma(a.root, b.root);
+    string s=binarytreebasic::tree_to_string(x);
+    vector<tipo*> A=binarytreebasic::nodes(x);
     binarytree* c=new binarytree(A, s);
     return *c;
 }
 
 binarytree& operator -(const binarytree& a, const binarytree &b){
-    treebasic::nodo* x=treebasic::differenza(a.root, b.root);
-    string s=treebasic::tree_to_string(x);
-    vector<tipo*> A=treebasic::nodes(x);
+    binarytreebasic::nodo* x=binarytreebasic::differenza(a.root, b.root);
+    string s=binarytreebasic::tree_to_string(x);
+    vector<tipo*> A=binarytreebasic::nodes(x);
     binarytree* c=new binarytree(A, s);
     return *c;
 }
 
 binarytree& binarytree::operator *(int p){
-    treebasic::nodo* x=moltiplicazione(this->root, p);
-    string s=treebasic::tree_to_string(x);
+    binarytreebasic::nodo* x=moltiplicazione(this->root, p);
+    string s=binarytreebasic::tree_to_string(x);
     vector<tipo*> A=nodes(x);
     binarytree* c=new binarytree(A, s);
     return *c;
 }
 
 binarytree& binarytree::operator /(int p){
-    treebasic::nodo* x=divisione(this->root, p);
-    string s=treebasic::tree_to_string(x);
+    binarytreebasic::nodo* x=divisione(this->root, p);
+    string s=binarytreebasic::tree_to_string(x);
     vector<tipo*> A=nodes(x);
     binarytree* c=new binarytree(A, s);
     return *c;

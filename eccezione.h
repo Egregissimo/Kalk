@@ -1,54 +1,43 @@
-#ifndef EXCEPTION_H
-#define EXCEPTION_H
-#include <iostream>
+#ifndef eccezione_H
+#define eccezione_H
 #include <string>
+#include <stdexcept>
 
 using std::string;
+using std::runtime_error;
+
 
 class eccezione{
 private:
-    int id;
-    string classe;
+    string cl;
     string significato;
+
+protected:
+    eccezione(string c, string s): cl(c), significato(s) {}
+
 public:
-    eccezione(int =0);
+    string stampa_errore() const;
+   // virtual void ghost_method() const =0;
 };
 
-
-class errore_vet{
-    friend std::ostream& operator<<(std::ostream&, const errore_vet&);
+class domain_error: public eccezione{
 public:
-    string messaggio;
-    string standard_mex;
-    errore_vet(string = "N/A", string = "N/A");
-    virtual void stampa_errore() const =0;
-};
-std::ostream& operator<<(std::ostream&, const errore_vet&);
-
-class errore_index:public errore_vet{
-public:
-    errore_index(string = "N/A");
-    void stampa_errore() const;
-};
-class errore_somma:public errore_vet{
-public:
-    errore_somma(string = "N/A");
-    void stampa_errore() const;
-};
-class errore_sottrazione:public errore_vet{
-public:
-    errore_sottrazione(string = "N/A");
-    void stampa_errore() const;
-};
-class errore_prodotto:public errore_vet{
-public:
-    errore_prodotto(string = "N/A");
-    void stampa_errore() const;
-};
-class errore_divisione:public errore_vet{
-public:
-    errore_divisione(string = "N/A");
-    void stampa_errore() const;
+    domain_error(string c="N/A", string s="il dominio inserito non e' corretto"): eccezione(c,s) {}
 };
 
-#endif // EXCEPTION_H
+class input_error: public eccezione{
+public:
+    input_error(string c="N/A", string s="gli input inseriti non sono corretti"): eccezione(c,s) {}
+};
+
+class path_error: public eccezione{
+public:
+    path_error(string c="N/A", string s="il percorso inserito non e' sintatticamente corretto"): eccezione(c,s) {}
+};
+
+class point_error: public eccezione{
+public:
+    point_error(string c="N/A", string s="il puntatore dato in input e' nullo"): eccezione(c,s) {}
+};
+
+#endif // eccezione_H

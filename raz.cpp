@@ -9,7 +9,7 @@ int raz::degree(double d){
 
 raz::raz(int n, int d) throw(domain_error): num(n){
     if(d==0)
-        throw domain_error();
+        throw domain_error("raz");
     else if(num==0)
         den=1;
     else if(d<0){
@@ -23,7 +23,7 @@ raz::raz(int n, int d) throw(domain_error): num(n){
 
 raz::raz(double n, double d) throw(domain_error){
     if(d==0)
-        throw domain_error();
+        throw domain_error("raz");
     if(n==0){
         num=0;
         den=1;
@@ -173,7 +173,7 @@ raz operator*(const raz& r1, const raz& r2){
 
 raz operator/(const raz& r1, const raz& r2) throw(domain_error){
     if(r2.num==0)
-        throw domain_error();
+        throw domain_error("raz");
     raz t(r1.num*r2.den, r1.den*r2.num);
     t=t.riduzione();
     return t;

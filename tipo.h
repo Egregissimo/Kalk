@@ -1,6 +1,6 @@
 #ifndef TIPO_H
 #define TIPO_H
-#include<eccezione1.h>
+#include <eccezione.h>
 
 //ogni tipo di dato da usare nell'albero deve includere
 //ed implementare questa classe

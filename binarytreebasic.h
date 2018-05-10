@@ -1,14 +1,14 @@
-#ifndef TREEBASIC_H
-#define TREEBASIC_H
+#ifndef BINARYTREEBASIC_H
+#define BINARYTREEBASIC_H
 #include <vector>
 #include <typeinfo>
 #include "raz.h"
 //#include "vet.h"
 using std::vector;
 
-class treebasic{
-     friend ostream& operator<<(ostream&, const treebasic&);
-     friend string to_string(const treebasic&);
+class binarytreebasic{
+     friend ostream& operator<<(ostream&, const binarytreebasic&);
+     friend string to_string(const binarytreebasic&);
 protected:
     class nodo{
     public:
@@ -44,7 +44,7 @@ private:
     nodo* constrRic(string::iterator, vector<tipo*>::iterator&, nodo* =0);//funzione ricorsica del costruttore
 
 public:
-    treebasic(): root(0) {}
+    binarytreebasic(): root(0) {}
     /* la costruzione di un albero sara' formato dalla sua struttura espressa con
      * una stringa controllata da un parser e da un vector di elementi da inserire
      * nell'albero. Gli elementi devo essere inseriti secondo l'ordine PREFISSO.
@@ -53,10 +53,10 @@ public:
      * Il nodo foglia è del tipo: (*,_,_), dove "_" indica il nodo vuoto.
      * Es: l'albero (5,(2,_,(1,_,_)),_) sara' (*,(*,_,(*,_,_)),_). Il costruttire vuole
      * per parametri l'array di valori, la sua dimensione e la stringa con la struttura*/
-    treebasic(vector<tipo*>, string &) throw(input_error);//viene costruito almeno un nodo
-    treebasic(const treebasic& t): root(copia(t.root)) {}// costruttore di copia profondo
-    virtual ~treebasic();// distruttore profondo
-    treebasic& operator=(const treebasic&);//assegnazione profonda
+    binarytreebasic(vector<tipo*>, string &) throw(input_error);//viene costruito almeno un nodo
+    binarytreebasic(const binarytreebasic& t): root(copia(t.root)) {}// costruttore di copia profondo
+    virtual ~binarytreebasic();// distruttore profondo
+    binarytreebasic& operator=(const binarytreebasic&);//assegnazione profonda
 
     tipo* cerca(string)const throw(path_error);//trova l'oggetto indicato dal percorso
 
@@ -68,7 +68,7 @@ public:
     string struttura_tree()const;//stampa la struttura dell'albero
 };
 
-ostream& operator<<(ostream&, const treebasic&);
-string to_string(const treebasic&);
+ostream& operator<<(ostream&, const binarytreebasic&);
+string to_string(const binarytreebasic&);
 
-#endif // TREEBASIC_H
+#endif // BINARYTREEBASIC_H

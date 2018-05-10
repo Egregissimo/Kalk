@@ -13,6 +13,16 @@ vet::vet(int* st, int dim1, int dim2){
             *(v_m+(j+(i*c))) = *(st+(j+(i*c)));
 }
 
+vet::vet(const vet& v){
+    r=v.r; c=v.c;
+    v_m = new int[r*c];
+
+    for(int i=0; i<v.r; i++)
+        for(int j=0; j<v.c; j++)
+            *(v_m+(j+(i*c))) = v[i][j];
+
+}
+
 int vet::getRow() const { return r; }
 int vet::getColumn() const { return c; }
 
@@ -24,7 +34,7 @@ bool vet::sameSize(vet tmp) const{
     else
         return false;
 }
-void vet::transposed(){
+void vet::transposed() throw(input_error){
     int* tmp = new int[r*c];
     int index = 0;
     for(int j=0; j<c; j++){
@@ -35,7 +45,7 @@ void vet::transposed(){
     }
 
     if(index > r*c)
-        throw errore_index();      //se index supera la dimensione dell'array solleva un eccezione per non fare casini con la matrice/vettore
+        throw input_error("vet");      //se index supera la dimensione dell'array solleva un eccezione per non fare casini con la matrice/vettore
 
     delete[] v_m;
     v_m = tmp;
@@ -72,7 +82,7 @@ int vet::norma() const{
 /* ------------------------------------------------------ */
 
 int* vet::operator [](size_t i) const { return (v_m + (c*i)); }
-vet operator +(const vet& vet1, const vet& vet2){
+vet operator +(const vet& vet1, const vet& vet2) throw(domain_error){
     if(vet1.sameSize(vet2)){
         vet out(vet1.r,vet1.c);
         for(int i=0; i<vet1.r; i++)
@@ -81,12 +91,11 @@ vet operator +(const vet& vet1, const vet& vet2){
 
         return out;
     }
-    else{
-        errore_vet* p_er = new errore_somma("ERROR SOMMA: impossibile eseguire la somma, dimensioni delle matrici non uguali");
-        throw p_er;
-    }
+    else
+        throw domain_error("vet");
+
 }
-vet operator -(const vet& vet1, const vet& vet2){
+vet operator -(const vet& vet1, const vet& vet2) throw(domain_error){
     if(vet1.sameSize(vet2)){
         vet out(vet1.r,vet1.c);
         for(int i=0; i<vet1.r; i++)
@@ -96,9 +105,9 @@ vet operator -(const vet& vet1, const vet& vet2){
         return out;
     }
     else
-        throw errore_sottrazione();
+        throw domain_error("vet");
 }
-vet vet::operator *(const vet& vet2){
+vet vet::operator *(const vet& vet2) throw(domain_error){
     if(this->isMoltiplication(vet2)){
         vet out(this->r,vet2.c);
         int valore=0;
@@ -116,7 +125,7 @@ vet vet::operator *(const vet& vet2){
         return out;
     }
     else
-        throw errore_prodotto();
+        throw domain_error("vet");
 }
 vet operator* (int k, const vet& vet1){
     vet out(vet1.r,vet1.c);
@@ -135,7 +144,7 @@ vet operator/ (int k, const vet& vet1){
 }
 vet& vet::operator= (const vet& vet1){
     if(this != &vet1){
-        delete[] (*this).v_m;
+        delete[] v_m;
 
         /* riassegnazione delle dimensioni e riallocazione */
         this->r=vet1.r; this->c=vet1.c;
@@ -203,12 +212,14 @@ vet* vet::moltiplicazione(int b){
 vet* vet::divisione(int b){
     return new vet(b / (*this));    /*è da controllare*/
 }
-bool uguale(tipo* b) const{
-    return (*this)==(*b);
+bool vet::uguale(tipo* b) const{
+    vet* b1 = dynamic_cast<vet*>(b);
+    return (*this)==(*b1);
 }
-bool min(tipo*) const{
-    return (*this)<(*b);
+bool vet::min(tipo* b) const{
+    vet* b1 = dynamic_cast<vet*>(b);
+    return (*this)<(*b1);
 }
-string to_stringa() const{
+string vet::to_stringa() const{
     return to_string((*this));
 }
