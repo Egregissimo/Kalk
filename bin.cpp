@@ -174,6 +174,7 @@ bin operator/ (int i, const bin& bin2) throw(input_error){
     double a = (double)i;
     double b = bin2.base10();
 
+
     if(b<0)
         throw input_error("bin");
 

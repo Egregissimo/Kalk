@@ -20,7 +20,7 @@ public:
     virtual tipo* remove(tipo*) throw(point_error);                     //rimuove l'oggetto cercandolo
     virtual tipo* search (tipo*)const throw(point_error);               //trova l'oggetto indicato
 
-    binarytree &operator *(int);
+    binarytree& operator *(int);
     binarytree& operator /(int);
 };
 

@@ -6,7 +6,7 @@
 #include <string>
 #include <math.h>                                   /* pow - sqrt - abs */
 
-class vet{
+class vet: public tipo{
     friend vet operator+(const vet&, const vet&) throw(domain_error);
     friend vet operator-(const vet&, const vet&) throw(domain_error);
     friend vet operator*(int, const vet&);
@@ -26,7 +26,7 @@ private:
 public:
     vet(int =1, int =1);
     vet(int*, int =1, int =1);                  /* costruttore con array di interi per popolaro nel momento della creazione */
-    vet(const vet&);                          /* costruttore di copia profondo */
+    vet(const vet&);                            /* costruttore di copia profondo */
 
 
     /* Metodi ausiliari  --------------------------  -------------------------- */

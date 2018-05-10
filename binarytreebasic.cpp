@@ -5,7 +5,6 @@ string binarytreebasic::nodo::stampa(binarytreebasic::nodo* n){
         return "_";
     return "('"+n->info->to_stringa()+"',"+stampa(n->left)+","+stampa(n->right)+")";
 }
-
 bool binarytreebasic::parser(string::iterator begin, string::iterator end){
     if(begin==end)
         return true;
@@ -47,8 +46,7 @@ bool binarytreebasic::parser(string::iterator begin, string::iterator end){
 
     return a && b;
 }
-
-//PRE={la stringa e' corretta}
+//PRE = { la stringa e' corretta }
 int binarytreebasic::balance_brackets(string::iterator i, string::iterator end){
     if(*i=='_')
         return 0;
@@ -65,9 +63,9 @@ int binarytreebasic::balance_brackets(string::iterator i, string::iterator end){
         return -1;
     return s-1;
 }
-//POST={ritorna il numero di passi fino alla posizione della ')' che chiude la parentesi della PRE}
+//POST = { ritorna il numero di passi fino alla posizione della ')' che chiude la parentesi della PRE }
 
-//PRE={la stringa e' corretta e begin punta a '('}
+//PRE = { la stringa e' corretta e begin punta a '(' }
 unsigned int binarytreebasic::n_nodes_stringa(string::iterator begin){
     int count=0, id=1;
     if(*begin=='_')
@@ -249,8 +247,8 @@ binarytreebasic::binarytreebasic(vector<tipo*> type, string& s) throw(input_erro
 binarytreebasic::~binarytreebasic(){if(root) distruggi(root);}
 
 binarytreebasic& binarytreebasic::operator=(const binarytreebasic& t){
-    if(this->root!=t.root){
-        delete root;
+    if(this != &t){
+        distruggi(root);
         root=copia(t.root);
     }
     return *this;
