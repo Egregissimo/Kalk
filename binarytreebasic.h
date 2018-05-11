@@ -60,7 +60,7 @@ public:
     virtual ~binarytreebasic();                                         /* distruttore profondo */
     binarytreebasic& operator=(const binarytreebasic&);                 /* assegnazione profonda */
 
-    tipo* cerca(string)const throw(path_error);                         /* trova l'oggetto indicato dal percorso */
+    tipo* cerca(string)const throw(path_error);                         /* trova l'oggetto indicato dal percorso, se stringa vuota ritorna la radice */
 
     virtual void add(tipo*)=0;                                          /* aggiungo il nodo tenendo l'albero bilanciato */
     virtual tipo* remove(string)=0;                                     /* rimuove l'oggetto indicato da un percorso */

@@ -51,6 +51,12 @@ int main(int argc, char *argv[])
         binarytreesearch bts_b(v_b, s1);
         cout<<bts_b<<endl;
         cout<<bts_b.balance()<<endl;
+
+        cout<<"BTS vet:"<<endl;
+        binarytreesearch bts_v(v_v, s1);
+        cout<<bts_v<<endl;
+        cout<<bts_v.balance()<<endl;
+        cout<<endl<<"********************************************************************************************"<<endl;
     /*
      * TEST DI ADD, PRODOTTO E DIVISIONE CON SCALARE
         bin x(2.5);
@@ -70,41 +76,51 @@ int main(int argc, char *argv[])
         cout<<endl<<"Funzione di remove(""):"<<endl<<a<<endl;
         a.remove(&x);
         cout<<endl<<"Funzione di remove(&x):"<<endl<<a<<endl;
+
+
+        cout<<endl<<"BTS bin:"<<endl<<a<<endl;
+        bin x(2.5);
+        bts_b.remove("");
+        cout<<endl<<"Funzione di remove(""):"<<endl<<bts_b<<endl;
+        bts_b.remove(&x);
+        cout<<endl<<"Funzione di remove(&x):"<<endl<<bts_b<<endl;
     */
 
-       tipo* ris = a.search(&R[0]);
-       cout<<ris<<endl;
-       //cout<<a.cerca("")->to_stringa()<<endl;
-       /*
+    /*
+     * TEST DI RICERCA
+       tipo* ris = a.search(&R[4]);
+       cout<<"QUI -->"<<*ris<<endl;
+       cout<<a.cerca("")->to_stringa()<<endl;
 
+       tipo* ris = bts_b.search(&B[4]);
+       cout<<"QUI -->"<<*ris<<endl;
+       cout<<bts_b.cerca("")->to_stringa()<<endl;
+    */
 
-        cout<<"BTS vet:"<<endl;
-        binarytreesearch bts_v(v_v, s1);
-        cout<<bts_v<<endl;
-        cout<<bts_v.balance()<<endl;
-        cout<<endl<<"********************************************************************************************"<<endl;
-
-
-
-
-
-
-
-/*
-
-        cout<<"albero normale"<<endl;
+        cout<<"BT raz:"<<endl;
         binarytree b(v, s);
         cout<<b<<endl;
-        b.add(&x);
-        cout<<b<<endl;
-        b.remove("");
-        cout<<b<<endl;
-        b.remove(&x);
-        cout<<b<<endl;
+
+        cout<<"BT bin:"<<endl;
+        binarytree bt_b(v_b, s);
+        cout<<bt_b<<endl;
+
+        cout<<"BT vet:"<<endl;
+        binarytree bt_v(v_v, s);
+        cout<<bt_v<<endl;
+
+        bin x(2.5);
+        bt_b.add(&x);
+        cout<<bt_b<<endl;
+        bt_b.remove("");
+        cout<<endl<<"Funzione di remove(""):"<<endl<<bt_b<<endl;
+        bt_b.remove(&x);
+        cout<<endl<<"Funzione di remove(&x):"<<endl<<bt_b<<endl;
+    /*
         cout<<b.search(&R[0])<<endl;
         cout<<b.cerca("")->to_stringa()<<endl;
         cout<<b*2<<endl<<b/2<<endl;
-        */
+    */
     }
     //catch(eccezione ex){throw runtime_error(ex.stampa_errore());}
     catch(input_error ex){ cout<<ex.stampa_errore()<<endl; }
