@@ -51,24 +51,32 @@ int main(int argc, char *argv[])
         binarytreesearch bts_b(v_b, s1);
         cout<<bts_b<<endl;
         cout<<bts_b.balance()<<endl;
-
+    /*
+     * TEST DI ADD, PRODOTTO E DIVISIONE CON SCALARE
         bin x(2.5);
         bts_b.add(&x);
-        cout<<endl<<"prodotto:"<<endl<<bts_b<<endl;
+        cout<<endl<<"Funzione di add:"<<endl<<bts_b<<endl;
+
+        cout<<endl<<"Prodotto e divisione:"<<endl;
         cout<<bts_b*2<<endl;
         cout<<bts_b/2<<endl;
+    */
 
-
-
-        /*
+    /*
+     * TEST DEL METODO remove(string s) e remove(tipo* t)
+        cout<<endl<<"BTS raz:"<<endl<<a<<endl;
+        raz x(5,10);
         a.remove("");
-        cout<<a<<endl;
+        cout<<endl<<"Funzione di remove(""):"<<endl<<a<<endl;
         a.remove(&x);
-        cout<<a<<endl;
-        cout<<a.search(&R[0])<<endl;
-        cout<<a.cerca("")->to_stringa()<<endl;
-        cout<<a*2<<endl<<a/2<<endl;
-        */
+        cout<<endl<<"Funzione di remove(&x):"<<endl<<a<<endl;
+    */
+
+       tipo* ris = a.search(&R[0]);
+       cout<<ris<<endl;
+       //cout<<a.cerca("")->to_stringa()<<endl;
+       /*
+
 
         cout<<"BTS vet:"<<endl;
         binarytreesearch bts_v(v_v, s1);

@@ -23,11 +23,18 @@ class vet: public tipo{
 private:
     int r, c;
     int* v_m;
+
+protected:
+    /* Metodi ausiliari per metodi di calcolo --------------------------  -------------------------- */
+    bool isMoltiplication(vet tmp) const;
+    bool isQuadrata(const vet&) const;
+    bool sameSize(vet tmp) const;
+
 public:
     vet(int =1, int =1);
     vet(int*, int =1, int =1);                  /* costruttore con array di interi per popolaro nel momento della creazione */
     vet(const vet&);                            /* costruttore di copia profondo */
-
+    ~vet();
 
     /* Metodi ausiliari  --------------------------  -------------------------- */
     int getRow() const;                         /* metodo che titorna il numero di righe di una matrice/vettore */
@@ -35,9 +42,6 @@ public:
     /* --------------------------  --------------------------  --------------------------  -------------------------- */
 
     /* Metodi ausiliari per metodi di calcolo --------------------------  -------------------------- */
-    bool isMoltiplication(vet tmp) const;
-    bool isQuadrata(const vet&) const;
-    bool sameSize(vet tmp) const;
     void transposed() throw(input_error);
     int norma() const;
     /* --------------------------  --------------------------  --------------------------  -------------------------- */
@@ -46,7 +50,6 @@ public:
     int* operator[](size_t) const;
     vet operator*(const vet&) throw(domain_error);                  /* due matrici si possno moltiplicare con A[m,n] e B[n,p], ho C[m,p] */
     vet& operator=(const vet&);
-
 
     vet* somma(tipo*);
     vet* differenza(tipo*);

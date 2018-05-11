@@ -22,6 +22,7 @@ vet::vet(const vet& v){
             *(v_m+(j+(i*c))) = v[i][j];
 
 }
+vet::~vet(){ delete[] v_m; }
 
 int vet::getRow() const { return r; }
 int vet::getColumn() const { return c; }

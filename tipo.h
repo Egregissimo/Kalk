@@ -5,6 +5,7 @@
 //ogni tipo di dato da usare nell'albero deve includere
 //ed implementare questa classe
 class tipo{
+    friend std::ostream& operator <<(std::ostream&, const tipo&);
 public:
     virtual ~tipo() {}
     virtual tipo* somma(tipo*) =0;//somma tra due tipi
@@ -15,5 +16,7 @@ public:
     virtual bool min(tipo*)const =0;//operatore <
     virtual string to_stringa()const =0;//stampa
 };
+
+std::ostream& operator<< (std::ostream&, const tipo&);
 
 #endif // TIPO_H
