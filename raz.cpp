@@ -115,14 +115,14 @@ raz raz::riduzione()const{
 
 raz* raz::somma(tipo* b)throw(point_error){
     if(!b)
-        throw point_error;
+        throw point_error();
     raz *b1=static_cast<raz*>(b);
     return new raz(((*this)+(*b1)));
 }
 
 raz* raz::differenza(tipo* b)throw(point_error){
     if(!b)
-        throw point_error;
+        throw point_error();
     raz*b1=static_cast<raz*>(b);
     return new raz(((*this)-(*b1)));
 }
@@ -137,14 +137,14 @@ raz* raz::divisione(int b){
 
 bool raz::uguale(tipo* b) const throw(point_error){
     if(!b)
-        throw point_error;
+        throw point_error();
     raz* b1=static_cast<raz*>(b);
     return (*this)==(*b1);
 }
 
 bool raz::min(tipo* b) const throw(point_error){
     if(!b)
-        throw point_error;
+        throw point_error();
     raz*b1=static_cast<raz*>(b);
     return (*this)<(*b1);
 }

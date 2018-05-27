@@ -24,8 +24,6 @@ SOURCES += \
     eccezione.cpp \
     binarytreesearch.cpp \
     binarytreebasic.cpp \
-    GUI/mainwindow.cpp \
-    GUI/leftsizekalk.cpp
 
 HEADERS += \
     raz.h \
@@ -36,5 +34,3 @@ HEADERS += \
     eccezione.h \
     binarytreesearch.h \
     binarytreebasic.h \
-    GUI/mainwindow.h \
-    GUI/leftsizekalk.h

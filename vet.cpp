@@ -188,13 +188,13 @@ string to_string(const vet& vet1){
 
 vet* vet::somma(tipo* b)throw(point_error){
     if(!b)
-        throw point_error;
+        throw point_error();
     vet* b1 = dynamic_cast<vet*>(b);
     return new vet((*this) + (*b1));
 }
 vet* vet::differenza(tipo* b)throw(point_error){
     if(!b)
-        throw point_error;
+        throw point_error();
     vet* b1 = dynamic_cast<vet*>(b);
     return new vet((*this) - (*b1));
 }
@@ -206,13 +206,13 @@ vet* vet::divisione(int b){
 }
 bool vet::uguale(tipo* b) const throw(point_error){
     if(!b)
-        throw point_error;
+        throw point_error();
     vet* b1 = dynamic_cast<vet*>(b);
     return (*this)==(*b1);
 }
 bool vet::min(tipo* b) const throw(point_error){
     if(!b)
-        throw point_error;
+        throw point_error();
     vet* b1 = dynamic_cast<vet*>(b);
     return (*this)<(*b1);
 }

@@ -246,13 +246,13 @@ string to_string(const bin& bin1){
 
 bin* bin::somma(tipo* b) throw(point_error){
     if(!b)
-        throw point_error;
+        throw point_error();
     bin* b1 = dynamic_cast<bin*>(b);
     return new bin((*this) + (*b1));
 }
 bin* bin::differenza(tipo* b) throw(point_error){
     if(!b)
-        throw point_error;
+        throw point_error();
     bin* b1 = dynamic_cast<bin*>(b);
     return new bin((*this) - (*b1));
 }
@@ -264,13 +264,13 @@ bin* bin::divisione(int b){
 }
 bool bin::uguale(tipo* b) const throw(point_error){
     if(!b)
-        throw point_error;
+        throw point_error();
     bin* b1 = dynamic_cast<bin*>(b);
     return (*this)==(*b1);
 }
 bool bin::min(tipo* b) const throw(point_error){
     if(!b)
-        throw point_error;
+        throw point_error();
     bin* b1 = dynamic_cast<bin*>(b);
     return (*this)<(*b1);
 }

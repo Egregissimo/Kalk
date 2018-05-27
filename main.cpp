@@ -2,14 +2,11 @@
 #include <QApplication>
 #include "binarytreesearch.h"
 #include "binarytree.h"
-#include "GUI/mainwindow.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    mainwindow window;
-    window.show();
-    return a.exec();
+    /*Q0Application a(argc, argv);
+    return a.exec();*/
     /*try{
 
         string s="(*,(*,_,(*,_,_)),(*,(*,_,_),(*,_,_)))";
