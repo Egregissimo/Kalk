@@ -46,13 +46,13 @@ bool binarytreebasic::parser(string::iterator begin, string::iterator end){
 
     return a && b;
 }
-//PRE = { la stringa e' corretta }
+//PRE = { la stringa e' potenzialmente non corretta }
 int binarytreebasic::balance_brackets(string::iterator i, string::iterator end){
     if(*i=='_')
         return 0;
     int k=1, s=1;
     if(end==i)//entra se la stringa è corretta e non dev'essere controllata
-        end=i-1;
+        end--;
 
     for(; k>0 && i+s!=end; s++)
         if(*(i+s)=='(')
@@ -78,7 +78,7 @@ unsigned int binarytreebasic::n_nodes_stringa(string::iterator begin){
         else if(*(begin+i)==')')
             id--;
     }
-    //dato che la stringa è corretta in for finira'
+    //dato che la stringa è corretta il for finira'
     return count;
 }
 
@@ -94,7 +94,7 @@ binarytreebasic::nodo* binarytreebasic::somma(nodo* a, nodo* b, nodo *father){
         x->left=somma(a->left, b, x);
         x->right=somma(a->right, b, x);
     }
-    else if(a && b && !a->left && a->right && !b->left && !b->right && ((a->info->divisione(-1))==b->info))
+    else if(a && b && !a->left && !a->right && !b->left && !b->right && ((a->info->moltiplicazione(-1))==b->info))
         return x;
     else if(a && b){
         x=new nodo(((a->info)->somma(b->info)), father);
@@ -116,7 +116,7 @@ binarytreebasic::nodo* binarytreebasic::differenza(nodo* a, nodo* b, nodo *fathe
         x->left=differenza(a->left, b, x);
         x->right=differenza(a->right, b, x);
     }
-    else if(a && b && !a->left && a->right && !b->left && !b->right && (a->info==b->info))
+    else if(a && b && !a->left && !a->right && !b->left && !b->right && (a->info==b->info))
         return x;
     else if(a && b){
         x=new nodo(((a->info)->differenza(b->info)), father);
@@ -129,6 +129,8 @@ binarytreebasic::nodo* binarytreebasic::differenza(nodo* a, nodo* b, nodo *fathe
 binarytreebasic::nodo* binarytreebasic::moltiplicazione(nodo* a, int k, nodo* father){
     nodo* x=0;
     if(a){
+        if(!k)
+            return new nodo(a->info->moltiplicazione(0));
         x=new nodo(((a->info)->moltiplicazione(k)), father);
         x->left=moltiplicazione(a->left, k, x);
         x->right=moltiplicazione(a->right, k, x);
@@ -144,12 +146,6 @@ binarytreebasic::nodo* binarytreebasic::divisione(nodo* a, int k, nodo* father){
         x->right=divisione(a->right, k, x);
     }
     return x;
-}
-
-int binarytreebasic::n_nodes(nodo* n){
-    if(!n)
-       return 0;
-   return 1+n_nodes(n->left)+n_nodes(n->right);
 }
 
 vector<tipo*> binarytreebasic::nodes(nodo* n){
@@ -218,16 +214,10 @@ binarytreebasic::nodo* binarytreebasic::constrRic(string::iterator i, vector<tip
     nodo* x=new nodo(val, father);
     int left=balance_brackets(i, i);
     int right=balance_brackets(i+left+2, i+left+2);
-    if(!left && !right)//caso base
-        return x;
-    if(!left && right)
+    if(right)
         x->right=constrRic(i+left+2, A, x);
-    else if(left && !right)
+    if(left)
         x->left=constrRic(i, A, x);
-    else{
-        x->left=constrRic(i, A, x);
-        x->right=constrRic(i+left+2, A, x);
-    }
     return x;
 }
 
@@ -252,6 +242,12 @@ binarytreebasic& binarytreebasic::operator=(const binarytreebasic& t){
         root=copia(t.root);
     }
     return *this;
+}
+
+int binarytreebasic::n_nodes(nodo* n){
+    if(!n)
+       return 0;
+   return 1+n_nodes(n->left)+n_nodes(n->right);
 }
 
 tipo* binarytreebasic::cerca(string s)const throw(path_error){

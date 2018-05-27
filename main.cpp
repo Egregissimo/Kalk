@@ -1,13 +1,16 @@
 #include <QCoreApplication>
+#include <QApplication>
 #include "binarytreesearch.h"
 #include "binarytree.h"
+#include "GUI/mainwindow.h"
 
 int main(int argc, char *argv[])
 {
-    /*QCoreApplication a(argc, argv);
-
-    return a.exec();*/
-    try{
+    QApplication a(argc, argv);
+    mainwindow window;
+    window.show();
+    return a.exec();
+    /*try{
 
         string s="(*,(*,_,(*,_,_)),(*,(*,_,_),(*,_,_)))";
         string s1="(*,(*,_,(*,(*,_,_),_)),(*,(*,_,_),_))";
@@ -97,7 +100,7 @@ int main(int argc, char *argv[])
        cout<<bts_b.cerca("")->to_stringa()<<endl;
     */
 
-        cout<<"BT raz:"<<endl;
+        /*cout<<"BT raz:"<<endl;
         binarytree b(v, s);
         cout<<b<<endl;
 
@@ -121,8 +124,7 @@ int main(int argc, char *argv[])
         cout<<b.cerca("")->to_stringa()<<endl;
         cout<<b*2<<endl<<b/2<<endl;
     */
-    }
-    //catch(eccezione ex){throw runtime_error(ex.stampa_errore());}
-    catch(input_error ex){ cout<<ex.stampa_errore()<<endl; }
-    return 0;
+    /*}
+    catch(input_error ex){ throw runtime_error(ex.stampa_errore()); }
+    return 0;*/
 }

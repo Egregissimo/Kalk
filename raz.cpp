@@ -18,7 +18,7 @@ raz::raz(int n, int d) throw(domain_error): num(n){
     }
     else
         den=d;
-    *this=riduzione();
+    riduzione();
 }
 
 raz::raz(double n, double d) throw(domain_error){
@@ -47,7 +47,7 @@ raz::raz(double n, double d) throw(domain_error){
         num=z.num;
         den=z.den;
     }
-    *this=riduzione();
+    riduzione();
 }
 
 int raz::getNum()const{
@@ -113,12 +113,16 @@ raz raz::riduzione()const{
     return x;
 }
 
-raz* raz::somma(tipo* b){
+raz* raz::somma(tipo* b)throw(point_error){
+    if(!b)
+        throw point_error;
     raz *b1=static_cast<raz*>(b);
     return new raz(((*this)+(*b1)));
 }
 
-raz* raz::differenza(tipo* b){
+raz* raz::differenza(tipo* b)throw(point_error){
+    if(!b)
+        throw point_error;
     raz*b1=static_cast<raz*>(b);
     return new raz(((*this)-(*b1)));
 }
@@ -131,12 +135,16 @@ raz* raz::divisione(int b){
     return new raz(((*this)/b));
 }
 
-bool raz::uguale(tipo* b) const{
+bool raz::uguale(tipo* b) const throw(point_error){
+    if(!b)
+        throw point_error;
     raz* b1=static_cast<raz*>(b);
     return (*this)==(*b1);
 }
 
-bool raz::min(tipo* b) const{
+bool raz::min(tipo* b) const throw(point_error){
+    if(!b)
+        throw point_error;
     raz*b1=static_cast<raz*>(b);
     return (*this)<(*b1);
 }
@@ -152,31 +160,25 @@ raz operator+(const raz& r1, const raz& r2){
         return r1;
     int n=r1.num*r2.den+r2.num*r1.den;
     int d=r1.den*r2.den;
-    raz ris(n, d);
-    ris=ris.riduzione();
-    return ris;
+
+    return raz(n, d);
 }
 
 raz operator-(const raz& r1, const raz& r2){
     int n=r1.num*r2.den-r2.num*r1.den;
     int d=r1.den*r2.den;
-    raz ris(n, d);
-    ris=ris.riduzione();
-    return ris;
+
+    return raz(n, d);
 }
 
 raz operator*(const raz& r1, const raz& r2){
-    raz t(r1.num*r2.num, r1.den*r2.den);
-    t=t.riduzione();
-    return t;
+    return raz(r1.num*r2.num, r1.den*r2.den);
 }
 
 raz operator/(const raz& r1, const raz& r2) throw(domain_error){
     if(r2.num==0)
         throw domain_error("raz");
-    raz t(r1.num*r2.den, r1.den*r2.num);
-    t=t.riduzione();
-    return t;
+    return raz(r1.num*r2.den, r1.den*r2.num);
 }
 
 bool operator==(const raz& r1, const raz& r2){
@@ -185,7 +187,6 @@ bool operator==(const raz& r1, const raz& r2){
 }
 
 bool operator!=(const raz& r1, const raz& r2){
-    //raz r3(r1), r4(r2);
     return r1.num!=r2.num || r1.den!=r2.den;
 }
 

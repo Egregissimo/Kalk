@@ -30,15 +30,15 @@ tipo* binarytree::removeIt(nodo* y){
         x->father=y->father;
 
     if(!y->father)                  //nel caso l'albero contenga l'unico nodo da rimuovere
-        this->root=x;
+        root=x;
     else if(y==y->father->left)     //nel caso z non abbia figli cancella il collegamento
         y->father->left=x;
     else                            //in alternativa collega i vari nodi senza z
         y->father->right=x;
 
     if(z){
-        nodo* t=this->root;
-        string path=min_path(this->root);
+        nodo* t=root;
+        string path=min_path(root);
         string::iterator begin=path.begin(), end=path.end();
         for(; begin!=end; begin++){
             if(*begin=='0')
@@ -87,8 +87,8 @@ binarytreebasic::nodo* binarytree::searchIt(nodo * x, tipo* a){
 void binarytree::add(tipo * a)throw(point_error){
     if(!a)
         throw point_error();
-    nodo* x=this->root;
-    string path=min_path(this->root);
+    nodo* x=root;
+    string path=min_path(root);
     string::iterator begin=path.begin(), end=path.end();
     for(; begin!=end; begin++){
         if(*begin=='0')
@@ -96,7 +96,9 @@ void binarytree::add(tipo * a)throw(point_error){
         else
             x=x->right;
     }
-    if(!x->left)
+    if(!x)
+        x=new nodo(a, x);
+    else if(!x->left)
         x->left=new nodo(a, x);
     else
         x->right=new nodo(a, x);
@@ -105,7 +107,7 @@ void binarytree::add(tipo * a)throw(point_error){
 tipo* binarytree::remove(string s) throw(path_error){
     if(!controlla_percorso(s))
         throw path_error();
-    nodo* x=this->root;
+    nodo* x=root;
     string::iterator begin=s.begin(), end=s.end();
     for(; begin!=end; begin++){
         if(*begin=='0')
@@ -124,7 +126,7 @@ tipo* binarytree::remove(string s) throw(path_error){
 tipo* binarytree::remove(tipo* a)throw(point_error){
     if(!a)
         throw point_error();
-    nodo* x=this->root;
+    nodo* x=root;
     if(x)
         x=searchIt(x, a);
     if(x){
@@ -138,7 +140,7 @@ tipo* binarytree::remove(tipo* a)throw(point_error){
 tipo* binarytree::search(tipo* a)const throw(point_error){
     if(!a)
         throw point_error();
-    nodo* x=this->root;
+    nodo* x=root;
     if(x)
         x=searchIt(x, a);
     if(x)

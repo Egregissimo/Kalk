@@ -1,9 +1,7 @@
 #ifndef VET_H
 #define VET_H
 
-#include "tipo.h";
-#include <iostream>
-#include <string>
+#include "tipo.h"
 #include <math.h>                                   /* pow - sqrt - abs */
 
 class vet: public tipo{
@@ -27,12 +25,12 @@ private:
 protected:
     /* Metodi ausiliari per metodi di calcolo --------------------------  -------------------------- */
     bool isMoltiplication(vet tmp) const;
-    bool isQuadrata(const vet&) const;
+    bool isQuadrata() const;
     bool sameSize(vet tmp) const;
 
 public:
-    vet(int =1, int =1);
-    vet(int*, int =1, int =1);                  /* costruttore con array di interi per popolaro nel momento della creazione */
+    vet(int =0, int =1);
+    vet(int*, int =0, int =1);                  /* costruttore con array di interi per popolaro nel momento della creazione */
     vet(const vet&);                            /* costruttore di copia profondo */
     ~vet();
 
@@ -51,12 +49,12 @@ public:
     vet operator*(const vet&) throw(domain_error);                  /* due matrici si possno moltiplicare con A[m,n] e B[n,p], ho C[m,p] */
     vet& operator=(const vet&);
 
-    vet* somma(tipo*);
-    vet* differenza(tipo*);
+    vet* somma(tipo*)throw(point_error);
+    vet* differenza(tipo*)throw(point_error);
     vet* moltiplicazione(int);
     vet* divisione(int);
-    bool uguale(tipo*)const;
-    bool min(tipo*)const;
+    bool uguale(tipo*)const throw(point_error);
+    bool min(tipo*)const throw(point_error);
     string to_stringa()const;
 };
 

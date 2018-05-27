@@ -15,7 +15,7 @@ protected:
     public:
         tipo* info;                                                 /* campo info polimorfo */
         nodo* father, *left, *right;
-        nodo(): father(0), left(0), right(0) {}
+        nodo(): info(0), father(0), left(0), right(0) {}
         nodo(tipo* val, nodo* f=0, nodo* l=0, nodo* r=0): info(val), father(f), left(l), right(r) {}
         static string stampa(nodo*);                                /* stampa (il campo info) il nodo corrente e il suo sottoalbero */
     };
@@ -32,7 +32,6 @@ protected:
     static nodo* moltiplicazione(nodo*, int, nodo * =0);
     static nodo* divisione(nodo*, int, nodo* =0);
 
-    static int n_nodes(nodo*);                                          /* conta i nodi dell'albero */
     static vector<tipo*> nodes(nodo*);                                  /* ritorna un vettore con i campi info del sottoalbero del nodo letti in ordine PREFISSO */
     static bool controlla_percorso(string &);                           /* constrolla se la stringa per la ricerca di un elemento sia formata esclusivamente da 0 e 1 */
     static bool controlla_input(vector<tipo*>&, string&);               /* constrolla se gli input del costruttore sono corretti */
@@ -58,7 +57,8 @@ public:
     binarytreebasic(vector<tipo*>, string &) throw(input_error);        /* costruttore */
     binarytreebasic(const binarytreebasic& t): root(copia(t.root)) {}   /* costruttore di copia profondo */
     virtual ~binarytreebasic();                                         /* distruttore profondo */
-    binarytreebasic& operator=(const binarytreebasic&);                 /* assegnazione profonda */
+    binarytreebasic& operator=(const binarytreebasic&);                /* assegnazione profonda */
+    static int n_nodes(nodo*);                                          /* conta i nodi dell'albero */
 
     tipo* cerca(string)const throw(path_error);                         /* trova l'oggetto indicato dal percorso, se stringa vuota ritorna la radice */
 

@@ -1,14 +1,8 @@
 #ifndef RAZ_H
 #define RAZ_H
 #include <cmath>
-#include <iostream>
 #include "tipo.h"
 
-using std::string;
-using std::to_string;
-using std::ostream;
-using std::cout;
-using std::endl;
 using std::sqrt;
 using std::floor;
 using std::pow;
@@ -43,12 +37,12 @@ public:
     static raz cbrt(const raz&);
     raz riduzione() const;
 
-    raz* somma(tipo*);
-    raz* differenza(tipo*);
+    raz* somma(tipo*)throw(point_error);
+    raz* differenza(tipo*)throw(point_error);
     raz* moltiplicazione(int);
     raz* divisione(int);
-    bool uguale(tipo*)const;
-    bool min(tipo*)const;
+    bool uguale(tipo*)const throw(point_error);
+    bool min(tipo*)const throw(point_error);
     string to_stringa()const;
 };
 

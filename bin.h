@@ -2,8 +2,6 @@
 #define BIN_H
 
 #include "tipo.h"
-#include <iostream>
-#include <string>
 #include <vector>
 #include <algorithm>                            /* reverse */
 #include <math.h>                               /* pow */
@@ -31,7 +29,7 @@ private:
 public:
     //bin();
     bin(int = 1);                                 /* costruttore che dato in input un valore base 10 lo trasforma in base 2 */
-    bin(double = 1);                              /*
+    bin(double);                              /*
                                                      5.375 base 10 = 101.011 base 2
                                                      0.375 × 2 = 0.750          parte intera 0
                                                      0.750 × 2 = 1.5            perte intera 1
@@ -47,12 +45,12 @@ public:
     //bin& operator= (const bin&);
 
 
-    bin* somma(tipo*);
-    bin* differenza(tipo*);
+    bin* somma(tipo*) throw(point_error);
+    bin* differenza(tipo*) throw(point_error);
     bin* moltiplicazione(int);
     bin* divisione(int);
-    bool uguale(tipo*)const;
-    bool min(tipo*)const;
+    bool uguale(tipo*)const throw(point_error);
+    bool min(tipo*)const throw(point_error);
     string to_stringa()const;
 };
 

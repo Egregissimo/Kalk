@@ -22,7 +22,7 @@ public:
 
 class domain_error: public eccezione{
 public:
-    domain_error(string c="N/A", string s="il dominio inserito non e' corretto"): eccezione(c,s) {}
+    domain_error(string c="N/A", string s="il denominatore e' nullo"): eccezione(c,s) {}
 };
 
 class input_error: public eccezione{

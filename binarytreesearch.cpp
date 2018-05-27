@@ -123,7 +123,7 @@ tipo* binarytreesearch::removeIt(nodo* z){
     if(x)
         x->father=y->father;
     if(!y->father)//nel caso l'albero contenga l'unico nodo da rimuovere
-        this->root=x;
+        root=x;
     else if(y==y->father->left)//nel caso z non abbia figli cancella il collegamento
         y->father->left=x;
     else//in alternativa collega i vari nodi senza z
@@ -137,7 +137,7 @@ tipo* binarytreesearch::removeIt(nodo* z){
 void binarytreesearch::add(tipo* a) throw(point_error){
     if(!a)
         throw point_error();
-    nodo *y=0, *x=this->root;
+    nodo *y=0, *x=root;
     while(x){
         y=x;
         if(a->min(x->info))
@@ -146,7 +146,7 @@ void binarytreesearch::add(tipo* a) throw(point_error){
             x=x->right;
     }
     if(!y)
-        this->root=new nodo(a);
+        root=new nodo(a);
     else if(a->min(y->info))
         y->left=new nodo(a, y);
     else
@@ -154,7 +154,7 @@ void binarytreesearch::add(tipo* a) throw(point_error){
 }
 
 tipo* binarytreesearch::remove(string s) throw(path_error){
-    nodo* x=this->root;
+    nodo* x=root;
     if(!controlla_percorso(s))
         throw path_error();
     string::iterator begin=s.begin(), end=s.end();
@@ -175,7 +175,7 @@ tipo* binarytreesearch::remove(string s) throw(path_error){
 tipo* binarytreesearch::remove(tipo* a) throw(point_error){
     if(!a)
         throw point_error();
-    nodo* x=this->root;
+    nodo* x=root;
     while(x && !(x->info->uguale(a)))
         if(a->min(x->info))
             x=x->left;
@@ -192,7 +192,7 @@ tipo* binarytreesearch::remove(tipo* a) throw(point_error){
 tipo* binarytreesearch::search(tipo* a)const throw(point_error){
     if(!a)
         throw point_error();
-    nodo* x=this->root;
+    nodo* x=root;
     while(x && !(x->info->uguale(a)))
         if(a->min(x->info))
             x=x->left;
@@ -205,8 +205,8 @@ tipo* binarytreesearch::search(tipo* a)const throw(point_error){
 }
 
 binarytreesearch binarytreesearch::balance() const{
-    int n=n_nodes(this->root);
-    vector<tipo*> A=nodes(this->root);
+    int n=n_nodes(root);
+    vector<tipo*> A=nodes(root);
     string s=crea_stringa(n);
     binarytreesearch a(A, s);
     return a;
@@ -241,7 +241,7 @@ binarytreesearch& operator -(const binarytreesearch &a, const binarytreesearch &
 }
 
 binarytreesearch& binarytreesearch::operator *(int p){
-    binarytreebasic::nodo* x=moltiplicazione(this->root, p);
+    binarytreebasic::nodo* x=moltiplicazione(root, p);
     string s=binarytreebasic::tree_to_string(x);
     vector<tipo*> A=nodes(x);
     binarytreesearch* c=new binarytreesearch(A, s);
@@ -249,7 +249,7 @@ binarytreesearch& binarytreesearch::operator *(int p){
 }
 
 binarytreesearch& binarytreesearch::operator /(int p){
-    binarytreebasic::nodo* x=divisione(this->root, p);
+    binarytreebasic::nodo* x=divisione(root, p);
     string s=binarytreebasic::tree_to_string(x);
     vector<tipo*> A=nodes(x);
     binarytreesearch* c=new binarytreesearch(A, s);

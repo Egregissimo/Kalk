@@ -1,4 +1,5 @@
-QT -= gui
+QT -= core gui
+QT += widgets
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
@@ -22,7 +23,9 @@ SOURCES += \
     binarytree.cpp \
     eccezione.cpp \
     binarytreesearch.cpp \
-    binarytreebasic.cpp
+    binarytreebasic.cpp \
+    GUI/mainwindow.cpp \
+    GUI/leftsizekalk.cpp
 
 HEADERS += \
     raz.h \
@@ -32,4 +35,6 @@ HEADERS += \
     binarytree.h \
     eccezione.h \
     binarytreesearch.h \
-    binarytreebasic.h
+    binarytreebasic.h \
+    GUI/mainwindow.h \
+    GUI/leftsizekalk.h

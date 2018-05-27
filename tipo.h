@@ -1,6 +1,12 @@
 #ifndef TIPO_H
 #define TIPO_H
-#include <eccezione.h>
+#include "eccezione.h"
+#include <iostream>
+
+using std::ostream;
+using std::cout;
+using std::endl;
+using std::to_string;
 
 //ogni tipo di dato da usare nell'albero deve includere
 //ed implementare questa classe

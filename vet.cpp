@@ -28,7 +28,7 @@ int vet::getRow() const { return r; }
 int vet::getColumn() const { return c; }
 
 bool vet::isMoltiplication(vet tmp) const{ return c == tmp.r; }
-bool vet::isQuadrata(const vet& vet2) const { return r==vet2.r && c==vet2.c; }
+bool vet::isQuadrata() const { return r==c; }
 bool vet::sameSize(vet tmp) const{
     if((r == tmp.r) && (c == tmp.c))
         return true;
@@ -54,30 +54,17 @@ void vet::transposed() throw(input_error){
     c = r; r = ttmp;
 }
 int vet::norma() const{
-    int out = 0;
-    if((r == 1) || (c == 1)){
-        /* NORMA VETTORE */
-        for(int i=0; i<r*c; i++)
-             out = pow(*(v_m+i), 2) + out;
-        out = sqrt(out);
-    }
-    else{
-        /* NORMA MATRICE */
-        int max;
-        for(int j=0; j<1; j++)
-            for(int i=0; i<r; i++)
-                out = abs(*(v_m+(j+(i*c)))) + out;
+    int max=0;
+    for(int i=0; i<c; i++){
+        int count=0;
+        for(int j=0; j<r; j++)
+            count+=abs(*(v_m+(i+(j*c))));
 
-        for(int j=1; j<c; j++){
-            max = 0;
-            for(int i=0; i<r; i++){
-                max = abs(*(v_m+(j+(i*c)))) + max;
-            }
-            if(max >= out)
-                out = max;
-        }
+        if(count>max)
+            max=count;
     }
-    return out;
+
+    return max;
 }
 
 /* ------------------------------------------------------ */
@@ -199,11 +186,15 @@ string to_string(const vet& vet1){
 
 /* Metodi ereditati dalla classe tipo.h */
 
-vet* vet::somma(tipo* b){
+vet* vet::somma(tipo* b)throw(point_error){
+    if(!b)
+        throw point_error;
     vet* b1 = dynamic_cast<vet*>(b);
     return new vet((*this) + (*b1));
 }
-vet* vet::differenza(tipo* b){
+vet* vet::differenza(tipo* b)throw(point_error){
+    if(!b)
+        throw point_error;
     vet* b1 = dynamic_cast<vet*>(b);
     return new vet((*this) - (*b1));
 }
@@ -213,11 +204,15 @@ vet* vet::moltiplicazione(int b){
 vet* vet::divisione(int b){
     return new vet(b / (*this));    /*è da controllare*/
 }
-bool vet::uguale(tipo* b) const{
+bool vet::uguale(tipo* b) const throw(point_error){
+    if(!b)
+        throw point_error;
     vet* b1 = dynamic_cast<vet*>(b);
     return (*this)==(*b1);
 }
-bool vet::min(tipo* b) const{
+bool vet::min(tipo* b) const throw(point_error){
+    if(!b)
+        throw point_error;
     vet* b1 = dynamic_cast<vet*>(b);
     return (*this)<(*b1);
 }
