@@ -65,23 +65,6 @@ int binarytreebasic::balance_brackets(string::iterator i, string::iterator end){
 }
 //POST = { ritorna il numero di passi fino alla posizione della ')' che chiude la parentesi della PRE }
 
-//PRE = { la stringa e' corretta e begin punta a '(' }
-unsigned int binarytreebasic::n_nodes_stringa(string::iterator begin){
-    int count=0, id=1;
-    if(*begin=='_')
-        return count;
-    for(int i=1; id; i++){
-        if(*(begin+i)=='*')
-            count++;
-        else if(*(begin+i)=='(')
-            id++;
-        else if(*(begin+i)==')')
-            id--;
-    }
-    //dato che la stringa è corretta il for finira'
-    return count;
-}
-
 binarytreebasic::nodo* binarytreebasic::somma(nodo* a, nodo* b, nodo *father){
     nodo* x=0;
     if(!a && b){
@@ -268,6 +251,29 @@ tipo* binarytreebasic::cerca(string s)const throw(path_error){
 
 string binarytreebasic::struttura_tree()const{
     return tree_to_string(this->root);
+}
+
+//PRE = { la stringa e' corretta e begin punta a '(' }
+unsigned int binarytreebasic::n_nodes_stringa(string::iterator begin){
+    int count=0, id=1;
+    if(*begin=='_')
+        return count;
+    for(int i=1; id; i++){
+        if(*(begin+i)=='*')
+            count++;
+        else if(*(begin+i)=='(')
+            id++;
+        else if(*(begin+i)==')')
+            id--;
+    }
+    //dato che la stringa è corretta il for finira'
+    return count;
+}
+
+Tipo* binarytreebasic::tipo_tree()const{
+    if(!root)
+        return 0;
+    return root->info;
 }
 
 ostream& operator <<(ostream& os, const binarytreebasic& t){
