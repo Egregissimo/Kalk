@@ -7,6 +7,9 @@
 #include "bin.h"
 using std::vector;
 
+class binarytreesearch;
+class binarytree;
+
 class binarytreebasic{
      friend ostream& operator<<(ostream&, const binarytreebasic&);
      friend string to_string(const binarytreebasic&);
@@ -33,8 +36,9 @@ protected:
 
     static vector<tipo*> nodes(nodo*);                                  /* ritorna un vettore con i campi info del sottoalbero del nodo letti in ordine PREFISSO */
     static bool controlla_percorso(string &);                           /* constrolla se la stringa per la ricerca di un elemento sia formata esclusivamente da 0 e 1 */
-    static bool controlla_input(vector<tipo*>&, string&);               /* constrolla se gli input del costruttore sono corretti */
     static string tree_to_string(nodo*);                                /* stampa la struttura dell'albero prendendo il nodo radice */
+    static bool controlla_input(vector<tipo*>&, string&);               /* constrolla se gli input del costruttore sono corretti */
+
 private:
     /* funzioni ausialiarie */
     nodo* copia(nodo *, nodo* =0)const;                                 /* effettua una copia profonda dell'albero */
@@ -68,7 +72,8 @@ public:
 
     string struttura_tree()const;                                       /* stampa la struttura dell'albero */
     static unsigned int n_nodes_stringa(string::iterator);              /* ritorna il numero di nodi di una stringa */
-    Tipo* tipo_tree()const;
+    tipo* tipo_tree()const;
+    static bool controlla_stringa(string);
 };
 
 ostream& operator<<(ostream&, const binarytreebasic&);

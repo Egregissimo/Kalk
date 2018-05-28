@@ -13,6 +13,7 @@
 #include <QProgressBar>
 #include <QTableWidget>
 #include <QMessageBox>
+#include <QTextEdit>
 
 #include "string"
 #include <vector>
@@ -23,6 +24,7 @@
 #include "../raz.h"
 
 class mygui: public QWidget{
+    QMessageBox msgBox;
     std::map<string, binarytreebasic*> mappaTree;
     std::vector<tipo*> vettoreTipo;
 
@@ -95,11 +97,22 @@ class mygui: public QWidget{
     QLabel* labelProgessStruttura;
     QProgressBar* progressBarStruttura;
 
+    QGridLayout* textEditLayout;
+    QLabel* label_struttura_tree1;
+    QLabel* label_struttura_tree2;
+    QTextEdit* struttura_tree1;
+    QTextEdit* struttura_tree2;
+
     /*  BOX3    --------------------------------------------------------------------------------------  */
     QGridLayout* operaLayout;
+    QGridLayout* calcolaLayout;
     QComboBox* ComboListaTree1;
     QComboBox* ComboListaTree2;
     QComboBox* ComboListaOperazioni;
+
+    QLineEdit* molt_div;
+    QPushButton* calcola;
+    QTextEdit* struttura_ris;
 
 public:
     mygui(QWidget* = 0);
@@ -143,8 +156,12 @@ private:
 
     void connectOptionToSlot();
     void connectButtonStructAndRadioToSlot();
+    void connectComboOperazioniToSlot();
 
     void creazioneNodiRaz();
+    void creazioneNodiBin();
+    void creazioneNodiVet();
+    void add_vet_raz_bin(QString);
 
     /*  -----   */
 
@@ -155,11 +172,15 @@ private:
     /*  -----  */
 
     void addWidgetOpera();
+    void addWidgetCalcola();
+
+    void add_rm_mol_div(bool);
     void aggiornaComboBoxListaTree();
 
     /*  Abilita/Disabilita  */
     void abi_disab_TastieraStruttura(bool);
     void abi_disab_go_crea(bool);
+    void abi_disab_radioType(bool);
 
 public slots:
     void clearAll();
@@ -179,7 +200,14 @@ public slots:
     void slotRadioBin();
     void slotRadioVet();
     void slotComboTree();
+    void slotComboTextEdit();
 
     void slotGo();
+
+    void slotAggiornaCombo();
+    void slotCreazioneVet();
+
+    void slotComboOperazioni(int);
+    void slotCalcola();
 };
 #endif // MYGUI_H

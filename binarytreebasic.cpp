@@ -270,10 +270,15 @@ unsigned int binarytreebasic::n_nodes_stringa(string::iterator begin){
     return count;
 }
 
-Tipo* binarytreebasic::tipo_tree()const{
+tipo* binarytreebasic::tipo_tree()const{
     if(!root)
         return 0;
     return root->info;
+}
+
+bool binarytreebasic::controlla_stringa(string s){
+    int size=s.size();
+    return parser(s.begin(), s.end()) && (size==0 || size==5 || size%6==1);
 }
 
 ostream& operator <<(ostream& os, const binarytreebasic& t){
