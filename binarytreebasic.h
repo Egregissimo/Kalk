@@ -23,7 +23,6 @@ protected:
     /* funzioni */
     static bool parser(string::iterator, string::iterator);             /* constrolla che la stringa in input sia grammaticalmente corretta */
     static int balance_brackets(string::iterator, string::iterator);    /* prende in input un carattere, se questo e' '(' ritorna la sua ')' bilanciata */
-    static unsigned int n_nodes_stringa(string::iterator);              /* ritorna il numero di nodi di una stringa */
 
     /*  il primo e secondo valore sono rispettivamente il termine a sinistra e destra dei rispettivi operatori. Il terzo si
         riferisce al nodo padre da impostare ad ogni ricorsione */
@@ -68,6 +67,7 @@ public:
     virtual tipo* search (tipo*)const=0;                                /* trova l'oggetto indicato in input */
 
     string struttura_tree()const;                                       /* stampa la struttura dell'albero */
+    static unsigned int n_nodes_stringa(string::iterator);              /* ritorna il numero di nodi di una stringa */
 };
 
 ostream& operator<<(ostream&, const binarytreebasic&);

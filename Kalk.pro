@@ -1,8 +1,9 @@
 QT -= core gui
 QT += widgets
 
-CONFIG += c++11 console
+# CONFIG += c++11 console
 CONFIG -= app_bundle
+QT += widgets
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -24,6 +25,8 @@ SOURCES += \
     eccezione.cpp \
     binarytreesearch.cpp \
     binarytreebasic.cpp \
+    tipo.cpp \
+    GUI/mygui.cpp
 
 HEADERS += \
     raz.h \
@@ -34,3 +37,4 @@ HEADERS += \
     eccezione.h \
     binarytreesearch.h \
     binarytreebasic.h \
+    GUI/mygui.h
