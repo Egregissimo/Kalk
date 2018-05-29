@@ -7,9 +7,6 @@
 #include "bin.h"
 using std::vector;
 
-class binarytreesearch;
-class binarytree;
-
 class binarytreebasic{
      friend ostream& operator<<(ostream&, const binarytreebasic&);
      friend string to_string(const binarytreebasic&);
