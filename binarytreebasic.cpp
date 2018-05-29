@@ -270,7 +270,7 @@ unsigned int binarytreebasic::n_nodes_stringa(string::iterator begin){
     return count;
 }
 
-Tipo* binarytreebasic::tipo_tree()const{
+tipo* binarytreebasic::tipo_tree()const{
     if(!root)
         return 0;
     return root->info;

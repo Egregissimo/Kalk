@@ -68,7 +68,7 @@ public:
 
     string struttura_tree()const;                                       /* stampa la struttura dell'albero */
     static unsigned int n_nodes_stringa(string::iterator);              /* ritorna il numero di nodi di una stringa */
-    Tipo* tipo_tree()const;
+    tipo *tipo_tree()const;
 };
 
 ostream& operator<<(ostream&, const binarytreebasic&);

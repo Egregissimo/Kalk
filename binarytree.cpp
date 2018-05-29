@@ -149,6 +149,22 @@ tipo* binarytree::search(tipo* a)const throw(point_error){
     return 0;
 }
 
+binarytree& binarytree::operator *(int p){
+    binarytreebasic::nodo* x=moltiplicazione(this->root, p);
+    string s=binarytreebasic::tree_to_string(x);
+    vector<tipo*> A=nodes(x);
+    binarytree* c=new binarytree(A, s);
+    return *c;
+}
+
+binarytree& binarytree::operator /(int p){
+    binarytreebasic::nodo* x=divisione(this->root, p);
+    string s=binarytreebasic::tree_to_string(x);
+    vector<tipo*> A=nodes(x);
+    binarytree* c=new binarytree(A, s);
+    return *c;
+}
+
 ostream& operator<<(ostream& os, const binarytree& t){
     if(t.root)
         os<<binarytreebasic::nodo::stampa(t.root);
@@ -173,22 +189,6 @@ binarytree& operator -(const binarytree& a, const binarytree &b){
     binarytreebasic::nodo* x=binarytreebasic::differenza(a.root, b.root);
     string s=binarytreebasic::tree_to_string(x);
     vector<tipo*> A=binarytreebasic::nodes(x);
-    binarytree* c=new binarytree(A, s);
-    return *c;
-}
-
-binarytree& binarytree::operator *(int p){
-    binarytreebasic::nodo* x=moltiplicazione(this->root, p);
-    string s=binarytreebasic::tree_to_string(x);
-    vector<tipo*> A=nodes(x);
-    binarytree* c=new binarytree(A, s);
-    return *c;
-}
-
-binarytree& binarytree::operator /(int p){
-    binarytreebasic::nodo* x=divisione(this->root, p);
-    string s=binarytreebasic::tree_to_string(x);
-    vector<tipo*> A=nodes(x);
     binarytree* c=new binarytree(A, s);
     return *c;
 }

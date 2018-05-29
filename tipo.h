@@ -11,6 +11,7 @@ using std::to_string;
 //ogni tipo di dato da usare nell'albero deve includere
 //ed implementare questa classe
 class tipo{
+    /* Dichiarazione di amicizia per i metodi dichiarati fuori dalla classe */
     friend std::ostream& operator <<(std::ostream&, const tipo&);
 public:
     virtual ~tipo() {}

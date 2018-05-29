@@ -1,6 +1,6 @@
 #ifndef BINARYTREE_H
 #define BINARYTREE_H
-#include "binarytreesearch.h"
+#include "binarytreebasic.h"
 
 
 class binarytree: public binarytreebasic{
