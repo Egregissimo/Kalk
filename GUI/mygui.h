@@ -13,6 +13,7 @@
 #include <QProgressBar>
 #include <QTableWidget>
 #include <QMessageBox>
+#include <QTextEdit>
 
 #include "string"
 #include <vector>
@@ -128,6 +129,7 @@ private:
     // connessione dei widget ai relativi slot
     void connectOptionToSlot();
     void connectButtonStructAndRadioToSlot();
+    void connectComboOperazioniToSlot();
 
     // funzioni ausiliarie per la creazione dei nodi raz, bin e vet
     void creazioneNodiRaz();
@@ -138,6 +140,7 @@ private:
     // funzioni per abilitare o disabilitare: la tastiera struttura, il tasto go/crea e i radio button
     void abi_disab_TastieraStruttura(bool);
     void abi_disab_go_crea(bool);
+    void abi_disab_radioType(bool);
 
 public slots:
     // slot per i tasti canc e canc all per l'inserimento struttura e per l'inserimento dati nella sezione bin
