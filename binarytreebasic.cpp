@@ -276,6 +276,11 @@ tipo* binarytreebasic::tipo_tree()const{
     return root->info;
 }
 
+bool binarytreebasic::controlla_stringa(string s){
+    int size=s.size();
+    return parser(s.begin(), s.end()) && (size==0 || size==5 || size%6==1);
+}
+
 ostream& operator <<(ostream& os, const binarytreebasic& t){
     if(t.root)
         os<<binarytreebasic::nodo::stampa(t.root);
