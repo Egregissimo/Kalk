@@ -1,6 +1,14 @@
 #include "mygui.h"
 
-mygui::mygui(QWidget* parent): QWidget(parent){
+/*  MAIN    -------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+mygui::mygui(QWidget* parent): QWidget(parent), mainHLayout(0), mainVLayout1(0), mainVLayout2(0),
+mainVLayout3(0), comboTreeLayout(0), ComboTree(0), radioTypeLayout(0), radioType(0), nomeLayout(0),
+LabelNomeTree(0), LineEditNomeTree(0), strutturaLayout(0), LineEditStrutturaTree(0), tastieraStrutturaLayout(0),
+tastierinoStruttura(0), displayLayout(0), labelNumeratore(0), LineEditNum(0), labelDenominatore(0), LineEditDen(0),
+labelKalk(0), display(0), label_row(0), SpinBox_row(0), label_colum(0),
+SpinBox_colum(0), goLayout(0), go(0), table(0), creaVet(0), progressLayout(0), progressBarStruttura(0),
+operaLayout(0), ComboListaTree1(0), ComboListaTree2(0), ComboListaOperazioni(0),
+molt_div(0), calcolaLayout(0), calcola(0), struttura_ris(0){
     for(unsigned int i=0; i<3; i++)
         whatChecked[i] = false;
     table = 0;      //FORSE NECESSARIO METTERE TUTTI I PUNTATORI SETTATI A 0 A INIZIO PROGRAMMA
@@ -9,17 +17,18 @@ mygui::mygui(QWidget* parent): QWidget(parent){
     setWindowTitle("Prova GUI KALK");
     resize(900,300);
     mainHLayout = new QHBoxLayout(this);
-    costruiciBox1();
+    costruisciBox1();
     mainHLayout->addLayout(mainVLayout1);
 
     mainVLayout2 = new QVBoxLayout();
     mainVLayout2->setContentsMargins(50,0,0,0);
-    costruiciBox2();
+    costruisciBox2();
     mainHLayout->addLayout(mainVLayout2);
 
 
 }
-void mygui::costruiciBox1(){
+
+void mygui::costruisciBox1(){
     creaLayout1();
     addWidgetComboRadio();
     addWidgetNomeTreeSezione();
@@ -27,6 +36,17 @@ void mygui::costruiciBox1(){
     addWidgetDisplayRaz();
     addWidgetGo();
 }
+void mygui::costruisciBox2(){
+    creaLayout2();
+    addWidgetProgressBar();
+}
+void mygui::costruisciBox3(){
+    resize(1200,300);
+    creaLayout3();
+    addWidgetOpera();
+    addWidgetCalcola();
+}
+
 void mygui::creaLayout1(){
     mainVLayout1 = new QVBoxLayout();
 
@@ -55,6 +75,25 @@ void mygui::creaLayout1(){
     mainVLayout1->addLayout(goLayout);
     /*  ------------------------------------------  */
 }
+void mygui::creaLayout2(){
+    progressLayout = new QGridLayout();
+    textEditLayout = new QGridLayout();
+    mainVLayout2->addLayout(progressLayout);
+    mainVLayout2->addLayout(textEditLayout);
+}
+void mygui::creaLayout3(){
+    mainVLayout3 = new QVBoxLayout();
+    mainVLayout3->setContentsMargins(50,0,0,0);
+    mainHLayout->addLayout(mainVLayout3);
+
+    operaLayout = new QGridLayout();
+    calcolaLayout = new QGridLayout();
+    mainVLayout3->addLayout(operaLayout);
+    mainVLayout3->addLayout(calcolaLayout);
+}
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+    /*  BOX1    ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 void mygui::addWidgetComboRadio(){
     creaComboRadioButton();
@@ -77,8 +116,14 @@ void mygui::addWidgetStrutturaSezione(){
     strutturaLayout->addWidget(LineEditStrutturaTree,0,1);
     strutturaLayout->addWidget(option2[1],0,2);
     strutturaLayout->addWidget(option2[0],0,3);
-    for(int i=0; i<tastierinoStruttura.size(); i++)
+    for(unsigned int i=0; i<tastierinoStruttura.size(); i++)
         tastieraStrutturaLayout->addWidget(tastierinoStruttura[i], 0, i);
+}
+void mygui::addWidgetGo(){
+    go = new QPushButton("Go/Crea");
+    goLayout->addWidget(go,0,0);
+    connect(go, SIGNAL(clicked()), this, SLOT(slotGo()));
+    go->setDisabled(true);
 }
 
 void mygui::addWidgetDisplayRaz(){
@@ -136,25 +181,6 @@ void mygui::addWidgetDisplayVet(){
 
     whatChecked[2]=true;
 }
-void mygui::addWidgetGo(){
-    go = new QPushButton("Go/Crea");
-    goLayout->addWidget(go,0,0);
-    connect(go, SIGNAL(clicked()), this, SLOT(slotGo()));
-    go->setDisabled(true);
-}
-void mygui::addWidgetTable(){
-    int r = SpinBox_row->value();
-    int c = SpinBox_colum->value();
-    if(table)
-        removeWidgetTable();
-
-    resize(900+c*50,300+r*50);
-    table = new QTableWidget(r,c);
-    creaVet = new QPushButton("Crea Vet");
-    goLayout->addWidget(table,1,0);
-    goLayout->addWidget(creaVet,2,0);
-}
-
 void mygui::removeWidgetDisplayRaz(){
     displayLayout->removeWidget(labelNumeratore);
     displayLayout->removeWidget(labelDenominatore);
@@ -190,6 +216,29 @@ void mygui::removeWidgetDisplayVet(){
     delete SpinBox_row;
     delete SpinBox_colum;
     whatChecked[2]=false;
+}
+
+void mygui::addWidgetTable(){
+    int r = SpinBox_row->value();
+    int c = SpinBox_colum->value();
+    if(table)
+        removeWidgetTable();
+
+    resize(900+c*50,300+r*50);
+    table = new QTableWidget(r,c);
+
+    for(int i=0; i<r; ++i){
+        for(int j=0; j<c; ++j){
+            QLineEdit* tmp_lineEdit = new QLineEdit("0");
+            tmp_lineEdit->setValidator(new QIntValidator());
+            table->setCellWidget(i,j,tmp_lineEdit);
+        }
+    }
+
+    creaVet = new QPushButton("Crea Vet");
+    connect(creaVet, SIGNAL(clicked()), this, SLOT(slotCreazioneVet()));
+    goLayout->addWidget(table,1,0);
+    goLayout->addWidget(creaVet,2,0);
 }
 void mygui::removeWidgetTable(){
     resize(900,300);
@@ -248,7 +297,139 @@ void mygui::creaTastieraOperatori(){
      connectButtonStructAndRadioToSlot();
 }
 
-/* SLOT PER I BOTTONI OPERATORI */
+void mygui::connectOptionToSlot(){
+    QObject::connect(option1[0], SIGNAL(clicked()), this, SLOT(clearAll()));
+    QObject::connect(option1[1], SIGNAL(clicked()), this, SLOT(canc()));
+    QObject::connect(option2[0], SIGNAL(clicked()), this, SLOT(clearAll2()));
+    QObject::connect(option2[1], SIGNAL(clicked()), this, SLOT(canc2()));
+}
+void mygui::connectButtonStructAndRadioToSlot(){
+    connect(tastierinoStruttura[0], SIGNAL(clicked()), this, SLOT(slotButtonAQ()));
+    connect(tastierinoStruttura[1], SIGNAL(clicked()), this, SLOT(slotButtonCQ()));
+    connect(tastierinoStruttura[2], SIGNAL(clicked()), this, SLOT(slotButton_()));
+    connect(tastierinoStruttura[3], SIGNAL(clicked()), this, SLOT(slotButtonVirgola()));
+    connect(tastierinoStruttura[4], SIGNAL(clicked()), this, SLOT(slotButtonStar()));
+    connect(tastierinoStruttura[5], SIGNAL(clicked()), this, SLOT(slotButtonAddStruttura()));
+    connect(radioType[2], SIGNAL(toggled(bool)), this, SLOT(slotRadioVet()));
+    connect(radioType[1], SIGNAL(toggled(bool)), this, SLOT(slotRadioBin()));
+    connect(radioType[0], SIGNAL(toggled(bool)), this, SLOT(slotRadioRaz()));
+
+    connect(radioType[2], SIGNAL(toggled(bool)), this, SLOT(slotAggiornaCombo()));
+    connect(radioType[1], SIGNAL(toggled(bool)), this, SLOT(slotAggiornaCombo()));
+    connect(radioType[0], SIGNAL(toggled(bool)), this, SLOT(slotAggiornaCombo()));
+    connect(ComboTree, SIGNAL(activated(int)), this, SLOT(slotComboTree()));
+}
+void mygui::connectComboOperazioniToSlot(){
+    connect(ComboListaOperazioni, SIGNAL(activated(int)), this, SLOT(slotComboOperazioni(int)));
+    connect(ComboListaTree1, SIGNAL(activated(int)), this, SLOT(slotComboTextEdit()));
+    connect(ComboListaTree2, SIGNAL(activated(int)), this, SLOT(slotComboTextEdit()));
+    connect(calcola, SIGNAL(clicked()), this, SLOT(slotCalcola()));
+}
+
+void mygui::creazioneNodiRaz(){
+    QString text;
+    double num; double den;
+
+    text = LineEditNum->text(); text.remove( QChar( '.' ) );
+    num = text.toDouble();
+
+    text = LineEditDen->text(); text.remove( QChar( '.' ) );
+    den = text.toDouble();
+
+    if(den == 0)
+        den = 1.0;
+
+    vettoreTipo.push_back(new raz(num,den));
+    LineEditNum->setText("");LineEditDen->setText("1");
+    avanzaProgressBar();
+    add_vet_raz_bin(text);
+}
+void mygui::creazioneNodiBin(){
+    QString text; text = display->text(); text.remove( QChar( '.' ) );
+    double val = text.toDouble();
+
+    vettoreTipo.push_back(new bin(val));
+    display->setText("1");
+    avanzaProgressBar();
+    add_vet_raz_bin(text);
+}
+void mygui::creazioneNodiVet(){
+    QLineEdit* tmpLineEdit;
+    int r=table->rowCount();
+    int c=table->columnCount();
+    int array[r*c];
+
+    for(int i=0; i<r; ++i){
+        for(int j=0; j<c; ++j){
+            tmpLineEdit = qobject_cast<QLineEdit*>(table->cellWidget(i,j));
+            if(tmpLineEdit)
+               array[j+(i*c)] = tmpLineEdit->text().toInt();
+        }
+    }
+    vettoreTipo.push_back(new vet(array,r,c));
+    avanzaProgressBar();
+    add_vet_raz_bin("");
+}
+void mygui::add_vet_raz_bin(QString text){
+    if(progressBarStruttura->value() == progressBarStruttura->maximum()){
+        if(!mainVLayout3)
+            costruisciBox3();
+
+        text = LineEditNomeTree->text();
+        string nomeTree = text.toStdString();
+        text = LineEditStrutturaTree->text();
+        string strutturaTree = text.toStdString();
+
+        if(ComboTree->currentText() == "Binary Tree")
+            mappaTree[nomeTree] = new binarytree(vettoreTipo,strutturaTree);
+
+        if(ComboTree->currentText() == "Binary Tree Search")
+            mappaTree[nomeTree] = new binarytreesearch(vettoreTipo, strutturaTree);
+
+        vettoreTipo.clear();
+        aggiornaComboBoxListaTree();
+        abi_disab_TastieraStruttura(true);
+        abi_disab_go_crea(false);
+        abi_disab_radioType(true);
+
+        progressBarStruttura->setValue(0);
+        LineEditNomeTree->setText("Albero" + QString::number(mappaTree.size()) );
+
+        msgBox.setText("Hai completato la creazione dei nodi!\nAlbero creato");
+        msgBox.exec();
+
+    }
+}
+
+void mygui::abi_disab_TastieraStruttura(bool flag){
+    if(flag){
+        for(unsigned int i=0; i<tastierinoStruttura.size(); ++i)
+            tastierinoStruttura[i]->setEnabled(true);
+    }
+    else{
+        for(unsigned int i=0; i<tastierinoStruttura.size(); ++i)
+            tastierinoStruttura[i]->setDisabled(true);
+    }
+}
+void mygui::abi_disab_go_crea(bool flag){
+    if(flag)
+        go->setEnabled(true);
+    else
+        go->setDisabled(true);
+}
+void mygui::abi_disab_radioType(bool flag){
+    if(flag){
+        for(unsigned int i=0; i<radioType.size(); ++i)
+            radioType[i]->setEnabled(true);
+    }
+    else{
+        for(unsigned int i=0; i<radioType.size(); ++i)
+            radioType[i]->setDisabled(true);
+    }
+
+}
+
+/* SLOT BOX 1*/
 void mygui::clearAll(){
     display->setText("");
 }
@@ -340,9 +521,7 @@ void mygui::slotRadioVet(){
         addWidgetDisplayVet();
     }
 }
-void mygui::slotComboTree(){
-    aggiornaComboBoxListaTree();
-}
+
 void mygui::slotGo(){
     if(radioType[0]->isChecked())
         creazioneNodiRaz();
@@ -351,80 +530,12 @@ void mygui::slotGo(){
         addWidgetTable();
 }
 
-void mygui::connectOptionToSlot(){
-    QObject::connect(option1[0], SIGNAL(clicked()), this, SLOT(clearAll()));
-    QObject::connect(option1[1], SIGNAL(clicked()), this, SLOT(canc()));
-    QObject::connect(option2[0], SIGNAL(clicked()), this, SLOT(clearAll2()));
-    QObject::connect(option2[1], SIGNAL(clicked()), this, SLOT(canc2()));
+void mygui::slotCreazioneVet(){
+    creazioneNodiVet();
 }
-void mygui::connectButtonStructAndRadioToSlot(){
-    connect(tastierinoStruttura[0], SIGNAL(clicked()), this, SLOT(slotButtonAQ()));
-    connect(tastierinoStruttura[1], SIGNAL(clicked()), this, SLOT(slotButtonCQ()));
-    connect(tastierinoStruttura[2], SIGNAL(clicked()), this, SLOT(slotButton_()));
-    connect(tastierinoStruttura[3], SIGNAL(clicked()), this, SLOT(slotButtonVirgola()));
-    connect(tastierinoStruttura[4], SIGNAL(clicked()), this, SLOT(slotButtonStar()));
-    connect(tastierinoStruttura[5], SIGNAL(clicked()), this, SLOT(slotButtonAddStruttura()));
-    connect(radioType[2], SIGNAL(toggled(bool)), this, SLOT(slotRadioVet()));
-    connect(radioType[1], SIGNAL(toggled(bool)), this, SLOT(slotRadioBin()));
-    connect(radioType[0], SIGNAL(toggled(bool)), this, SLOT(slotRadioRaz()));
-    connect(ComboTree, SIGNAL(activated(int)), this, SLOT(slotComboTree()));
-}
-/*  ----------------------------------------------------    */
-void mygui::creazioneNodiRaz(){
-    QMessageBox msgBox;
-    double num; double den;
-    QString text;
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-    text = LineEditNum->text();
-    text.remove( QChar( '.' ) );
-    num = text.toDouble();
-    text = LineEditDen->text();
-    text.remove( QChar( '.' ) );
-    den = text.toDouble();
-
-    if(den == 0)
-        den = 1.0;
-
-    vettoreTipo.push_back(new raz(num,den));
-    LineEditNum->setText("");LineEditDen->setText("");
-    avanzaProgressBar();
-
-    if(progressBarStruttura->value() == progressBarStruttura->maximum()){
-        if(!mainVLayout3)
-            costruiciBox3();
-
-
-        msgBox.setText("Hai completato la creazione dei nodi!\nAlbero creato");
-        msgBox.exec();
-
-        QString nome = LineEditNomeTree->text();
-        string nomeTree = nome.toStdString();
-
-        if(ComboTree->currentText() == "Binary Tree")
-            mappaTree[nomeTree] = new binarytree();
-
-        if(ComboTree->currentText() == "Binary Tree Search")
-            mappaTree[nomeTree] = new binarytreesearch();
-
-
-        aggiornaComboBoxListaTree();
-        abi_disab_TastieraStruttura(true);
-        abi_disab_go_crea(false);
-
-        progressBarStruttura->setValue(0);
-        LineEditNomeTree->setText("Albero" + QString::number(mappaTree.size()) );
-    }
-}
-
-/*  BOX2    */
-void mygui::costruiciBox2(){
-    creaLayout2();
-    addWidgetProgressBar();
-}
-void mygui::creaLayout2(){
-    progressLayout = new QGridLayout();
-    mainVLayout2->addLayout(progressLayout);
-}
+/*  BOX2    ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 void mygui::addWidgetProgressBar(){
     creaProgessBarStruttura();
     progressLayout->addWidget(labelProgessStruttura,0,0);
@@ -437,35 +548,43 @@ void mygui::creaProgessBarStruttura(){
 
     progressBarStruttura->setValue(0);
 }
-
 void mygui::avanzaProgressBar(){
     progressBarStruttura->setValue(progressBarStruttura->value() + 1);
 }
+/*  ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-/*  BOX3    */
-void mygui::costruiciBox3(){
-    resize(1200,300);
-    creaLayout3();
-    addWidgetOpera();
-}
-void mygui::creaLayout3(){
-    mainVLayout3 = new QVBoxLayout();
-    mainVLayout3->setContentsMargins(50,0,0,0);
-    mainHLayout->addLayout(mainVLayout3);
-
-    operaLayout = new QGridLayout();
-    mainVLayout3->addLayout(operaLayout);
-}
+/*  BOX3    ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 void mygui::addWidgetOpera(){
-    if(radioType[0]->isChecked()){
-        ComboListaTree1 = new QComboBox();  ComboListaTree2 = new QComboBox(); ComboListaOperazioni = new QComboBox();
-        ComboListaOperazioni->addItem("Somma");
-        ComboListaOperazioni->addItem("Sottrazione");
-        ComboListaOperazioni->addItem("Moltiplicazione");
-        ComboListaOperazioni->addItem("Divisione");
-        operaLayout->addWidget(ComboListaTree1,0,0);
-        operaLayout->addWidget(ComboListaOperazioni,0,1);
-        operaLayout->addWidget(ComboListaTree2,0,2);
+    ComboListaTree1 = new QComboBox();  ComboListaTree2 = new QComboBox(); ComboListaOperazioni = new QComboBox();
+    ComboListaOperazioni->addItem("Somma");
+    ComboListaOperazioni->addItem("Sottrazione");
+    ComboListaOperazioni->addItem("Moltiplicazione");
+    ComboListaOperazioni->addItem("Divisione");
+    operaLayout->addWidget(ComboListaTree1,0,0);
+    operaLayout->addWidget(ComboListaOperazioni,0,1);
+    operaLayout->addWidget(ComboListaTree2,0,2);
+}
+void mygui::addWidgetCalcola(){
+    calcola = new QPushButton("Calcola");
+    calcolaLayout->addWidget(calcola);
+    connectComboOperazioniToSlot();
+
+    struttura_ris = new QTextEdit();
+    calcolaLayout->addWidget(struttura_ris,1,0);
+    struttura_ris->setReadOnly(true);
+}
+void mygui::add_rm_mol_div(bool flag){
+    if(flag){
+        if(!molt_div){
+            operaLayout->removeWidget(ComboListaTree2);
+            delete ComboListaTree2;
+            ComboListaTree2 = 0;
+
+            molt_div = new QLineEdit("1");
+            molt_div->setAlignment(Qt::AlignRight);
+            molt_div->setValidator(new QIntValidator());
+            operaLayout->addWidget(molt_div,0,2);
+        }
     }
 }
 
@@ -493,20 +612,99 @@ void mygui::aggiornaComboBoxListaTree(){
     }
 }
 
-/*  Abilita disabilita  */
-void mygui::abi_disab_TastieraStruttura(bool flag){
-    if(flag){
-        for(int i=0; i<tastierinoStruttura.size(); ++i)
-            tastierinoStruttura[i]->setEnabled(true);
-    }
-    else{
-        for(int i=0; i<tastierinoStruttura.size(); ++i)
-            tastierinoStruttura[i]->setDisabled(true);
+/* SLOT BOX 3 */
+void mygui::slotComboTree(){
+    aggiornaComboBoxListaTree();
+}
+void mygui::slotComboTextEdit(){
+    if(!(ComboListaTree1->size().isNull()) && !(ComboListaTree2->size().isNull())){
+        string s=to_string(*(mappaTree[ComboListaTree1->currentText().toStdString()]));
+        struttura_tree1->setText(QString::fromStdString(s));
+
+
+        s=to_string(*(mappaTree[ComboListaTree2->currentText().toStdString()]));
+        struttura_tree2->setText(QString::fromStdString(s));
     }
 }
-void mygui::abi_disab_go_crea(bool flag){
-    if(flag)
-        go->setEnabled(true);
+
+void mygui::slotAggiornaCombo(){
+    aggiornaComboBoxListaTree();
+}
+
+void mygui::slotComboOperazioni(int){
+    if(ComboListaOperazioni->currentIndex()==0 || ComboListaOperazioni->currentIndex()==1)
+        add_rm_mol_div(false);
     else
-        go->setDisabled(true);
+        add_rm_mol_div(true);
 }
+void mygui::slotCalcola(){
+    string nomeTree1 = ComboListaTree1->currentText().toStdString();
+    binarytreebasic* a=mappaTree[nomeTree1], *c=0;
+    binarytreesearch* a1=0, *c1=0;
+    binarytree* a2=0, *c2=0;
+
+    if(dynamic_cast<binarytreesearch*>(a))
+        a1=dynamic_cast<binarytreesearch*>(a);
+    else
+        a2=dynamic_cast<binarytree*>(a);
+    try{
+        if(ComboListaOperazioni->currentIndex() == 0){   //somma
+            string nomeTree2 = ComboListaTree2->currentText().toStdString();
+            binarytreebasic* b=mappaTree[nomeTree2];
+            binarytreesearch* b1=0;
+            binarytree* b2=0;
+            if(dynamic_cast<binarytreesearch*>(b))
+                b1=dynamic_cast<binarytreesearch*>(b);
+            else
+                b2=dynamic_cast<binarytree*>(b);
+            if(a1)
+                c1=&((*a1)+(*b1));
+            else
+                c2=&((*a2)+(*b2));
+        }
+        else if(ComboListaOperazioni->currentIndex() == 1){   //differenza
+            string nomeTree2 = ComboListaTree2->currentText().toStdString();
+            binarytreebasic* b=mappaTree[nomeTree2];
+            binarytreesearch* b1=0;
+            binarytree* b2=0;
+            if(dynamic_cast<binarytreesearch*>(b))
+                b1=dynamic_cast<binarytreesearch*>(b);
+            else
+                b2=dynamic_cast<binarytree*>(b);
+            if(a1)
+                c1=&((*a1)-(*b1));
+            else
+                c2=&((*a2)-(*b2));
+        }
+        else if(ComboListaOperazioni->currentIndex() == 2){   //moltiplicazione
+            int p=molt_div->text().toInt();
+            if(a1)
+                c1=&((*a1)*p);
+            else
+                c2=&((*a2)*p);
+        }
+        else{   //divisione
+            int p=molt_div->text().toInt();
+            if(a1)
+                c1=&((*a1)/p);
+            else
+                c2=&((*a2)/p);
+        }
+        if(c1)
+            c=c1;
+        else
+            c=c2;
+
+        string nome_ris = "risAlbero" + mappaTree.size();
+        mappaTree[nome_ris] = c;
+
+        struttura_ris->setText(QString::fromStdString(to_string(*c)));
+    }
+    catch(eccezione e){
+        msgBox.setText(QString::fromStdString(e.stampa_errore()));
+        msgBox.exec();
+    }
+
+}
+
+/*  ----------------------------------------------------    */

@@ -80,7 +80,7 @@ vet operator +(const vet& vet1, const vet& vet2) throw(domain_error){
         return out;
     }
     else
-        throw domain_error("vet");
+        throw domain_error("vet", "dimensioni delle matrici non corrette per l'operazione");
 
 }
 vet operator -(const vet& vet1, const vet& vet2) throw(domain_error){
@@ -93,7 +93,7 @@ vet operator -(const vet& vet1, const vet& vet2) throw(domain_error){
         return out;
     }
     else
-        throw domain_error("vet");
+        throw domain_error("vet", "dimensioni delle matrici non corrette per l'operazione");
 }
 vet vet::operator *(const vet& vet2) throw(domain_error){
     if(this->isMoltiplication(vet2)){
@@ -186,13 +186,13 @@ string to_string(const vet& vet1){
 
 /* Metodi ereditati dalla classe tipo.h */
 
-vet* vet::somma(tipo* b)throw(point_error){
+vet* vet::somma(tipo* b)throw(point_error, domain_error){
     if(!b)
         throw point_error();
     vet* b1 = dynamic_cast<vet*>(b);
     return new vet((*this) + (*b1));
 }
-vet* vet::differenza(tipo* b)throw(point_error){
+vet* vet::differenza(tipo* b)throw(point_error, domain_error){
     if(!b)
         throw point_error();
     vet* b1 = dynamic_cast<vet*>(b);

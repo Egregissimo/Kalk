@@ -48,8 +48,8 @@ public:
     vet& operator=(const vet&);
 
     /* Metodi virtuali ereditati dalla classe tipo e implementati della classe vet */
-    vet* somma(tipo*)throw(point_error);
-    vet* differenza(tipo*)throw(point_error);
+    vet* somma(tipo*)throw(point_error, domain_error);
+    vet* differenza(tipo*)throw(point_error, domain_error);
     vet* moltiplicazione(int);
     vet* divisione(int);
     bool uguale(tipo*)const throw(point_error);
