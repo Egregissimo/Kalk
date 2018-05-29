@@ -1,13 +1,14 @@
 #include "mygui.h"
 
 /*  MAIN    -------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-mygui::mygui(QWidget* parent): QWidget(parent), mainHLayout(0), mainVLayout1(0), mainVLayout2(0),
-mainVLayout3(0), comboTreeLayout(0), ComboTree(0), radioTypeLayout(0), radioType(0), nomeLayout(0),
+mygui::mygui(QWidget* parent): QWidget(parent),/*MAIN*/ mainHLayout(0), mainVLayout1(0), mainVLayout2(0),
+mainVLayout3(0),/*BOX 1*/ comboTreeLayout(0), ComboTree(0), radioTypeLayout(0), nomeLayout(0),
 LabelNomeTree(0), LineEditNomeTree(0), strutturaLayout(0), LineEditStrutturaTree(0), tastieraStrutturaLayout(0),
-tastierinoStruttura(0), displayLayout(0), labelNumeratore(0), LineEditNum(0), labelDenominatore(0), LineEditDen(0),
+displayLayout(0), labelNumeratore(0), LineEditNum(0), labelDenominatore(0), LineEditDen(0),
 labelKalk(0), display(0), label_row(0), SpinBox_row(0), label_colum(0),
-SpinBox_colum(0), goLayout(0), go(0), table(0), creaVet(0), progressLayout(0), progressBarStruttura(0),
-operaLayout(0), ComboListaTree1(0), ComboListaTree2(0), ComboListaOperazioni(0),
+SpinBox_colum(0), goLayout(0), go(0), table(0), creaVet(0),/*BOX 2*/ progressLayout(0), labelProgessStruttura(0),
+progressBarStruttura(0), textEditLayout(0), label_struttura_tree1(0), struttura_tree1(0), label_struttura_tree2(0),
+struttura_tree2(0), /*BOX 3*/ operaLayout(0), ComboListaTree1(0), ComboListaTree2(0), ComboListaOperazioni(0),
 molt_div(0), calcolaLayout(0), calcola(0), struttura_ris(0){
     for(unsigned int i=0; i<3; i++)
         whatChecked[i] = false;
@@ -470,7 +471,8 @@ void mygui::slotButtonStar(){
 }
 void mygui::slotButtonAddStruttura(){
     QString testo_struttura = LineEditStrutturaTree->text();
-    if(!testo_struttura.isEmpty()){
+
+    if(!testo_struttura.isEmpty() && binarytreebasic::controlla_stringa(testo_struttura.toStdString())){
         string std_testo_struttura = testo_struttura.toStdString();
         string::iterator start = std_testo_struttura.begin();
         int nNodi = binarytreebasic::n_nodes_stringa(start);
@@ -478,6 +480,10 @@ void mygui::slotButtonAddStruttura(){
 
         abi_disab_TastieraStruttura(false);
         abi_disab_go_crea(true);
+    }
+    else{
+        msgBox.setText("La stringa non è sintatticamente corretta");
+        msgBox.exec();
     }
 }
 
@@ -618,12 +624,23 @@ void mygui::slotComboTree(){
 }
 void mygui::slotComboTextEdit(){
     if(!(ComboListaTree1->size().isNull()) && !(ComboListaTree2->size().isNull())){
-        string s=to_string(*(mappaTree[ComboListaTree1->currentText().toStdString()]));
-        struttura_tree1->setText(QString::fromStdString(s));
+        //pulizia
+        delete struttura_tree1;
+        delete label_struttura_tree1;
+        delete struttura_tree2;
+        delete label_struttura_tree2;
 
+        string s=to_string(*(mappaTree[ComboListaTree1->currentText().toStdString()]));
+        struttura_tree1=new QTextEdit(QString::fromStdString(s));
+        label_struttura_tree1=new QLabel(ComboListaTree1->currentText());
+        progressLayout->addWidget(label_struttura_tree1, 1,0);
+        progressLayout->addWidget(struttura_tree1, 1,1);
 
         s=to_string(*(mappaTree[ComboListaTree2->currentText().toStdString()]));
-        struttura_tree2->setText(QString::fromStdString(s));
+        struttura_tree2=new QTextEdit(QString::fromStdString(s));
+        label_struttura_tree2=new QLabel(ComboListaTree2->currentText());
+        progressLayout->addWidget(label_struttura_tree2, 2,0);
+        progressLayout->addWidget(struttura_tree2, 2,1);
     }
 }
 
