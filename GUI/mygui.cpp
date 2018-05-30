@@ -267,20 +267,22 @@ void mygui::creaNomeTreeSezione(){
 void mygui::creaStrutturaSezione(){
     LabelStrutturaTree = new QLabel("Struttura");
     LineEditStrutturaTree = new QLineEdit("(*,(*,_,(*,_,_)),(*,(*,_,_),(*,_,_)))");
-    LineEditStrutturaTree->setReadOnly(true);
+    QRegExp exp("[\*()_,]+");
+    QRegExpValidator* v=new QRegExpValidator(exp);
+    LineEditStrutturaTree->setValidator(v);
 }
 void mygui::creaOptionButton(){
     option1.push_back(new QPushButton("Clear"));
-    option1.push_back(new QPushButton("◄"));
+    option1.push_back(new QPushButton("Canc"));
     option2.push_back(new QPushButton("Clear"));
-    option2.push_back(new QPushButton("◄"));
+    option2.push_back(new QPushButton("Canc"));
 
-    for(unsigned int i=0; i<option1.size()-1 && i<option2.size()-1; i++){
+    for(unsigned int i=0; i<option1.size() && i<option2.size(); i++){
         option1[i]->setFixedSize(QSize(40,30));
         option2[i]->setFixedSize(QSize(40,30));
 
-        option1[i+1]->setFixedSize(QSize(30,30));
-        option2[i+1]->setFixedSize(QSize(30,30));
+//        option1[i+1]->setFixedSize(QSize(30,30));
+//        option2[i+1]->setFixedSize(QSize(30,30));
     }
     connectOptionToSlot();
 }
@@ -505,9 +507,9 @@ void mygui::slotRadioBin(){
         }
 
         option1.push_back(new QPushButton("Clear"));
-        option1.push_back(new QPushButton("◄"));
+        option1.push_back(new QPushButton("Canc"));
         option1[0]->setFixedSize(QSize(40,30));
-        option1[1]->setFixedSize(QSize(30,30));
+        option1[1]->setFixedSize(QSize(40,30));
         addWidgetDisplayBin();
     }
 }
@@ -593,6 +595,7 @@ void mygui::add_rm_mol_div(bool flag){
         ComboListaTree2 = new QComboBox();
         operaLayout->addWidget(ComboListaTree2,0,2);
         aggiornaComboBoxListaTree();
+        connect(ComboListaTree2, SIGNAL(activated(int)), this, SLOT(slotComboTextEdit()));
     }
 }
 
@@ -600,12 +603,14 @@ void mygui::aggiornaComboBoxListaTree(){
     /* va fatto un cast per il tipo di albero e il tipo di nodo */
     if(mainVLayout3){
         ComboListaTree1->clear();
-        ComboListaTree2->clear();
+        if(ComboListaTree2)
+            ComboListaTree2->clear();
         if(ComboTree->currentText() == "Binary Tree"){
             for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
                 if(dynamic_cast<binarytree*>((it->second))){
                     ComboListaTree1->addItem(QString::fromStdString(it->first));
-                    ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    if(ComboListaTree2)
+                        ComboListaTree2->addItem(QString::fromStdString(it->first));
                 }
             }
         }
@@ -613,7 +618,8 @@ void mygui::aggiornaComboBoxListaTree(){
             for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
                 if(dynamic_cast<binarytreesearch*>((it->second))){
                     ComboListaTree1->addItem(QString::fromStdString(it->first));
-                    ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    if(ComboListaTree2)
+                        ComboListaTree2->addItem(QString::fromStdString(it->first));
                 }
             }
         }
@@ -632,8 +638,10 @@ void mygui::slotComboTree(){
     aggiornaComboBoxListaTree();
 }
 void mygui::slotComboTextEdit(){
-    if(!(ComboListaTree1->size().isNull()) && !(ComboListaTree2->size().isNull())){
+    if(!(ComboListaTree1->size().isNull())){
         //pulizia
+        textEditLayout->removeWidget(struttura_tree1);
+        textEditLayout->removeWidget(label_struttura_tree1);
         delete struttura_tree1;
         delete label_struttura_tree1;
 
@@ -645,6 +653,8 @@ void mygui::slotComboTextEdit(){
         textEditLayout->addWidget(struttura_tree1, 1,0);
     }
     if(ComboListaTree2 && !(ComboListaTree2->size().isNull())){
+        textEditLayout->removeWidget(struttura_tree2);
+        textEditLayout->removeWidget(label_struttura_tree2);
         delete struttura_tree2;
         delete label_struttura_tree2;
 
@@ -654,7 +664,6 @@ void mygui::slotComboTextEdit(){
         textEditLayout->addWidget(label_struttura_tree2, 2,0);
         textEditLayout->addWidget(struttura_tree2, 3,0);
     }
-    mainVLayout2->addLayout(textEditLayout);
 }
 
 void mygui::slotAggiornaCombo(){

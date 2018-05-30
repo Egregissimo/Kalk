@@ -64,7 +64,7 @@ double bin::base10() const{
         i++;
     }
 
-    for(int i=0; i<frazionaria.size(); i++)
+    for(unsigned int i=0; i<frazionaria.size(); i++)
         f_out = f_out + (frazionaria[i] * (pow(2,-(i+1))));
 
     f_out = i_out + f_out;
@@ -216,12 +216,12 @@ string to_string(const bin& bin1){
     else
         out = "+";
 
-    for(int i=0; i<bin1.intera.size(); i++)
+    for(unsigned int i=0; i<bin1.intera.size(); i++)
         out = out + std::to_string(bin1.intera[i]);
 
     out = out + ".";
 
-    for(int i=0; i<bin1.frazionaria.size(); i++)
+    for(unsigned int i=0; i<bin1.frazionaria.size(); i++)
         out = out + std::to_string(bin1.frazionaria[i]);
 
     return out;
