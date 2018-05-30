@@ -129,7 +129,6 @@ private:
     // connessione dei widget ai relativi slot
     void connectOptionToSlot();
     void connectButtonStructAndRadioToSlot();
-    void connectComboOperazioniToSlot();
 
     // funzioni ausiliarie per la creazione dei nodi raz, bin e vet
     void creazioneNodiRaz();
@@ -205,6 +204,9 @@ private:
     void addWidgetCalcola();
     void add_rm_mol_div(bool);
     void aggiornaComboBoxListaTree();
+
+    //connessione ComboListaTree1 e 2 alle relative operazioni
+    void connectComboOperazioniToSlot();
 
 public slots:
     void slotComboTree();               // slot per cambiare il secondo operatore (da ComboBox a LineEdit e viceversa)

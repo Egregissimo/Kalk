@@ -320,12 +320,6 @@ void mygui::connectButtonStructAndRadioToSlot(){
     connect(radioType[0], SIGNAL(toggled(bool)), this, SLOT(slotAggiornaCombo()));
     connect(ComboTree, SIGNAL(activated(int)), this, SLOT(slotComboTree()));
 }
-void mygui::connectComboOperazioniToSlot(){
-    connect(ComboListaOperazioni, SIGNAL(activated(int)), this, SLOT(slotComboOperazioni(int)));
-    connect(ComboListaTree1, SIGNAL(activated(int)), this, SLOT(slotComboTextEdit()));
-    connect(ComboListaTree2, SIGNAL(activated(int)), this, SLOT(slotComboTextEdit()));
-    connect(calcola, SIGNAL(clicked()), this, SLOT(slotCalcola()));
-}
 
 void mygui::creazioneNodiRaz(){
     QString text;
@@ -580,17 +574,25 @@ void mygui::addWidgetCalcola(){
     struttura_ris->setReadOnly(true);
 }
 void mygui::add_rm_mol_div(bool flag){
-    if(flag){
-        if(!molt_div){
-            operaLayout->removeWidget(ComboListaTree2);
-            delete ComboListaTree2;
-            ComboListaTree2 = 0;
+    if(flag && !molt_div){
+        operaLayout->removeWidget(ComboListaTree2);
+        delete ComboListaTree2;
+        ComboListaTree2 = 0;
 
-            molt_div = new QLineEdit("1");
-            molt_div->setAlignment(Qt::AlignRight);
-            molt_div->setValidator(new QIntValidator());
-            operaLayout->addWidget(molt_div,0,2);
+        molt_div = new QLineEdit("1");
+        molt_div->setAlignment(Qt::AlignRight);
+        molt_div->setValidator(new QIntValidator());
+        operaLayout->addWidget(molt_div,0,2);
+    }
+    else{
+        if(molt_div){
+            operaLayout->removeWidget(molt_div);
+            delete molt_div;
+            molt_div=0;
         }
+        ComboListaTree2 = new QComboBox();
+        operaLayout->addWidget(ComboListaTree2,0,2);
+        aggiornaComboBoxListaTree();
     }
 }
 
@@ -618,6 +620,13 @@ void mygui::aggiornaComboBoxListaTree(){
     }
 }
 
+void mygui::connectComboOperazioniToSlot(){
+    connect(ComboListaOperazioni, SIGNAL(activated(int)), this, SLOT(slotComboOperazioni(int)));
+    connect(ComboListaTree1, SIGNAL(activated(int)), this, SLOT(slotComboTextEdit()));
+    connect(ComboListaTree2, SIGNAL(activated(int)), this, SLOT(slotComboTextEdit()));
+    connect(calcola, SIGNAL(clicked()), this, SLOT(slotCalcola()));
+}
+
 /* SLOT BOX 3 */
 void mygui::slotComboTree(){
     aggiornaComboBoxListaTree();
@@ -627,21 +636,25 @@ void mygui::slotComboTextEdit(){
         //pulizia
         delete struttura_tree1;
         delete label_struttura_tree1;
-        delete struttura_tree2;
-        delete label_struttura_tree2;
+
 
         string s=to_string(*(mappaTree[ComboListaTree1->currentText().toStdString()]));
         struttura_tree1=new QTextEdit(QString::fromStdString(s));
         label_struttura_tree1=new QLabel(ComboListaTree1->currentText());
-        progressLayout->addWidget(label_struttura_tree1, 1,0);
-        progressLayout->addWidget(struttura_tree1, 1,1);
-
-        s=to_string(*(mappaTree[ComboListaTree2->currentText().toStdString()]));
-        struttura_tree2=new QTextEdit(QString::fromStdString(s));
-        label_struttura_tree2=new QLabel(ComboListaTree2->currentText());
-        progressLayout->addWidget(label_struttura_tree2, 2,0);
-        progressLayout->addWidget(struttura_tree2, 2,1);
+        textEditLayout->addWidget(label_struttura_tree1, 0,0);
+        textEditLayout->addWidget(struttura_tree1, 1,0);
     }
+    if(ComboListaTree2 && !(ComboListaTree2->size().isNull())){
+        delete struttura_tree2;
+        delete label_struttura_tree2;
+
+        string ss=to_string(*(mappaTree[ComboListaTree2->currentText().toStdString()]));
+        struttura_tree2=new QTextEdit(QString::fromStdString(ss));
+        label_struttura_tree2=new QLabel(ComboListaTree2->currentText());
+        textEditLayout->addWidget(label_struttura_tree2, 2,0);
+        textEditLayout->addWidget(struttura_tree2, 3,0);
+    }
+    mainVLayout2->addLayout(textEditLayout);
 }
 
 void mygui::slotAggiornaCombo(){

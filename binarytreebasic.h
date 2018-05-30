@@ -54,13 +54,13 @@ public:
      * Es: l'albero (5,(2,_,(1,_,_)),_) sara' (*,(*,_,(*,_,_)),_). Il costruttire vuole
      * per parametri l'array di valori, la sua dimensione e la stringa con la struttura */
 
-    binarytreebasic(vector<tipo*>, string &) throw(input_error);        /* costruttore */
+    binarytreebasic(vector<tipo*>, string &);        /* costruttore */
     binarytreebasic(const binarytreebasic& t): root(copia(t.root)) {}   /* costruttore di copia profondo */
     virtual ~binarytreebasic();                                         /* distruttore profondo */
     binarytreebasic& operator=(const binarytreebasic&);                /* assegnazione profonda */
     static int n_nodes(nodo*);                                          /* conta i nodi dell'albero */
 
-    tipo* cerca(string)const throw(path_error);                         /* trova l'oggetto indicato dal percorso, se stringa vuota ritorna la radice */
+    tipo* cerca(string)const;                         /* trova l'oggetto indicato dal percorso, se stringa vuota ritorna la radice */
 
     virtual void add(tipo*)=0;                                          /* aggiungo il nodo tenendo l'albero bilanciato */
     virtual tipo* remove(string)=0;                                     /* rimuove l'oggetto indicato da un percorso */

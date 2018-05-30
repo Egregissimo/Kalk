@@ -3,7 +3,7 @@
 string binarytreebasic::nodo::stampa(binarytreebasic::nodo* n){
     if(!(n))
         return "_";
-    return "('"+n->info->to_stringa()+"',"+stampa(n->left)+","+stampa(n->right)+")";
+    return "('"+n->info->to_stringa()+","+stampa(n->left)+","+stampa(n->right)+")";
 }
 //POST={stampa il nodo e i suoi sotto-alberi}
 
