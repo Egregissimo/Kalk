@@ -12,8 +12,8 @@ class bin: public tipo{
     friend bin operator- (const bin&, const bin&);                              /* friend */
     friend bin operator* (const bin&, const bin&);                              /* friend */
     friend bin operator* (int, const bin&);                                     /* friend */
-    friend bin operator/ (const bin&, const bin&) throw(input_error);           /* friend */
-    friend bin operator/ (int, const bin&) throw(input_error);                  /* friend */
+    friend bin operator/ (const bin&, const bin&);           /* friend */
+    friend bin operator/ (int, const bin&);                  /* friend */
 
     friend bool operator< (const bin&, const bin&);                             /* friend */
     friend bool operator<= (const bin&, const bin&);                            /* friend */
@@ -46,12 +46,12 @@ public:
     //bin& operator= (const bin&);
 
     /* metodi virtuali ereditati dalla classe tipo e implementati della classe bin */
-    bin* somma(tipo*) throw(point_error);
-    bin* differenza(tipo*) throw(point_error);
+    bin* somma(tipo*);
+    bin* differenza(tipo*);
     bin* moltiplicazione(int);
     bin* divisione(int);
-    bool uguale(tipo*)const throw(point_error);
-    bool min(tipo*)const throw(point_error);
+    bool uguale(tipo*)const;
+    bool min(tipo*)const;
     string to_stringa()const;
 };
 
@@ -60,8 +60,8 @@ bin operator+ (const bin&, const bin&);                         /* oveloading de
 bin operator- (const bin&, const bin&);                         /* oveloading degli operatori */
 bin operator* (const bin&, const bin&);                         /* oveloading degli operatori */
 bin operator* (int, const bin&);                                /* oveloading degli operatori, vuole un intero come primo operando e un bin come secondo operando */
-bin operator/ (const bin&, const bin&) throw(input_error);      /* oveloading degli operatori */
-bin operator/ (int, const bin&) throw(input_error);             /* oveloading degli operatori, vuole un intero come primo operando e un bin come secondo operando */
+bin operator/ (const bin&, const bin&);      /* oveloading degli operatori */
+bin operator/ (int, const bin&);             /* oveloading degli operatori, vuole un intero come primo operando e un bin come secondo operando */
 
 
 bool operator< (const bin&, const bin&);        /* oveloading degli operatori */

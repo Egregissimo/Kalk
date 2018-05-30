@@ -58,9 +58,6 @@ tipo* binarytree::removeIt(nodo* y){
 
 //PRE={x non e' un puntatore nullo}     /* PRE={ l'albero è un albero binario corretto } */
 binarytreebasic::nodo* binarytree::searchIt(nodo * x, tipo* a){
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     *      ALTRA VERSIONE DI SEARCHIT CON MENO IF
-
     if(!x)                              // se l'albero è vuoto e se non trovo il nodo return 0
         return 0;
     if(x->info->uguale(a))              // se lo trovo ritorno quel puntatore
@@ -70,23 +67,11 @@ binarytreebasic::nodo* binarytree::searchIt(nodo * x, tipo* a){
     if(!z)                              // se non lo trovo cerco a destra
         z = searchIt(x->right, a);
     return z;                           // se lo trovo ritorno quel puntatore altrimenti ritorna 0 dalle chiamate ricorsive
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    if(!x)
-        return x;
-    if(x->info->uguale(a))
-        return x;
-    nodo* z=searchIt(x->left, a), *y=searchIt(x->right, a);
-    if(z)
-        return z;
-    if(y)
-        return y;
-    return 0;
 }
 
-void binarytree::add(tipo * a)throw(point_error){
+void binarytree::add(tipo * a){
     if(!a)
-        throw point_error();
+        throw point_error("binarytree");
     nodo* x=root;
     string path=min_path(root);
     string::iterator begin=path.begin(), end=path.end();
@@ -104,9 +89,9 @@ void binarytree::add(tipo * a)throw(point_error){
         x->right=new nodo(a, x);
 }
 
-tipo* binarytree::remove(string s) throw(path_error){
+tipo* binarytree::remove(string s){
     if(!controlla_percorso(s))
-        throw path_error();
+        throw path_error("binarytree");
     nodo* x=root;
     string::iterator begin=s.begin(), end=s.end();
     for(; begin!=end; begin++){
@@ -123,9 +108,9 @@ tipo* binarytree::remove(string s) throw(path_error){
     return 0;
 }
 
-tipo* binarytree::remove(tipo* a)throw(point_error){
+tipo* binarytree::remove(tipo* a){
     if(!a)
-        throw point_error();
+        throw point_error("binarytree");
     nodo* x=root;
     if(x)
         x=searchIt(x, a);
@@ -137,9 +122,9 @@ tipo* binarytree::remove(tipo* a)throw(point_error){
     return 0;
 }
 
-tipo* binarytree::search(tipo* a)const throw(point_error){
+tipo* binarytree::search(tipo* a)const{
     if(!a)
-        throw point_error();
+        throw point_error("binarytree");
     nodo* x=root;
     if(x)
         x=searchIt(x, a);

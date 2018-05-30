@@ -7,9 +7,9 @@ int raz::degree(double d){
     return i;
 }
 
-raz::raz(int n, int d) throw(domain_error): num(n){
+raz::raz(int n, int d): num(n){
     if(d==0)
-        throw domain_error("raz");
+        throw dominio_error("raz");
     else if(num==0)
         den=1;
     else if(d<0){
@@ -21,9 +21,9 @@ raz::raz(int n, int d) throw(domain_error): num(n){
     riduzione();
 }
 
-raz::raz(double n, double d) throw(domain_error){
+raz::raz(double n, double d){
     if(d==0)
-        throw domain_error("raz");
+        throw dominio_error("raz");
     if(n==0){
         num=0;
         den=1;
@@ -113,16 +113,16 @@ raz raz::riduzione()const{
     return x;
 }
 
-raz* raz::somma(tipo* b)throw(point_error){
+raz* raz::somma(tipo* b){
     if(!b)
-        throw point_error();
+        throw point_error("raz");
     raz *b1=static_cast<raz*>(b);
     return new raz(((*this)+(*b1)));
 }
 
-raz* raz::differenza(tipo* b)throw(point_error){
+raz* raz::differenza(tipo* b){
     if(!b)
-        throw point_error();
+        throw point_error("raz");
     raz*b1=static_cast<raz*>(b);
     return new raz(((*this)-(*b1)));
 }
@@ -135,16 +135,16 @@ raz* raz::divisione(int b){
     return new raz(((*this)/b));
 }
 
-bool raz::uguale(tipo* b) const throw(point_error){
+bool raz::uguale(tipo* b) const{
     if(!b)
-        throw point_error();
+        throw point_error("raz");
     raz* b1=static_cast<raz*>(b);
     return (*this)==(*b1);
 }
 
-bool raz::min(tipo* b) const throw(point_error){
+bool raz::min(tipo* b) const{
     if(!b)
-        throw point_error();
+        throw point_error("raz");
     raz*b1=static_cast<raz*>(b);
     return (*this)<(*b1);
 }
@@ -175,9 +175,9 @@ raz operator*(const raz& r1, const raz& r2){
     return raz(r1.num*r2.num, r1.den*r2.den);
 }
 
-raz operator/(const raz& r1, const raz& r2) throw(domain_error){
+raz operator/(const raz& r1, const raz& r2){
     if(r2.num==0)
-        throw domain_error("raz");
+        throw dominio_error("raz");
     return raz(r1.num*r2.den, r1.den*r2.num);
 }
 
@@ -216,5 +216,3 @@ string to_string(const raz &r){
     else
         return to_string(r.num)+"/"+to_string(r.den);
 }
-
-//throw(0) denominatore nullo

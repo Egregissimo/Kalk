@@ -120,22 +120,7 @@ std::string bin::base16() const{
 
 unsigned int bin::getDimIntera() const { return intera.size(); }
 unsigned int bin::getDimFrazionaria() const { return frazionaria.size(); }
-/*
-bin& bin::operator =(const bin& bin1){
-    if(this != &bin1){
-        this->intera.clear();
-        this->frazionaria.clear();
 
-        this->segno = bin1.segno;
-        for(unsigned int i=0; i<bin1.intera.size(); i++)
-            this->intera.push_back(bin1.intera[i]);
-
-        for(unsigned int i=0; i<bin1.frazionaria.size(); i++)
-            this->frazionaria.push_back(bin1.frazionaria[i]);
-    }
-    return *this;
-}
-*/
 bin operator +(const bin& bin1, const bin& bin2){
     double a = bin1.base10();
     double b = bin2.base10();
@@ -160,7 +145,7 @@ bin operator *(int i, const bin& bin2){
     bin out(a*b);
     return out;
 }
-bin operator /(const bin& bin1, const bin& bin2) throw(input_error){
+bin operator /(const bin& bin1, const bin& bin2){
     double a = bin1.base10();
     double b = bin2.base10();
 
@@ -170,7 +155,7 @@ bin operator /(const bin& bin1, const bin& bin2) throw(input_error){
     bin out(a/b);
     return out;
 }
-bin operator/ (int i, const bin& bin2) throw(input_error){
+bin operator/ (int i, const bin& bin2){
     double a = (double)i;
     double b = bin2.base10();
 
@@ -244,15 +229,15 @@ string to_string(const bin& bin1){
 
 /* Metodi ereditati dalla classe tipo.h */
 
-bin* bin::somma(tipo* b) throw(point_error){
+bin* bin::somma(tipo* b){
     if(!b)
-        throw point_error();
+        throw point_error("bin");
     bin* b1 = dynamic_cast<bin*>(b);
     return new bin((*this) + (*b1));
 }
-bin* bin::differenza(tipo* b) throw(point_error){
+bin* bin::differenza(tipo* b){
     if(!b)
-        throw point_error();
+        throw point_error("bin");
     bin* b1 = dynamic_cast<bin*>(b);
     return new bin((*this) - (*b1));
 }
@@ -262,15 +247,15 @@ bin* bin::moltiplicazione(int b){
 bin* bin::divisione(int b){
     return new bin(b / (*this));    /*è da controllare*/
 }
-bool bin::uguale(tipo* b) const throw(point_error){
+bool bin::uguale(tipo* b) const{
     if(!b)
-        throw point_error();
+        throw point_error("bin");
     bin* b1 = dynamic_cast<bin*>(b);
     return (*this)==(*b1);
 }
-bool bin::min(tipo* b) const throw(point_error){
+bool bin::min(tipo* b) const{
     if(!b)
-        throw point_error();
+        throw point_error("bin");
     bin* b1 = dynamic_cast<bin*>(b);
     return (*this)<(*b1);
 }

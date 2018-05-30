@@ -9,16 +9,16 @@ class binarytree: public binarytreebasic{
     friend binarytree& operator +(const binarytree&, const binarytree&);
     friend binarytree& operator -(const binarytree&, const binarytree&);
 private:
-    static string min_path(nodo*);
-    tipo* removeIt(nodo*);
-    static nodo* searchIt(nodo*, tipo*);
+    static string min_path(nodo*);                  //trova il percorso più corto che presenta un nodo con 0 o 1 figlio attraverso una stringa di 0 e 1
+    tipo* removeIt(nodo*);                          //funzione iterativa per rimuovere il nodo
+    static nodo* searchIt(nodo*, tipo*);            //funzione iterativa per trovare il nodo
 public:
     binarytree(): binarytreebasic() {}
     binarytree(vector<tipo*> type, string& s): binarytreebasic(type, s) {}
-    virtual void add(tipo*) throw(point_error);
-    virtual tipo* remove(string) throw(path_error);                     //rimuove l'oggetto indicato da un percorso
-    virtual tipo* remove(tipo*) throw(point_error);                     //rimuove l'oggetto cercandolo
-    virtual tipo* search (tipo*)const throw(point_error);               //trova l'oggetto indicato
+    virtual void add(tipo*);                            //aggiunge nel percorso più corto il nodo dato come parametro
+    virtual tipo* remove(string);                     //rimuove l'oggetto indicato da un percorso
+    virtual tipo* remove(tipo*);                     //rimuove l'oggetto cercandolo
+    virtual tipo* search (tipo*)const;               //trova l'oggetto indicato
 
     binarytree& operator *(int);
     binarytree& operator /(int);

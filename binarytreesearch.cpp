@@ -67,7 +67,7 @@ void binarytreesearch::ordinaRic(vector<tipo*>& A, string::iterator begin, vecto
     }
 }
 
-vector<tipo*> binarytreesearch::ordina(vector<tipo*> t, string& s) throw(input_error){
+vector<tipo*> binarytreesearch::ordina(vector<tipo*> t, string& s){
     if(controlla_input(t, s)){
         vector<tipo*> A=t;
         vector<tipo*> B(t.size());
@@ -77,7 +77,7 @@ vector<tipo*> binarytreesearch::ordina(vector<tipo*> t, string& s) throw(input_e
         return B;
     }
     else
-        throw input_error();
+        throw input_error("binarytreesearch");
 }
 
 string binarytreesearch::crea_stringa(int n){
@@ -134,9 +134,9 @@ tipo* binarytreesearch::removeIt(nodo* z){
     return a;
 }
 
-void binarytreesearch::add(tipo* a) throw(point_error){
+void binarytreesearch::add(tipo* a){
     if(!a)
-        throw point_error();
+        throw point_error("binarytreesearch");
     nodo *y=0, *x=root;
     while(x){
         y=x;
@@ -153,10 +153,10 @@ void binarytreesearch::add(tipo* a) throw(point_error){
         y->right=new nodo(a, y);
 }
 
-tipo* binarytreesearch::remove(string s) throw(path_error){
+tipo* binarytreesearch::remove(string s){
     nodo* x=root;
     if(!controlla_percorso(s))
-        throw path_error();
+        throw path_error("binarytreesearch");
     string::iterator begin=s.begin(), end=s.end();
     for(; x && begin!=end; begin++){
         if(*begin=='0')
@@ -172,9 +172,9 @@ tipo* binarytreesearch::remove(string s) throw(path_error){
     return 0;
 }
 
-tipo* binarytreesearch::remove(tipo* a) throw(point_error){
+tipo* binarytreesearch::remove(tipo* a){
     if(!a)
-        throw point_error();
+        throw point_error("binarytreesearch");
     nodo* x=root;
     while(x && !(x->info->uguale(a)))
         if(a->min(x->info))
@@ -189,9 +189,9 @@ tipo* binarytreesearch::remove(tipo* a) throw(point_error){
     return 0;
 }
 
-tipo* binarytreesearch::search(tipo* a)const throw(point_error){
+tipo* binarytreesearch::search(tipo* a)const{
     if(!a)
-        throw point_error();
+        throw point_error("binarytreesearch");
     nodo* x=root;
     while(x && !(x->info->uguale(a)))
         if(a->min(x->info))
@@ -255,5 +255,3 @@ binarytreesearch& binarytreesearch::operator /(int p){
     binarytreesearch* c=new binarytreesearch(A, s);
     return *c;
 }
-
-//throw(0) l'input e' un puntatore nullo

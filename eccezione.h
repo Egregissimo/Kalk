@@ -20,9 +20,9 @@ public:
    // virtual void ghost_method() const =0;
 };
 
-class domain_error: public eccezione{
+class dominio_error: public eccezione{
 public:
-    domain_error(string c="N/A", string s="il denominatore e' nullo"): eccezione(c,s) {}
+    dominio_error(string c="N/A", string s="il denominatore e' nullo"): eccezione(c,s) {}
 };
 
 class input_error: public eccezione{

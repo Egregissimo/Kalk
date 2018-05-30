@@ -35,7 +35,7 @@ bool vet::sameSize(vet tmp) const{
     else
         return false;
 }
-void vet::transposed() throw(input_error){
+void vet::transposed(){
     int* tmp = new int[r*c];
     int index = 0;
     for(int j=0; j<c; j++){
@@ -70,7 +70,7 @@ int vet::norma() const{
 /* ------------------------------------------------------ */
 
 int* vet::operator [](size_t i) const { return (v_m + (c*i)); }
-vet operator +(const vet& vet1, const vet& vet2) throw(domain_error){
+vet operator +(const vet& vet1, const vet& vet2){
     if(vet1.sameSize(vet2)){
         vet out(vet1.r,vet1.c);
         for(int i=0; i<vet1.r; i++)
@@ -80,10 +80,10 @@ vet operator +(const vet& vet1, const vet& vet2) throw(domain_error){
         return out;
     }
     else
-        throw domain_error("vet", "dimensioni delle matrici non corrette per l'operazione");
+        throw dominio_error("vet", "dimensioni delle matrici non corrette per l'operazione");
 
 }
-vet operator -(const vet& vet1, const vet& vet2) throw(domain_error){
+vet operator -(const vet& vet1, const vet& vet2) {
     if(vet1.sameSize(vet2)){
         vet out(vet1.r,vet1.c);
         for(int i=0; i<vet1.r; i++)
@@ -93,9 +93,9 @@ vet operator -(const vet& vet1, const vet& vet2) throw(domain_error){
         return out;
     }
     else
-        throw domain_error("vet", "dimensioni delle matrici non corrette per l'operazione");
+        throw dominio_error("vet", "dimensioni delle matrici non corrette per l'operazione");
 }
-vet vet::operator *(const vet& vet2) throw(domain_error){
+vet vet::operator *(const vet& vet2){
     if(this->isMoltiplication(vet2)){
         vet out(this->r,vet2.c);
         int valore=0;
@@ -113,7 +113,7 @@ vet vet::operator *(const vet& vet2) throw(domain_error){
         return out;
     }
     else
-        throw domain_error("vet");
+        throw dominio_error("vet");
 }
 vet operator* (int k, const vet& vet1){
     vet out(vet1.r,vet1.c);
@@ -186,15 +186,15 @@ string to_string(const vet& vet1){
 
 /* Metodi ereditati dalla classe tipo.h */
 
-vet* vet::somma(tipo* b)throw(point_error, domain_error){
+vet* vet::somma(tipo* b){
     if(!b)
-        throw point_error();
+        throw point_error("vet");
     vet* b1 = dynamic_cast<vet*>(b);
     return new vet((*this) + (*b1));
 }
-vet* vet::differenza(tipo* b)throw(point_error, domain_error){
+vet* vet::differenza(tipo* b){
     if(!b)
-        throw point_error();
+        throw point_error("vet");
     vet* b1 = dynamic_cast<vet*>(b);
     return new vet((*this) - (*b1));
 }
@@ -204,15 +204,15 @@ vet* vet::moltiplicazione(int b){
 vet* vet::divisione(int b){
     return new vet(b / (*this));    /*è da controllare*/
 }
-bool vet::uguale(tipo* b) const throw(point_error){
+bool vet::uguale(tipo* b) const{
     if(!b)
-        throw point_error();
+        throw point_error("vet");
     vet* b1 = dynamic_cast<vet*>(b);
     return (*this)==(*b1);
 }
-bool vet::min(tipo* b) const throw(point_error){
+bool vet::min(tipo* b) const {
     if(!b)
-        throw point_error();
+        throw point_error("vet");
     vet* b1 = dynamic_cast<vet*>(b);
     return (*this)<(*b1);
 }

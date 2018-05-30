@@ -5,6 +5,9 @@ string binarytreebasic::nodo::stampa(binarytreebasic::nodo* n){
         return "_";
     return "('"+n->info->to_stringa()+"',"+stampa(n->left)+","+stampa(n->right)+")";
 }
+//POST={stampa il nodo e i suoi sotto-alberi}
+
+//PRE={prende l'inizio e la fine della stringa che deve parsare}
 bool binarytreebasic::parser(string::iterator begin, string::iterator end){
     if(begin==end)
         return true;
@@ -46,6 +49,9 @@ bool binarytreebasic::parser(string::iterator begin, string::iterator end){
 
     return a && b;
 }
+//POST={restutuisce true se la stringa rappresenta correttamente la stringa per la struttura di un albero. Non
+// considera la sua lunghezza, es. "(*,_,_))))" sarà considerata corretta}
+
 //PRE = { la stringa e' potenzialmente non corretta }
 int binarytreebasic::balance_brackets(string::iterator i, string::iterator end){
     if(*i=='_')
@@ -65,6 +71,7 @@ int binarytreebasic::balance_brackets(string::iterator i, string::iterator end){
 }
 //POST = { ritorna il numero di passi fino alla posizione della ')' che chiude la parentesi della PRE }
 
+//funzioni usate per la operazioni dagli alberi derivati (binarytreesearch e binarytree)
 binarytreebasic::nodo* binarytreebasic::somma(nodo* a, nodo* b, nodo *father){
     nodo* x=0;
     if(!a && b){
@@ -147,6 +154,7 @@ vector<tipo*> binarytreebasic::nodes(nodo* n){
     c.insert(c.end(), a.begin(), a.end());
     return c;
 }
+//POST={restutuisce un vettore coi campi info del nodo e dei sui sottoalberi visitati in modo prefisso};
 
 bool binarytreebasic::controlla_percorso(string &s){
     string::iterator begin=s.begin(), end=s.end();
@@ -155,7 +163,9 @@ bool binarytreebasic::controlla_percorso(string &s){
             return false;
     return true;
 }
+//POST={restituisce tre se la stringa consiste in una corretta stringa di ricerca dell'albero (formata solo da 1 e 0)}
 
+//controlla anche se il vettore dato in input contiene tutti pundatori con TD uguale
 bool binarytreebasic::controlla_input(vector<tipo*>& v, string &s){
     vector<tipo*>::iterator begin=v.begin(), end=v.end();
     int size=s.size();
@@ -204,7 +214,7 @@ binarytreebasic::nodo* binarytreebasic::constrRic(string::iterator i, vector<tip
     return x;
 }
 
-binarytreebasic::binarytreebasic(vector<tipo*> type, string& s) throw(input_error){
+binarytreebasic::binarytreebasic(vector<tipo*> type, string& s){
     if(controlla_input(type, s)){
         //int k=0;//indice valore da analizzare nell'array
         //constrRic costruisce l'albero prendendo in input l'array di valori,
@@ -214,7 +224,7 @@ binarytreebasic::binarytreebasic(vector<tipo*> type, string& s) throw(input_erro
         root=constrRic(s.begin(), it);
     }
     else
-        throw input_error();
+        throw input_error("binarytree");
 }
 
 binarytreebasic::~binarytreebasic(){if(root) distruggi(root);}
@@ -233,10 +243,10 @@ int binarytreebasic::n_nodes(nodo* n){
    return 1+n_nodes(n->left)+n_nodes(n->right);
 }
 
-tipo* binarytreebasic::cerca(string s)const throw(path_error){
+tipo* binarytreebasic::cerca(string s)const{
     nodo* x=this->root;
     if(!controlla_percorso(s) || !x)
-        throw path_error();
+        throw path_error("binarytree");
     string::iterator begin=s.begin(), end=s.end();
     for(; x && begin!=end; begin++)
         if(*begin=='0')
@@ -292,6 +302,3 @@ string to_string(const binarytreebasic &t){
         return  binarytreebasic::nodo::stampa(t.root);
     return "";
 }
-
-//throw(0) i dati inseriti in input non sono corretti
-//throw(1) il percorso inserito non e' corretto
