@@ -134,12 +134,12 @@ private:
     void creazioneNodiRaz();
     void creazioneNodiBin();
     void creazioneNodiVet();
-    void add_vet_raz_bin(QString);              // creazine dell'albero popolandolo coi nodi creati prima
+    void add_vet_raz_bin();              // creazine dell'albero popolandolo coi nodi creati prima
 
     // funzioni per abilitare o disabilitare: la tastiera struttura, il tasto go/crea e i radio button
-    void abi_disab_TastieraStruttura(bool);
-    void abi_disab_go_crea(bool);
-    void abi_disab_radioType(bool);
+    void abi_TastieraStruttura(bool);
+    void abi_go_crea(bool);
+    void abi_radioType(bool);
 
 public slots:
     // slot per i tasti canc e canc all per l'inserimento struttura e per l'inserimento dati nella sezione bin
