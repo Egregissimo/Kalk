@@ -140,6 +140,7 @@ private:
     void abi_TastieraStruttura(bool);
     void abi_go_crea(bool);
     void abi_radioType(bool);
+    void abi_butto_crea(bool);
 
 public slots:
     // slot per i tasti canc e canc all per l'inserimento struttura e per l'inserimento dati nella sezione bin
@@ -207,6 +208,8 @@ private:
 
     //connessione ComboListaTree1 e 2 alle relative operazioni
     void connectComboOperazioniToSlot();
+
+
 
 public slots:
     void slotComboTree();               // slot per cambiare il secondo operatore (da ComboBox a LineEdit e viceversa)

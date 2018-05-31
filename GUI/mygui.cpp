@@ -400,6 +400,9 @@ void mygui::add_vet_raz_bin(){
         msgBox.setText("Hai completato la creazione dei nodi!\nAlbero creato");
         msgBox.exec();
         abi_radioType(true);
+
+        if(creaVet)
+            abi_butto_crea(false);
     }
 }
 
@@ -434,7 +437,12 @@ void mygui::abi_radioType(bool flag){
         for(unsigned int i=0; i<radioType.size(); ++i)
             radioType[i]->setDisabled(true);
     }
-
+}
+void mygui::abi_butto_crea(bool flag){
+    if(flag)
+        creaVet->setEnabled(true);
+    else
+        creaVet->setDisabled(true);
 }
 
 /* SLOT BOX 1*/
@@ -487,6 +495,9 @@ void mygui::slotButtonAddStruttura(){
 
         abi_TastieraStruttura(false);
         abi_go_crea(true);
+
+        if(creaVet)
+            abi_butto_crea(true);
     }
     else{
         msgBox.setText("La stringa non è sintatticamente corretta");
@@ -506,6 +517,7 @@ void mygui::slotRadioRaz(){
         if(mainVLayout1->geometry().width()<300)
             resize(1350, 300);
         addWidgetDisplayRaz();
+        aggiornaComboBoxListaTree();
         go->setText("Go/Crea");
     }
 }
@@ -527,6 +539,7 @@ void mygui::slotRadioBin(){
         if(mainVLayout1->geometry().width()<300)
             resize(1350, 300);
         addWidgetDisplayBin();
+        aggiornaComboBoxListaTree();
         go->setText("Go/Crea");
     }
 }
@@ -539,6 +552,7 @@ void mygui::slotRadioVet(){
             removeWidgetDisplayBin();
         if(mainVLayout1->geometry().width()<300)
             resize(1350, 300);
+        aggiornaComboBoxListaTree();
         addWidgetDisplayVet();
     }
 }
@@ -626,9 +640,63 @@ void mygui::aggiornaComboBoxListaTree(){
         ComboListaTree1->clear();
         if(ComboListaTree2)
             ComboListaTree2->clear();
+
+
+        for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
+            binarytreebasic* aux = it->second;
+            if(ComboTree->currentText() == "Binary Tree"){
+                if(radioType[0]->isChecked()){
+                    if( dynamic_cast<binarytree*>(aux) && dynamic_cast<raz*>(aux->tipo_tree())){
+                        ComboListaTree1->addItem(QString::fromStdString(it->first));
+                        if(ComboListaTree2)
+                            ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    }
+                }
+                if(radioType[1]->isChecked()){
+                    if( dynamic_cast<binarytree*>(aux) && dynamic_cast<bin*>(aux->tipo_tree()) ){
+                        ComboListaTree1->addItem(QString::fromStdString(it->first));
+                        if(ComboListaTree2)
+                            ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    }
+                }
+                if(radioType[2]->isChecked()){
+                    if( dynamic_cast<binarytree*>(aux) && dynamic_cast<vet*>(aux->tipo_tree()) ){
+                        ComboListaTree1->addItem(QString::fromStdString(it->first));
+                        if(ComboListaTree2)
+                            ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    }
+                }
+            }
+
+            if(ComboTree->currentText() == "Binary Tree Search"){
+                if(radioType[0]->isChecked()){
+                    if( dynamic_cast<binarytreesearch*>(aux) && dynamic_cast<raz*>(aux->tipo_tree()) ){
+                        ComboListaTree1->addItem(QString::fromStdString(it->first));
+                        if(ComboListaTree2)
+                            ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    }
+                }
+                if(radioType[1]->isChecked()){
+                    if( dynamic_cast<binarytreesearch*>(aux) && dynamic_cast<bin*>(aux->tipo_tree()) ){
+                        ComboListaTree1->addItem(QString::fromStdString(it->first));
+                        if(ComboListaTree2)
+                            ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    }
+                }
+                if(radioType[2]->isChecked()){
+                    if( dynamic_cast<binarytreesearch*>(aux) && dynamic_cast<vet*>(aux->tipo_tree()) ){
+                        ComboListaTree1->addItem(QString::fromStdString(it->first));
+                        if(ComboListaTree2)
+                            ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    }
+                }
+            }
+        }
+
+        /*
         if(ComboTree->currentText() == "Binary Tree"){
             for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
-                if(dynamic_cast<binarytree*>((it->second))){
+                if(dynamic_cast<binarytree*>(aux)){
                     ComboListaTree1->addItem(QString::fromStdString(it->first));
                     if(ComboListaTree2)
                         ComboListaTree2->addItem(QString::fromStdString(it->first));
@@ -637,13 +705,14 @@ void mygui::aggiornaComboBoxListaTree(){
         }
         if(ComboTree->currentText() == "Binary Tree Search"){
             for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
-                if(dynamic_cast<binarytreesearch*>((it->second))){
+                if(dynamic_cast<binarytreesearch*>(aux)){
                     ComboListaTree1->addItem(QString::fromStdString(it->first));
                     if(ComboListaTree2)
                         ComboListaTree2->addItem(QString::fromStdString(it->first));
                 }
             }
         }
+        */
     }
 }
 
