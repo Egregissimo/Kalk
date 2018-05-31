@@ -251,6 +251,7 @@ void mygui::removeWidgetTable(){
     delete table;
     delete creaVet;
     table = 0;
+    creaVet = 0;
 }
 
 void mygui::creaComboRadioButton(){
@@ -402,7 +403,7 @@ void mygui::add_vet_raz_bin(){
         abi_radioType(true);
 
         if(creaVet)
-            abi_butto_crea(false);
+            abi_button_crea(false);
     }
 }
 
@@ -438,7 +439,7 @@ void mygui::abi_radioType(bool flag){
             radioType[i]->setDisabled(true);
     }
 }
-void mygui::abi_butto_crea(bool flag){
+void mygui::abi_button_crea(bool flag){
     if(flag)
         creaVet->setEnabled(true);
     else
@@ -497,7 +498,7 @@ void mygui::slotButtonAddStruttura(){
         abi_go_crea(true);
 
         if(creaVet)
-            abi_butto_crea(true);
+            abi_button_crea(true);
     }
     else{
         msgBox.setText("La stringa non è sintatticamente corretta");

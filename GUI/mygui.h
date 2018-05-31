@@ -140,7 +140,7 @@ private:
     void abi_TastieraStruttura(bool);
     void abi_go_crea(bool);
     void abi_radioType(bool);
-    void abi_butto_crea(bool);
+    void abi_button_crea(bool);
 
 public slots:
     // slot per i tasti canc e canc all per l'inserimento struttura e per l'inserimento dati nella sezione bin
