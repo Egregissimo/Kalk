@@ -7,6 +7,7 @@ public class Binarytreesearch extends Binarytreebasic{
 	
 	public Binarytreesearch(Tipo[] t, String s) {super(ordina(t, s), s);}
 	public Binarytreesearch() {}
+	//supporta la funzione merge_sort
 	private static void merge(Tipo[] left, Tipo[] right, Tipo[] bars) {
 		int nL=left.length;
 		int nR=right.length;
@@ -34,7 +35,8 @@ public class Binarytreesearch extends Binarytreebasic{
 			i++;
 		}
 	}
-	private static void merge_sort(Tipo[] bar) {
+	//ordina in modo crescente i valori del vettore dato come parametro
+  	private static void merge_sort(Tipo[] bar) {
 		if(bar.length<=1)
 			return;
 		
@@ -51,6 +53,8 @@ public class Binarytreesearch extends Binarytreebasic{
 		merge_sort(right);
 		merge(left, right, bar);
 	}
+  //funzione ricorsiva per creare l'albero di ricerca. Prende in input il primo array per inserirne
+    //i valori ordinati nel secondo array da usare nel costruttore
 	private static void ordinaRic(Tipo[] A, String s, int begin, Tipo[] B, int it) {
 		int size=A.length;
 		if(size>1) {
@@ -73,6 +77,7 @@ public class Binarytreesearch extends Binarytreebasic{
 			it++;
 		}
 	}
+	//invoca ordinaRic per ritornare l'array ordinato per inserire i nodi nell'ordine corretto nell'albero di ricerca
 	private static Tipo[] ordina(Tipo[] t, String s) throws IllegalArgumentException{
 		if(!controlla_input(t, s))
 			throw new IllegalArgumentException("percorso non valido");
@@ -83,12 +88,14 @@ public class Binarytreesearch extends Binarytreebasic{
 		ordinaRic(A, s, 0, B, 0);
 		return B;
 	}
+	//crea una stringa per un albero bilanciato di ricerca di n nodi
 	private static String crea_stringa(int n) {
 		if(n==0)
 			return "_";
 		int q=(n+1)/2;
 		return "(*,"+crea_stringa(q-1)+","+crea_stringa(n-q)+")";
 	}
+	//trova il minimo dell'albero
 	private static Nodo minimum(Nodo r) {
 		if(r==null)
 			return null;
@@ -96,6 +103,7 @@ public class Binarytreesearch extends Binarytreebasic{
 			r=r.left;
 		return r;
 	}
+	//trova il successore del nodo dato in input
 	private static Nodo successor(Nodo r) {
 		if(r==null)
 			return null;
@@ -109,6 +117,7 @@ public class Binarytreesearch extends Binarytreebasic{
 		}
 		return y;
 	}
+	//rimuove in modo iterativo il nodo indicato mantenedo le proprieta' del'albero di ricerca
 	private Tipo removeIt(Nodo z) {
 		Nodo x=null, y=null;
 		if(z.left==null || z.right==null)
@@ -131,6 +140,7 @@ public class Binarytreesearch extends Binarytreebasic{
 			x.info=z.info;
 		return z.info;		
 	}
+	//cerca di tenere  l'albero bilanciato
 	public void add(Tipo a) throws ClassCastException{
 		if(root!=null && root.info.getClass()!=a.getClass())
 			throw new ClassCastException("tipi incompatibili per l'operazione");
@@ -150,6 +160,7 @@ public class Binarytreesearch extends Binarytreebasic{
 		else
 			y.right=new Nodo(a, y);
 	}
+	/* rimuove l'oggetto indicato da un percorso, se stringa vuota elimina la radice */
 	public Tipo remove(String s) throws IllegalArgumentException{
 		if(!controlla_percorso(s))
 			throw new IllegalArgumentException("percorso non valido");
@@ -166,6 +177,7 @@ public class Binarytreesearch extends Binarytreebasic{
 		System.out.println("Elemento non trovato\n");
 		return null;
 	}
+	//rimuove l'oggetto cercandolo
 	public Tipo remove(Tipo a) throws ClassCastException{
 		if(root!=null && root.info.getClass()!=a.getClass())
 			throw new ClassCastException("tipi incompatibili per l'operazione");
@@ -181,6 +193,7 @@ public class Binarytreesearch extends Binarytreebasic{
 		System.out.println("Elemento non trovato\n");
 		return null;
 	}
+	//trova l'oggetto indicato
 	public Tipo search(Tipo a) throws ClassCastException{
 		if(root!=null && root.info.getClass()!=a.getClass())
 			throw new ClassCastException("tipi incompatibili per l'operazione");
@@ -196,6 +209,7 @@ public class Binarytreesearch extends Binarytreebasic{
 		System.out.println("Elemento non trovato\n");
 		return null;
 	}
+	//restituisce un albero di ricerca bilanciato
 	public Binarytreesearch balance() {
 		int n=n_nodes(root);
 		Tipo[] A=nodes(root).toArray(new Tipo[0]);

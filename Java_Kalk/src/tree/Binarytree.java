@@ -7,6 +7,7 @@ public class Binarytree extends Binarytreebasic{
 	
 	public Binarytree(Tipo[] t, String s) {super(t,s);}
 	public Binarytree() {}
+	//trova il percorso più corto che presenta un nodo con 0 o 1 figlio attraverso una stringa di 0 e 1
 	private static String min_path(Nodo x) {
 		if(x==null)
 			return new String();
@@ -23,6 +24,7 @@ public class Binarytree extends Binarytreebasic{
 		}
 		return c;
 	}
+	//funzione iterativa per rimuovere il nodo
 	private Tipo removeIt(Nodo y) {
 		Nodo x=null, z=null;
 		if(y.left!=null && y.right!=null)
@@ -57,6 +59,7 @@ public class Binarytree extends Binarytreebasic{
 		}
 		return y.info;
 	}
+	//funzione iterativa per trovare il nodo
 	private static Nodo searchIt(Nodo x, Tipo a) {
 		if(x==null)
 			return null;
@@ -68,6 +71,7 @@ public class Binarytree extends Binarytreebasic{
 			z=searchIt(x.right, a);
 		return z;
 	}
+	//aggiunge nel percorso più corto il nodo dato come parametro
 	public void add(Tipo a) throws ClassCastException{
 		if(root!=null && root.info.getClass()!=a.getClass())
 			throw new ClassCastException("tipi incompatibili per l'operazione");
@@ -86,6 +90,7 @@ public class Binarytree extends Binarytreebasic{
 		else
 			x.right=new Nodo(a, x);
 	}
+	//rimuove l'oggetto indicato da un percorso
 	public Tipo remove(String s) throws IllegalArgumentException{
 		if(!controlla_percorso(s))
 			throw new IllegalArgumentException("percorso non valido");
@@ -102,6 +107,7 @@ public class Binarytree extends Binarytreebasic{
 		System.out.println("Elemento non trovato\n");
 		return null;
 	}
+	//rimuove l'oggetto cercandolo
 	public Tipo remove(Tipo a) throws ClassCastException{
 		if(root!=null && root.info.getClass()!=a.getClass())
 			throw new ClassCastException("tipi incompatibili per l'operazione");
@@ -114,6 +120,7 @@ public class Binarytree extends Binarytreebasic{
 		System.out.println("Elemento non trovato\n");
 		return null;
 	}
+	//trova l'oggetto indicato
 	public Tipo search(Tipo a) throws ClassCastException{
 		if(root!=null && root.info.getClass()!=a.getClass())
 			throw new ClassCastException("tipi incompatibili per l'operazione");

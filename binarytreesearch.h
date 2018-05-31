@@ -2,8 +2,7 @@
 #define binarytreesearch_H
 #include "binarytreebasic.h"
 
-/*  Ricordarsi che per invocare un campo dati bisogna fare this->"campo dati"
-    Non serve ridefinire costruttore di copia, distruttore o assegnazione dato
+/*  Non serve ridefinire costruttore di copia, distruttore o assegnazione dato
     che questi alberi derivati non hanno campi dati. */
 class binarytreesearch: public binarytreebasic{
     friend ostream& operator<<(ostream&, const binarytreesearch&);

@@ -207,10 +207,11 @@ binarytreebasic::nodo* binarytreebasic::constrRic(string::iterator i, vector<tip
     nodo* x=new nodo(val, father);
     int left=balance_brackets(i, i);
     int right=balance_brackets(i+left+2, i+left+2);
-    if(right)
-        x->right=constrRic(i+left+2, A, x);
     if(left)
         x->left=constrRic(i, A, x);
+    if(right)
+        x->right=constrRic(i+left+2, A, x);
+
     return x;
 }
 

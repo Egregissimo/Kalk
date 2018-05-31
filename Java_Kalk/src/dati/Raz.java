@@ -63,6 +63,7 @@ public class Raz implements Tipo{
 	}
 	public int getNum() {return num;}
 	public int getDen() {return den;}
+	//ritorna il reciproco del numero razionale dato per parametro
 	public static Raz inverso(Raz r) {return new Raz(r.den, r.num);}
 	//metodi per la conversione
 	public double toDouble() {double d=num/den; return d;}
@@ -88,7 +89,7 @@ public class Raz implements Tipo{
 		else
 			den=1;
 	}
-	//indica quante cifre dpo la virgola ci sono
+	//ritorna il numero di cifre dopo la virgola in un double
 	private int degree(double d) {
 		int i=0;
 		while(((d*Math.pow(10, i)-Math.floor(d*Math.pow(10, i)))!=0) && i<=10)

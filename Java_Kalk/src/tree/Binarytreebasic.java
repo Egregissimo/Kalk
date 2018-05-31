@@ -20,6 +20,7 @@ public abstract class Binarytreebasic {
 		protected Nodo(Tipo t, Nodo f) {this(t, f, null, null);}
 		protected Nodo(Tipo t) {this(t, null, null, null);}
 		protected Nodo() {this(null, null, null, null);}
+		/* stampa (il campo info) il nodo corrente e il suo sottoalbero */
 		protected static String stampa(Nodo n) {
 			if(n==null)
 				return "_";
@@ -27,6 +28,7 @@ public abstract class Binarytreebasic {
 		}
 	}
 	Nodo root=null;
+	/* funzione ricorsica ausiliaria per il costruttore */
 	private Nodo constrRic(String s, Tipo[] t, Nodo f, int t_i, int s_i) {
 		Nodo x=new Nodo(t[t_i], f);
 		s_i+=3;
@@ -47,6 +49,7 @@ public abstract class Binarytreebasic {
 		root=constrRic(s, t, null, 0, 0);
 	}
 	public Binarytreebasic() {}
+	/* constrolla che la stringa in input sia grammaticalmente corretta */
 	protected static boolean parser(String s, int begin, int end) {
 		if(begin==end)
 			return true;
@@ -88,6 +91,7 @@ public abstract class Binarytreebasic {
 		
 		return a && b;
 	}
+	/* prende in input un carattere, se questo e' '(' ritorna la sua ')' bilanciata */
 	protected static int balance_brackets(String s, int begin, int end) {
 		if(s.charAt(begin)=='_')
 			return 0;
@@ -104,6 +108,7 @@ public abstract class Binarytreebasic {
 			return -1;
 		return m-1;
 	}
+	/* ritorna il numero di nodi di una stringa */
 	protected static int n_nodes_stringa(String s, int begin) {
 		int count=0, id=1;
 		if(s.charAt(begin)=='_')
@@ -180,6 +185,7 @@ public abstract class Binarytreebasic {
 		}
 		return x;
 	}
+	/* ritorna un vettore con i campi info del sottoalbero del nodo letti in ordine PREFISSO */
 	protected static ArrayList<Tipo> nodes(Nodo n) {
 		ArrayList<Tipo> a=new ArrayList<Tipo>(), b=new ArrayList<Tipo>();
 		if(n==null)
@@ -196,28 +202,33 @@ public abstract class Binarytreebasic {
 		c.addAll(a);
 		return c;
 	}
+	/* constrolla se la stringa per la ricerca di un elemento sia formata esclusivamente da 0 e 1 */
 	protected static boolean controlla_percorso(String s) {
 		for(int i=0; i<s.length(); i++)
 			if(s.charAt(i)!='0' && s.charAt(i)!='1')
 				return false;
 		return true;
 	}
+	/* constrolla se gli input del costruttore sono corretti */
 	protected static boolean controlla_input(Tipo[] t, String s) {
 		for(int i=0; i<t.length; i++)
 			if(t[0].getClass()!=t[i].getClass())
 				return false;
 		return parser(s, 0, s.length()) && (t.length==n_nodes_stringa(s, 0)) && (s.length()==0 || s.length()==5 || s.length()%6==1);
 	}
+	/* stampa la struttura dell'albero prendendo il nodo radice */
 	protected static String tree_to_string(Nodo r) {
 		if(r==null)
 			return "_";
 		return "(*,"+tree_to_string(r.left)+","+tree_to_string(r.right)+")";
 	}
+	/* conta i nodi dell'albero */
 	public static int n_nodes(Nodo n) {
 		if(n==null)
 			return 0;
 		return 1+n_nodes(n.left)+n_nodes(n.right);
 	}
+	/* trova l'oggetto indicato dal percorso, se stringa vuota ritorna la radice */
 	public Tipo cerca(String s) throws IllegalArgumentException{
 		Nodo x=root;
 		if(!controlla_percorso(s) || x==null)
@@ -233,6 +244,7 @@ public abstract class Binarytreebasic {
 		System.out.println("Elemento non trovato\n");
 		return null;
 	}
+	/* stampa la struttura dell'albero */
 	public String struttura_tree() {
 		return tree_to_string(root);
 	}

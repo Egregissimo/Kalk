@@ -18,7 +18,9 @@ raz::raz(int n, int d): num(n){
     }
     else
         den=d;
-    riduzione();
+    raz x=riduzione();
+    num=x.num;
+    den=x.den;
 }
 
 raz::raz(double n, double d){
@@ -34,20 +36,19 @@ raz::raz(double n, double d){
         int num_num=static_cast<int>(n*std::pow(10, degree_num));//non sono presenti cifre decimali in questo double
         int den_num=static_cast<int>(std::pow(10, degree_num));
         raz x(num_num, den_num);//viene invocato il costruttore raz(int, int)
-        //cout<<"degree: "<<degree_num<<" num_num: "<<num_num<<" den_num: "<<den_num<<endl;
         //denominatore
         int degree_den=degree(d);
         int num_den=static_cast<int>(d*std::pow(10, degree_den));//non sono presenti cifre decimali in questo double
         int den_den=static_cast<int>(std::pow(10, degree_den));
         raz y(num_den, den_den);
-        //cout<<"degree: "<<degree_den<<" num_num: "<<num_den<<" den_num: "<<den_den<<endl;
 
-        //cout<<x<<" "<<y<<endl;
         raz z=x/y;
         num=z.num;
         den=z.den;
     }
-    riduzione();
+    raz x=riduzione();
+    num=x.num;
+    den=x.den;
 }
 
 int raz::getNum()const{

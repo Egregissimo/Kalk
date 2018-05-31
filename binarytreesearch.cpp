@@ -74,6 +74,7 @@ vector<tipo*> binarytreesearch::ordina(vector<tipo*> t, string& s){
         vector<tipo*>::iterator it=B.begin();
         merge_sort(A);
         ordinaRic(A, s.begin(), it);
+
         return B;
     }
     else
