@@ -180,6 +180,7 @@ void mygui::addWidgetDisplayVet(){
     displayLayout->addWidget(SpinBox_row,0,1);
     displayLayout->addWidget(SpinBox_colum,0,3);
 
+    go->setText("Imposta le dimensioni della matrice");
     whatChecked[2]=true;
 }
 void mygui::removeWidgetDisplayRaz(){
@@ -242,7 +243,6 @@ void mygui::addWidgetTable(){
     connect(creaVet, SIGNAL(clicked()), this, SLOT(slotCreazioneVet()));
     goLayout->addWidget(table,1,0);
     goLayout->addWidget(creaVet,2,0);
-    go->setText("Imposta le dimensioni della matrice");
 }
 void mygui::removeWidgetTable(){
     resize(900,300);
@@ -400,8 +400,6 @@ void mygui::add_vet_raz_bin(){
         msgBox.setText("Hai completato la creazione dei nodi!\nAlbero creato");
         msgBox.exec();
         abi_radioType(true);
-        if(radioType[2]->isChecked())
-                go->setText("Go/Crea");
     }
 }
 
@@ -508,6 +506,7 @@ void mygui::slotRadioRaz(){
         if(mainVLayout1->geometry().width()<300)
             resize(1350, 300);
         addWidgetDisplayRaz();
+        go->setText("Go/Crea");
     }
 }
 void mygui::slotRadioBin(){
@@ -528,6 +527,7 @@ void mygui::slotRadioBin(){
         if(mainVLayout1->geometry().width()<300)
             resize(1350, 300);
         addWidgetDisplayBin();
+        go->setText("Go/Crea");
     }
 }
 void mygui::slotRadioVet(){
@@ -669,7 +669,7 @@ void mygui::slotComboTextEdit(){
 
         string s=to_string(*(mappaTree[ComboListaTree1->currentText().toStdString()]));
         struttura_tree1=new QTextEdit(QString::fromStdString(s));
-        label_struttura_tree1=new QLabel("Primo operatore: "+ComboListaTree1->currentText());
+        label_struttura_tree1=new QLabel("Primo operando: "+ComboListaTree1->currentText());
         textEditLayout->addWidget(label_struttura_tree1, 0,0);
         textEditLayout->addWidget(struttura_tree1, 1,0);
     }
@@ -681,7 +681,7 @@ void mygui::slotComboTextEdit(){
 
         string ss=to_string(*(mappaTree[ComboListaTree2->currentText().toStdString()]));
         struttura_tree2=new QTextEdit(QString::fromStdString(ss));
-        label_struttura_tree2=new QLabel("secondo operatore: "+ComboListaTree2->currentText());
+        label_struttura_tree2=new QLabel("Secondo operando: "+ComboListaTree2->currentText());
         textEditLayout->addWidget(label_struttura_tree2, 2,0);
         textEditLayout->addWidget(struttura_tree2, 3,0);
     }
