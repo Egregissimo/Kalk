@@ -324,7 +324,7 @@ void mygui::connectButtonStructAndRadioToSlot(){
     connect(radioType[2], SIGNAL(toggled(bool)), this, SLOT(slotAggiornaCombo()));
     connect(radioType[1], SIGNAL(toggled(bool)), this, SLOT(slotAggiornaCombo()));
     connect(radioType[0], SIGNAL(toggled(bool)), this, SLOT(slotAggiornaCombo()));
-    connect(ComboTree, SIGNAL(activated(int)), this, SLOT(slotComboTree()));
+    connect(ComboTree, SIGNAL(activated(int)), this, SLOT(slotAggiornaCombo()));
 }
 
 void mygui::creazioneNodiRaz(){
@@ -622,7 +622,7 @@ void mygui::add_rm_mol_div(bool flag){
         molt_div->setValidator(new QIntValidator());
         operaLayout->addWidget(molt_div,0,2);
     }
-    else{
+    if(!flag){
         if(molt_div){
             operaLayout->removeWidget(molt_div);
             delete molt_div;
@@ -696,20 +696,64 @@ void mygui::aggiornaComboBoxListaTree(){
 
         /*
         if(ComboTree->currentText() == "Binary Tree"){
-            for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
-                if(dynamic_cast<binarytree*>(aux)){
-                    ComboListaTree1->addItem(QString::fromStdString(it->first));
-                    if(ComboListaTree2)
-                        ComboListaTree2->addItem(QString::fromStdString(it->first));
+            if(radioType[0]->isChecked()){
+                for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
+                    if(dynamic_cast<binarytree*>((it->second)) && dynamic_cast<raz*>((it->second->tipo_tree()))){
+                        ComboListaTree1->addItem(QString::fromStdString(it->first));
+                        if(ComboListaTree2)
+                            ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    }
+                }
+            }
+
+            if(radioType[1]->isChecked()){
+                for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
+                    if(dynamic_cast<binarytree*>((it->second)) && dynamic_cast<bin*>((it->second->tipo_tree()))){
+                        ComboListaTree1->addItem(QString::fromStdString(it->first));
+                        if(ComboListaTree2)
+                            ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    }
+                }
+            }
+
+            if(radioType[2]->isChecked()){
+                for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
+                    if(dynamic_cast<binarytree*>((it->second)) && dynamic_cast<vet*>((it->second->tipo_tree()))){
+                        ComboListaTree1->addItem(QString::fromStdString(it->first));
+                        if(ComboListaTree2)
+                            ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    }
                 }
             }
         }
         if(ComboTree->currentText() == "Binary Tree Search"){
-            for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
-                if(dynamic_cast<binarytreesearch*>(aux)){
-                    ComboListaTree1->addItem(QString::fromStdString(it->first));
-                    if(ComboListaTree2)
-                        ComboListaTree2->addItem(QString::fromStdString(it->first));
+            if(radioType[0]->isChecked()){
+                for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
+                    if(dynamic_cast<binarytreesearch*>((it->second)) && dynamic_cast<raz*>((it->second->tipo_tree()))){
+                        ComboListaTree1->addItem(QString::fromStdString(it->first));
+                        if(ComboListaTree2)
+                            ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    }
+                }
+            }
+
+            if(radioType[1]->isChecked()){
+                for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
+                    if(dynamic_cast<binarytreesearch*>((it->second)) && dynamic_cast<bin*>((it->second->tipo_tree()))){
+                        ComboListaTree1->addItem(QString::fromStdString(it->first));
+                        if(ComboListaTree2)
+                            ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    }
+                }
+            }
+
+            if(radioType[2]->isChecked()){
+                for(std::map<string, binarytreebasic*>::iterator it=mappaTree.begin(); it!=mappaTree.end(); ++it){
+                    if(dynamic_cast<binarytreesearch*>((it->second)) && dynamic_cast<vet*>((it->second->tipo_tree()))){
+                        ComboListaTree1->addItem(QString::fromStdString(it->first));
+                        if(ComboListaTree2)
+                            ComboListaTree2->addItem(QString::fromStdString(it->first));
+                    }
                 }
             }
         }
@@ -725,9 +769,6 @@ void mygui::connectComboOperazioniToSlot(){
 }
 
 /* SLOT BOX 3 */
-void mygui::slotComboTree(){
-    aggiornaComboBoxListaTree();
-}
 void mygui::slotComboTextEdit(){
     if(!(ComboListaTree1->size().isNull())){
         //pulizia

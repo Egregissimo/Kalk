@@ -212,7 +212,6 @@ private:
 
 
 public slots:
-    void slotComboTree();               // slot per cambiare il secondo operatore (da ComboBox a LineEdit e viceversa)
     void slotComboTextEdit();           // slot per stampare la struttura con nodi degli alberi 1 e 2
 
     void slotAggiornaCombo();           // slot per aggiornare le liste delle ComboBox 1 e 2 che cambiano dinamicamente in base al tipo di albero e al tipo di nodo
