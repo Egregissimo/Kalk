@@ -38,7 +38,7 @@ tipo* binarytree::removeIt(nodo* y){
 
     if(z){
         nodo* t=root;
-        string path=min_path(root);
+        string path=min_path(t);
         string::iterator begin=path.begin(), end=path.end();
         for(; begin!=end; begin++){
             if(*begin=='0')
@@ -73,7 +73,7 @@ void binarytree::add(tipo * a){
     if(!a)
         throw point_error("binarytree");
     nodo* x=root;
-    string path=min_path(root);
+    string path=min_path(x);
     string::iterator begin=path.begin(), end=path.end();
     for(; begin!=end; begin++){
         if(*begin=='0')

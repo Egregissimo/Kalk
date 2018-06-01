@@ -8,7 +8,7 @@ int main(int argc, char *argv[]){
 
     return app.exec();
 
-   /*
+    /*
     try{
         QApplication app(argc, argv);
         string s="(*,(*,(*,_,_),_),(*,_,(*,_,_)))";
@@ -29,27 +29,23 @@ int main(int argc, char *argv[]){
         string qs("Albero binario di ricerca t:<br/>"+to_string(t)+"<br/>Bilancio l'albero t:<br/>"+to_string(t.balance())+"<br/>Aggiungo in nodo (9/10):<br/>");
         t.add(f);
         qs+=to_string(t)+"<br/>";
-        raz* g=dynamic_cast<raz*>(t.search(c));
-        raz* h=dynamic_cast<raz*>(t.cerca("0"));
-        raz* i=dynamic_cast<raz*>(t.remove("0"));
-        raz* j=dynamic_cast<raz*>(t.remove(a));
         qs+="Albero t con il nodo aggiunto:<br/>"+to_string(t);
-        qs+="<br/>Trova il nodo (5/2):<br/>"+to_string(*g)+"<br/>Trova il nodo nel percorso '0':<br/>"+to_string(*h)
-                                   +"<br/>Rimuovo il nodo nel percorso '0':<br/>"+to_string(*i)+"<br/>"+to_string(t)+"<br/>Rimuovo il nodo (5/7):<br/>"+to_string(*j);
+        qs+="<br/>Trova il nodo (5/2):<br/>"+t.search(c)->to_stringa()+"<br/>Trova il nodo nel percorso '0':<br/>"+t.cerca("0")->to_stringa()
+                                   +"<br/>Rimuovo il nodo nel percorso '0':<br/>"+t.remove("0")->to_stringa()+"<br/>"+to_string(t)+"<br/>Rimuovo il nodo (5/7):<br/>"+t.remove(a)->to_stringa()
+                +"<br/>"+to_string(t);
 
-        raz* k=dynamic_cast<raz*>(tt.search(c));
-        raz* l=dynamic_cast<raz*>(tt.cerca("0"));
-        raz* m=dynamic_cast<raz*>(tt.remove("0"));
-        raz* n=dynamic_cast<raz*>(tt.remove(a));
         qs+="<br/><br/>Albero binario tt:<br/>"+to_string(tt)+"<br/>Aggiungo in nodo (9/10):<br/>";
         tt.add(f);
         qs+=to_string(tt)+"<br/>";
         qs+="Albero tt con il nodo aggiunto:<br/>"+to_string(tt);
-        qs+="<br/>Trova il nodo (5/2):<br/>"+to_string(*k)+"<br/>Trova il nodo nel percorso '0':<br/>"+to_string(*l)
-                                   +"<br/>Rimuovo il nodo nel percorso '0':<br/>"+to_string(*m)+"<br/>"+to_string(tt)+"<br/>Rimuovo il nodo (5/7):<br/>"+to_string(*n);
+        cout<<tt<<endl;
+        tt.search(c)->to_stringa();
+        qs+="<br/>Trova il nodo (5/2):<br/>"+tt.search(c)->to_stringa()+"<br/>Trova il nodo nel percorso '0':<br/>"+tt.cerca("0")->to_stringa();
+        qs+="<br/>Rimuovo il nodo nel percorso '0':<br/>"+tt.remove("0")->to_stringa()+"<br/>"+to_string(tt)+"<br/>Rimuovo il nodo (5/7):<br/>"+tt.remove(a)->to_stringa()
+                +"<br/>"+to_string(tt);
         QTextEdit* te=new QTextEdit(QString::fromStdString(qs));
         te->setReadOnly(true);
-        te->resize(400, 600);
+        te->resize(400, 650);
         te->show();
         return app.exec();
     }
