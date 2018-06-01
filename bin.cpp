@@ -42,7 +42,8 @@ bin::bin(double d){
     if(frazionario == 0)
         frazionaria.push_back(0);
     else{
-        while(frazionario != 0){
+        int i=0;
+        while(frazionario != 0 && i<10){
             frazionario = frazionario*2;
 
             if(frazionario >= 1){
@@ -51,6 +52,7 @@ bin::bin(double d){
             }
             else
                 frazionaria.push_back(0);
+            i++;
         }
     }
 }
