@@ -27,7 +27,7 @@ SOURCES += \
     binarytreesearch.cpp \
     binarytreebasic.cpp \
     tipo.cpp \
-    GUI/mygui.cpp
+    mygui.cpp
 
 HEADERS += \
     raz.h \
@@ -38,4 +38,4 @@ HEADERS += \
     eccezione.h \
     binarytreesearch.h \
     binarytreebasic.h \
-    GUI/mygui.h
+    mygui.h

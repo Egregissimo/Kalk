@@ -131,7 +131,7 @@ void mygui::addWidgetDisplayRaz(){
     labelNumeratore = new QLabel("Num");
     labelDenominatore   = new QLabel("Den");
     LineEditNum = new QLineEdit("");
-    LineEditDen = new QLineEdit("");
+    LineEditDen = new QLineEdit("1");
     LineEditNum->setAlignment(Qt::AlignRight);
     LineEditDen->setAlignment(Qt::AlignRight);
     LineEditNum->setMaxLength(15);
@@ -152,7 +152,7 @@ void mygui::addWidgetDisplayBin(){
     display = new QLineEdit("");
     display->setAlignment(Qt::AlignRight);
     display->setMaxLength(15);
-    display->setValidator( new QDoubleValidator() );
+    display->setValidator( new QIntValidator() );
     displayLayout->addWidget(labelKalk,0,0);
     displayLayout->addWidget(display,0,1);
     displayLayout->addWidget(option1[1],0,2);
@@ -347,10 +347,10 @@ void mygui::creazioneNodiRaz(){
 }
 void mygui::creazioneNodiBin(){
     QString text; text = display->text(); text.remove( QChar( '.' ) );
-    double val = text.toDouble();
+    int val = text.toInt();
 
     vettoreTipo.push_back(new bin(val));
-    display->setText("1");
+    //display->setText("0");
     avanzaProgressBar();
     add_vet_raz_bin();
 }

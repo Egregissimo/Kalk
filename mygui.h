@@ -18,8 +18,8 @@
 #include "string"
 #include <vector>
 #include <map>
-#include "../binarytree.h"
-#include "../binarytreesearch.h"
+#include "binarytree.h"
+#include "binarytreesearch.h"
 
 class mygui: public QWidget{
     Q_OBJECT                                        // Macro
