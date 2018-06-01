@@ -28,7 +28,7 @@ private:
 
     bool segno;                                   /* 1 negativo 0 positivo */
 public:
-    bin(int = 1);                                 /* costruttore che dato in input un valore base 10 lo trasforma in base 2 */
+    bin(int = 0);                                 /* costruttore che dato in input un valore base 10 lo trasforma in base 2 */
 
     /* metodi ausiliari */
     double base10() const;                        /* converte un tipo bin in un intero in base 10 */
