@@ -34,7 +34,9 @@ protected:
     static vector<tipo*> nodes(nodo*);                                  /* ritorna un vettore con i campi info del sottoalbero del nodo letti in ordine PREFISSO */
     static bool controlla_percorso(string &);                           /* constrolla se la stringa per la ricerca di un elemento sia formata esclusivamente da 0 e 1 */
     static string tree_to_string(nodo*);                                /* stampa la struttura dell'albero prendendo il nodo radice */
-    static bool controlla_input(vector<tipo*>&, string&);               /* constrolla se gli input del costruttore sono corretti */
+    static bool controlla_input(vector<tipo*>&, string&);               /* constrolla se gli input del costruttore sono corretti: se la stringa è sintatticamente corretta,
+                                                                            se il numero di nodi dichiarati dalla struttura dell'albero sono tanti quanti la lunghezza del
+                                                                            vettore passato come parametro per il costruttore e se i dati nel vettore sono tutti dello stesso tipo*/
 
 private:
     /* funzioni ausialiarie */
@@ -69,8 +71,9 @@ public:
 
     string struttura_tree()const;                                       /* stampa la struttura dell'albero */
     static unsigned int n_nodes_stringa(string::iterator);              /* ritorna il numero di nodi di una stringa */
-    tipo* tipo_tree()const;
-    static bool controlla_stringa(string);
+    //funzioni create escusivamente per la GUI
+    tipo* tipo_tree()const;                                             /* ritorna il tipo di nodo dell albero */
+    static bool controlla_stringa(string);                              /* controlla se la stringa data in input è sintatticamente corretta (la vora come il metodo parser)*/
 };
 
 ostream& operator<<(ostream&, const binarytreebasic&);

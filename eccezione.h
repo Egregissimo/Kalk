@@ -17,7 +17,6 @@ protected:
 
 public:
     string stampa_errore() const;
-   // virtual void ghost_method() const =0;
 };
 
 class dominio_error: public eccezione{
